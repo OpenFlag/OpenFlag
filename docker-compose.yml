@@ -15,9 +15,9 @@ services:
     hostname: postgres
     container_name: postgres
     environment:
-      POSTGRES_DB: gopher
+      POSTGRES_DB: openflag
       POSTGRES_PASSWORD: secret
-      POSTGRES_USER: gopher
+      POSTGRES_USER: openflag
     ports:
       - 5432:5432
     volumes:

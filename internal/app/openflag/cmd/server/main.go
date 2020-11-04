@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/postgres"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/metric"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/router"
 	"github.com/labstack/echo/v4"
@@ -19,10 +21,18 @@ import (
 func main(cfg config.Config) {
 	e := router.New(cfg)
 
+	postgresDb := postgres.WithRetry(postgres.Create, cfg.Postgres)
+
+	defer func() {
+		if err := postgresDb.Close(); err != nil {
+			logrus.Errorf("postgres connection close error: %s", err.Error())
+		}
+	}()
+
 	e.GET("/healthz", func(c echo.Context) error { return c.NoContent(http.StatusNoContent) })
 
 	// ==========
-	// This place is for main codes
+	// Codes
 	// ==========
 
 	sig := make(chan os.Signal, 1)

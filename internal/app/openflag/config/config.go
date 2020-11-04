@@ -16,6 +16,7 @@ type (
 	Config struct {
 		Logger     Logger     `mapstructure:"logger" validate:"required"`
 		Server     Server     `mapstructure:"server" validate:"required"`
+		Postgres   Postgres   `mapstructure:"postgres" validate:"required"`
 		Monitoring Monitoring `mapstructure:"monitoring" validate:"required"`
 	}
 
@@ -29,6 +30,18 @@ type (
 		ReadTimeout     time.Duration `mapstructure:"read-timeout" validate:"required"`
 		WriteTimeout    time.Duration `mapstructure:"write-timeout" validate:"required"`
 		GracefulTimeout time.Duration `mapstructure:"graceful-timeout" validate:"required"`
+	}
+
+	Postgres struct {
+		Host               string        `mapstructure:"host" validate:"required"`
+		Port               int           `mapstructure:"port" validate:"required"`
+		Username           string        `mapstructure:"user" validate:"required"`
+		Password           string        `mapstructure:"pass" validate:"required"`
+		DBName             string        `mapstructure:"dbname" validate:"required"`
+		ConnectTimeout     time.Duration `mapstructure:"connect-timeout" validate:"required"`
+		ConnectionLifetime time.Duration `mapstructure:"connection-lifetime" validate:"required"`
+		MaxOpenConnections int           `mapstructure:"max-open-connections"`
+		MaxIdleConnections int           `mapstructure:"max-idle-connections"`
 	}
 
 	Monitoring struct {

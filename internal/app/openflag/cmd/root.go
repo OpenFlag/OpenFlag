@@ -3,6 +3,8 @@ package cmd
 import (
 	"os"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/cmd/migrate"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/cmd/server"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/config"
 	"github.com/OpenFlag/OpenFlag/pkg/log"
@@ -22,6 +24,7 @@ func Execute() {
 		Short: "OpenFlag is an open source feature flagging, A/B testing and dynamic configuration service.",
 	}
 
+	migrate.Register(root, cfg)
 	server.Register(root, cfg)
 
 	if err := root.Execute(); err != nil {

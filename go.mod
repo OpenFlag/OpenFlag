@@ -3,7 +3,10 @@ module github.com/OpenFlag/OpenFlag
 go 1.15
 
 require (
+	github.com/carlescere/scheduler v0.0.0-20170109141437-ee74d2f83d82
 	github.com/go-playground/universal-translator v0.17.0 // indirect
+	github.com/golang-migrate/migrate/v4 v4.13.0
+	github.com/jinzhu/gorm v1.9.16
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/prometheus/client_golang v0.9.3

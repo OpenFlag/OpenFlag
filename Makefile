@@ -9,7 +9,7 @@ export LDFLAGS="-w -s"
 all: format lint build
 
 run-migrate:
-	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate
+	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate --path migrations
 
 run-server:
 	go run -ldflags $(LDFLAGS) ./cmd/openflag server
