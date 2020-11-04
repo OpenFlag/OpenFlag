@@ -26,7 +26,7 @@ COPY . /src
 # Put built binaries and runtime resources in /app dir ready to be copied over or used.
 RUN make install && \
     mkdir -p /app && \
-    cp -r $GOPATH/bin/gopher /app/
+    cp -r $GOPATH/bin/openflag /app/
 
 #
 # 2. Runtime Container
