@@ -37,17 +37,30 @@ postgres:
   max-idle-connections: 5
 
 redis:
-  address: 127.0.0.1:6379
-  pool-size: 0
-  min-idle-conns: 20
-  dial-timeout: 5s
-  read-timeout: 3s
-  write-timeout: 3s
-  pool-timeout: 4s
-  idle-timeout: 5m
-  max-retries: 5
-  min-retry-backoff: 1s
-  max-retry-backoff: 3s
+  master:
+    address: 127.0.0.1:6379
+    pool-size: 0
+    min-idle-conns: 20
+    dial-timeout: 5s
+    read-timeout: 3s
+    write-timeout: 3s
+    pool-timeout: 4s
+    idle-timeout: 5m
+    max-retries: 5
+    min-retry-backoff: 1s
+    max-retry-backoff: 3s
+  slave:
+    address: 127.0.0.1:6379
+    pool-size: 0
+    min-idle-conns: 20
+    dial-timeout: 5s
+    read-timeout: 3s
+    write-timeout: 3s
+    pool-timeout: 4s
+    idle-timeout: 5m
+    max-retries: 5
+    min-retry-backoff: 1s
+    max-retry-backoff: 3s
 
 monitoring:
   prometheus:

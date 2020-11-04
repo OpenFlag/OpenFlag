@@ -31,11 +31,11 @@ func main(cfg config.Config) {
 		}
 	}()
 
-	_, redisClose := redis.Create(cfg.Redis)
+	_, redisMasterClose := redis.Create(cfg.Redis.Master)
 
 	defer func() {
-		if err := redisClose(); err != nil {
-			logrus.Errorf("redis connection close error: %s", err.Error())
+		if err := redisMasterClose(); err != nil {
+			logrus.Errorf("redis master connection close error: %s", err.Error())
 		}
 	}()
 

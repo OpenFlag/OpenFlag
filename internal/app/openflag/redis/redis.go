@@ -5,7 +5,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func Create(cfg config.Redis) (client redis.Cmdable, closeFunc func() error) {
+func Create(cfg config.RedisConfig) (client redis.Cmdable, closeFunc func() error) {
 	result := redis.NewClient(
 		&redis.Options{
 			Addr:            cfg.Address,

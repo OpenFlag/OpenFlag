@@ -46,6 +46,11 @@ type (
 	}
 
 	Redis struct {
+		Master RedisConfig `mapstructure:"master" validate:"required"`
+		Slave  RedisConfig `mapstructure:"slave" validate:"required"`
+	}
+
+	RedisConfig struct {
 		Address         string        `mapstructure:"address" validate:"required"`
 		PoolSize        int           `mapstructure:"pool-size"`
 		MinIdleConns    int           `mapstructure:"min-idle-conns"`
