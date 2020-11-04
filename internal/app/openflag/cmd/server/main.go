@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/redis"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/postgres"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/metric"
@@ -26,6 +28,14 @@ func main(cfg config.Config) {
 	defer func() {
 		if err := postgresDb.Close(); err != nil {
 			logrus.Errorf("postgres connection close error: %s", err.Error())
+		}
+	}()
+
+	_, redisClose := redis.Create(cfg.Redis)
+
+	defer func() {
+		if err := redisClose(); err != nil {
+			logrus.Errorf("redis connection close error: %s", err.Error())
 		}
 	}()
 

@@ -17,6 +17,7 @@ type (
 		Logger     Logger     `mapstructure:"logger" validate:"required"`
 		Server     Server     `mapstructure:"server" validate:"required"`
 		Postgres   Postgres   `mapstructure:"postgres" validate:"required"`
+		Redis      Redis      `mapstructure:"redis" validate:"required"`
 		Monitoring Monitoring `mapstructure:"monitoring" validate:"required"`
 	}
 
@@ -42,6 +43,20 @@ type (
 		ConnectionLifetime time.Duration `mapstructure:"connection-lifetime" validate:"required"`
 		MaxOpenConnections int           `mapstructure:"max-open-connections"`
 		MaxIdleConnections int           `mapstructure:"max-idle-connections"`
+	}
+
+	Redis struct {
+		Address         string        `mapstructure:"address" validate:"required"`
+		PoolSize        int           `mapstructure:"pool-size"`
+		MinIdleConns    int           `mapstructure:"min-idle-conns"`
+		DialTimeout     time.Duration `mapstructure:"dial-timeout"`
+		ReadTimeout     time.Duration `mapstructure:"read-timeout"`
+		WriteTimeout    time.Duration `mapstructure:"write-timeout"`
+		PoolTimeout     time.Duration `mapstructure:"pool-timeout"`
+		IdleTimeout     time.Duration `mapstructure:"idle-timeout"`
+		MaxRetries      int           `mapstructure:"max-retries"`
+		MinRetryBackoff time.Duration `mapstructure:"min-retry-backoff"`
+		MaxRetryBackoff time.Duration `mapstructure:"max-retry-backoff"`
 	}
 
 	Monitoring struct {
