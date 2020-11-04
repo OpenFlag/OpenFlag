@@ -117,5 +117,4 @@ data
 .DS_Store
 ./OpenFlag
 config.yaml
-config-testing.yaml
 coverage.txt
