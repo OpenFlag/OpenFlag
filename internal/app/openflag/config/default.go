@@ -26,15 +26,26 @@ server:
   graceful-timeout: 5s
 
 postgres:
-  host: 127.0.0.1
-  port: 5432
-  user: openflag
-  pass: secret
-  dbname: openflag
-  connect-timeout: 30s
-  connection-lifetime: 30m
-  max-open-connections: 10
-  max-idle-connections: 5
+  master:
+    host: 127.0.0.1
+    port: 5432
+    user: openflag
+    pass: secret
+    dbname: openflag
+    connect-timeout: 30s
+    connection-lifetime: 30m
+    max-open-connections: 10
+    max-idle-connections: 5
+  slave:
+    host: 127.0.0.1
+    port: 5432
+    user: openflag
+    pass: secret
+    dbname: openflag
+    connect-timeout: 30s
+    connection-lifetime: 30m
+    max-open-connections: 10
+    max-idle-connections: 5
 
 redis:
   master:

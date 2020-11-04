@@ -18,7 +18,7 @@ const (
 	maxAttempts         = 60
 )
 
-func Create(postgres config.Postgres) (*gorm.DB, error) {
+func Create(postgres config.PostgresConfig) (*gorm.DB, error) {
 	url := fmt.Sprintf(
 		"host=%s port=%d user=%s dbname=%s password=%s connect_timeout=%d sslmode=disable",
 		postgres.Host, postgres.Port, postgres.Username, postgres.DBName, postgres.Password,
@@ -42,7 +42,7 @@ func Create(postgres config.Postgres) (*gorm.DB, error) {
 	return postgresDb, nil
 }
 
-func WithRetry(fn func(postgres config.Postgres) (*gorm.DB, error), postgres config.Postgres) *gorm.DB {
+func WithRetry(fn func(postgres config.PostgresConfig) (*gorm.DB, error), postgres config.PostgresConfig) *gorm.DB {
 	for i := 0; i < maxAttempts; i++ {
 		db, err := fn(postgres)
 		if err == nil {

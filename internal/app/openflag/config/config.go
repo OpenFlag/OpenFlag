@@ -34,6 +34,11 @@ type (
 	}
 
 	Postgres struct {
+		Master PostgresConfig `mapstructure:"master" validate:"required"`
+		Slave  PostgresConfig `mapstructure:"slave" validate:"required"`
+	}
+
+	PostgresConfig struct {
 		Host               string        `mapstructure:"host" validate:"required"`
 		Port               int           `mapstructure:"port" validate:"required"`
 		Username           string        `mapstructure:"user" validate:"required"`

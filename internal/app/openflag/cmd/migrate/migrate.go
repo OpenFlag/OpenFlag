@@ -18,7 +18,7 @@ const (
 	flagPath = "path"
 )
 
-func main(path string, cfg config.Postgres) error {
+func main(path string, cfg config.PostgresConfig) error {
 	db := postgres.WithRetry(postgres.Create, cfg)
 
 	defer func() {
@@ -71,7 +71,7 @@ func Register(root *cobra.Command, cfg config.Config) {
 				return err
 			}
 
-			if err := main(path, cfg.Postgres); err != nil {
+			if err := main(path, cfg.Postgres.Master); err != nil {
 				return err
 			}
 

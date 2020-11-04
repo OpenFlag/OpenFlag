@@ -23,19 +23,29 @@ import (
 func main(cfg config.Config) {
 	e := router.New(cfg)
 
-	postgresDb := postgres.WithRetry(postgres.Create, cfg.Postgres)
+	postgresDbMaster := postgres.WithRetry(postgres.Create, cfg.Postgres.Master)
+	postgresDbSlave := postgres.WithRetry(postgres.Create, cfg.Postgres.Slave)
 
 	defer func() {
-		if err := postgresDb.Close(); err != nil {
-			logrus.Errorf("postgres connection close error: %s", err.Error())
+		if err := postgresDbMaster.Close(); err != nil {
+			logrus.Errorf("postgres master connection close error: %s", err.Error())
+		}
+
+		if err := postgresDbSlave.Close(); err != nil {
+			logrus.Errorf("postgres slave connection close error: %s", err.Error())
 		}
 	}()
 
 	_, redisMasterClose := redis.Create(cfg.Redis.Master)
+	_, redisSlaveClose := redis.Create(cfg.Redis.Slave)
 
 	defer func() {
 		if err := redisMasterClose(); err != nil {
 			logrus.Errorf("redis master connection close error: %s", err.Error())
+		}
+
+		if err := redisSlaveClose(); err != nil {
+			logrus.Errorf("redis slave connection close error: %s", err.Error())
 		}
 	}()
 
