@@ -114,6 +114,7 @@ fabric.properties
 
 .idea
 data
+logs
 .DS_Store
 ./OpenFlag
 config.yaml

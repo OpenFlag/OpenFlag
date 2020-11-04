@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/cmd"
 )
 
 func main() {
-	fmt.Println("OpenFlag is an open source feature flagging, A/B testing and dynamic configuration service.")
+	cmd.Execute()
 }

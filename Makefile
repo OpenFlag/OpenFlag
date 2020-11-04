@@ -8,11 +8,17 @@ export LDFLAGS="-w -s"
 
 all: format lint build
 
+run-migrate:
+	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate
+
+run-server:
+	go run -ldflags $(LDFLAGS) ./cmd/openflag server
+
 build:
-	CGO_ENABLED=1 go build -ldflags $(LDFLAGS)  .
+	CGO_ENABLED=1 go build -ldflags $(LDFLAGS)  ./cmd/openflag
 
 install:
-	CGO_ENABLED=1 go install -ldflags $(LDFLAGS)
+	CGO_ENABLED=1 go install -ldflags $(LDFLAGS) ./cmd/openflag
 
 check-formatter:
 	which goimports || GO111MODULE=off go get -u golang.org/x/tools/cmd/goimports
