@@ -4,9 +4,14 @@ export APP=openflag
 
 export ROOT=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
-export LDFLAGS="-w -s"
+export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
+
+export LDFLAGS="-w -s -X $(BUILD_INFO_PKG).Date=$$(TZ=Asia/Tehran date '+%FT%T') -X $(BUILD_INFO_PKG).Version=$$(git rev-parse HEAD | cut -c 1-8) -X $(BUILD_INFO_PKG).VCSRef=$$(git rev-parse --abbrev-ref HEAD)"
 
 all: format lint build
+
+run-version:
+	go run -ldflags $(LDFLAGS) ./cmd/openflag version
 
 run-migrate:
 	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate --path migrations

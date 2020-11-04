@@ -24,8 +24,9 @@ func Init(path string, cfg interface{}, defaultConfig string, prefix string) int
 	v.AutomaticEnv()
 
 	err := v.MergeInConfig()
+	//nolint:staticcheck
 	if err != nil {
-		log.Println("no config file found. Using defaults and environment variables")
+		//log.Println("no config file found. Using defaults and environment variables")
 	}
 
 	if err := v.UnmarshalExact(&cfg); err != nil {

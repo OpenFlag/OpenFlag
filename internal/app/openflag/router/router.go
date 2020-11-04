@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/config"
 	"github.com/OpenFlag/OpenFlag/pkg/log"
+	"github.com/OpenFlag/OpenFlag/pkg/version"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
@@ -29,6 +30,7 @@ func New(cfg config.Config) *echo.Echo {
 	e.Use(middleware.RecoverWithConfig(recoverConfig))
 
 	e.Use(middleware.CORS())
+	e.Use(version.Middleware)
 	e.Use(log.LoggerMiddleware(cfg.Logger.AccessLogger))
 	e.Use(prometheusMiddleware())
 
