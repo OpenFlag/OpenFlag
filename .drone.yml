@@ -22,3 +22,10 @@ steps:
         from_secret: codecov_token
       files:
         - coverage.txt
+
+  - name: build
+    image: docker
+    commands:
+      - docker build -t openflag:latest .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
