@@ -29,11 +29,13 @@ var (
 		ReqQPS: promauto.NewCounterVec(prometheus.CounterOpts{
 			Namespace: metric.Namespace,
 			Name:      "http_request_total",
+			Help:      "The total http requests received",
 		}, []string{LabelEcoCode, LabelEcoMethod, LabelEcoHost, LabelEcoURL}),
 
 		ReqDuration: promauto.NewHistogramVec(prometheus.HistogramOpts{
 			Namespace: metric.Namespace,
 			Name:      "http_request_duration_seconds",
+			Help:      "A histogram of latencies for requests received",
 		}, []string{LabelEcoCode, LabelEcoMethod, LabelEcoHost, LabelEcoURL}),
 	}
 )
