@@ -73,6 +73,8 @@ func main(cfg config.Config) {
 	// Codes
 	// ==========
 
+	e.Static("/", "browser/openflag-ui/build")
+
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 

@@ -1,35 +1,46 @@
 #
-# 1. Build Container
+# 1. OpenFlag Build Container
 #
-FROM golang:1.15-alpine AS build
+FROM golang:1.15-alpine AS openflag-backend
 
 ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
-ARG GO_PROXY
+ARG GO_PROXY=https://goproxy.io
 ENV GOPROXY=${GO_PROXY}
 
 RUN mkdir -p /src
 
-RUN apk add build-base
-RUN apk add git
+RUN apk add build-base git
 
-# First add modules list to better utilize caching
 COPY go.sum go.mod /src/
 
 WORKDIR /src
 
 COPY . /src
 
-# Build components.
-# Put built binaries and runtime resources in /app dir ready to be copied over or used.
 RUN make install && \
     mkdir -p /app && \
     cp -r $GOPATH/bin/openflag /app/
 
 #
-# 2. Runtime Container
+# 2. OpenFlag UI Container
+#
+FROM node:alpine AS openflag-ui
+
+WORKDIR /usr/src/browser/openflag-ui
+
+COPY browser/openflag-ui/package.json browser/openflag-ui/package-lock.json ./
+
+RUN npm install
+
+ADD /browser/openflag-ui ./
+
+RUN npm run build --prod
+
+#
+# 3. Runtime Container
 #
 FROM alpine:3.9
 
@@ -49,6 +60,12 @@ RUN apk add --update --no-cache \
 
 WORKDIR /app
 
-COPY --from=build /app /app/
+COPY --from=openflag-backend /app /app/
 
-COPY --from=build /src/migrations /app/migrations
+COPY --from=openflag-backend /src/docker/run.sh /app/run.sh
+
+COPY --from=openflag-backend /src/internal/app/openflag/migrations /app/migrations
+
+COPY --from=openflag-ui /usr/src/openflag-ui /app/browser/openflag-ui
+
+CMD ['run.sh']

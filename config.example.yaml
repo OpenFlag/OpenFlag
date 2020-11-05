@@ -1,7 +1,7 @@
 logger:
   access:
-    enabled: true
-    path: "./logs/access.log"
+    enabled: false
+    path: "/var/log/openflag/access.log"
     format: "${remote_ip} - - [${time_rfc3339}] \"${method} ${uri} HTTP/1.1\" ${status} \
     ${bytes_out} ${bytes_in} ${latency} \"${referer}\" \"${user_agent}\"\n"
     max-size: 1024
@@ -9,7 +9,7 @@ logger:
     max-age: 7
   app:
     level: debug
-    path: "./logs/app.log"
+    path: "/var/log/openflag/app.log"
     max-size: 1024
     max-backups: 7
     max-age: 7

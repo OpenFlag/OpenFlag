@@ -16,7 +16,7 @@ run-version:
 	go run -ldflags $(LDFLAGS) ./cmd/openflag version
 
 run-migrate:
-	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate --path migrations
+	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate --path ./internal/app/openflag/migrations
 
 run-server:
 	go run -ldflags $(LDFLAGS) ./cmd/openflag server
