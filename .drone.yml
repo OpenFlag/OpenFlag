@@ -24,6 +24,5 @@ steps:
         - coverage.txt
 
   - name: build
-    image: docker
-    commands:
-      - docker build -t openflag:latest .
+    image: plugins/docker
+    repo: openflag:latest
