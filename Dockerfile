@@ -66,6 +66,6 @@ COPY --from=openflag-backend /src/docker/run.sh /app/run.sh
 
 COPY --from=openflag-backend /src/internal/app/openflag/migrations /app/migrations
 
-COPY --from=openflag-ui /usr/src/openflag-ui /app/browser/openflag-ui
+COPY --from=openflag-ui /usr/src/browser/openflag-ui /app/browser/openflag-ui
 
 CMD ['run.sh']
