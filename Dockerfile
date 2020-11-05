@@ -7,7 +7,7 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
-ARG GO_PROXY=https://goproxy.io
+ARG GO_PROXY
 ENV GOPROXY=${GO_PROXY}
 
 RUN mkdir -p /src
