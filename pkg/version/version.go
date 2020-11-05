@@ -10,10 +10,12 @@ import (
 // Following variables are set via -ldflags
 //nolint:gochecknoglobals
 var (
+	// AppVersion represents the semantic version of the app
+	AppVersion string
 	// VCSRef represents name of branch at build time
 	VCSRef string
 	// Version represents git SHA at build time
-	Version string
+	BuildVersion string
 	// Date represents the time of build
 	Date string
 )
@@ -21,7 +23,9 @@ var (
 func Validate() error {
 	missingFields := []string{}
 
-	for name, value := range map[string]string{"VCSRef": VCSRef, "Version": Version, "Date": Date} {
+	for name, value := range map[string]string{
+		"AppVersion": AppVersion, "VCSRef": VCSRef, "BuildVersion": BuildVersion, "Date": Date,
+	} {
 		if value == "" {
 			missingFields = append(missingFields, name)
 		}
@@ -37,9 +41,10 @@ func Validate() error {
 func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if err := Validate(); err == nil {
+			c.Response().Header().Set("X-OPENFLAG-APP-VERSION", AppVersion)
 			c.Response().Header().Set("X-OPENFLAG-VCS-REF", VCSRef)
+			c.Response().Header().Set("X-OPENFLAG-BUILD-VERSION", BuildVersion)
 			c.Response().Header().Set("X-OPENFLAG-BUILD-DATE", Date)
-			c.Response().Header().Set("X-OPENFLAG-BUILD-VERSION", Version)
 		}
 
 		return next(c)
@@ -47,5 +52,8 @@ func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 func String() string {
-	return fmt.Sprintf("VCSRef = %s, BuildVersion = %s, BuildDate = %s", VCSRef, Version, Date)
+	return fmt.Sprintf(
+		"AppVersion = %s, VCSRef = %s, BuildVersion = %s, BuildDate = %s",
+		AppVersion, VCSRef, BuildVersion, Date,
+	)
 }
