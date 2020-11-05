@@ -25,5 +25,9 @@ steps:
 
   - name: build
     image: plugins/docker
-    repo: openflag/openflag
-    dry_run: true
+    settings:
+      repo: openflag/openflag
+      tags:
+        - latest
+        - 0.1.0
+      dry_run: true
