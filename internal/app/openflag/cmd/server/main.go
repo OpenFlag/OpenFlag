@@ -7,11 +7,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/redis"
-
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/postgres"
-
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/metric"
+	"github.com/OpenFlag/OpenFlag/pkg/monitoring/prometheus"
+	"github.com/carlescere/scheduler"
+
+	"github.com/OpenFlag/OpenFlag/pkg/redis"
+
+	"github.com/OpenFlag/OpenFlag/pkg/postgres"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/router"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -20,24 +23,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	healthCheckInterval = 1
+)
+
+//nolint:funlen
 func main(cfg config.Config) {
 	e := router.New(cfg)
 
-	postgresDbMaster := postgres.WithRetry(postgres.Create, cfg.Postgres.Master)
-	postgresDbSlave := postgres.WithRetry(postgres.Create, cfg.Postgres.Slave)
+	pgDbMaster := postgres.WithRetry(postgres.Create, cfg.Postgres.Master)
+	pgDbSlave := postgres.WithRetry(postgres.Create, cfg.Postgres.Slave)
 
 	defer func() {
-		if err := postgresDbMaster.Close(); err != nil {
+		if err := pgDbMaster.Close(); err != nil {
 			logrus.Errorf("postgres master connection close error: %s", err.Error())
 		}
 
-		if err := postgresDbSlave.Close(); err != nil {
+		if err := pgDbSlave.Close(); err != nil {
 			logrus.Errorf("postgres slave connection close error: %s", err.Error())
 		}
 	}()
 
-	_, redisMasterClose := redis.Create(cfg.Redis.Master)
-	_, redisSlaveClose := redis.Create(cfg.Redis.Slave)
+	redisMasterClient, redisMasterClose := redis.Create(cfg.Redis.Master)
+	redisSlaveClient, redisSlaveClose := redis.Create(cfg.Redis.Slave)
 
 	defer func() {
 		if err := redisMasterClose(); err != nil {
@@ -48,6 +56,16 @@ func main(cfg config.Config) {
 			logrus.Errorf("redis slave connection close error: %s", err.Error())
 		}
 	}()
+
+	_, err := scheduler.Every(healthCheckInterval).Seconds().Run(func() {
+		metric.ReportDbStatus(pgDbMaster, "pg_master")
+		metric.ReportDbStatus(pgDbMaster, "pg_slave")
+		metric.ReportRedisStatus(redisMasterClient, "redis_master")
+		metric.ReportRedisStatus(redisSlaveClient, "redis_slave")
+	})
+	if err != nil {
+		logrus.Fatalf("failed to start metric scheduler: %s", err.Error())
+	}
 
 	e.GET("/healthz", func(c echo.Context) error { return c.NoContent(http.StatusNoContent) })
 
@@ -64,7 +82,7 @@ func main(cfg config.Config) {
 		}
 	}()
 
-	go metric.StartPrometheusServer(cfg.Monitoring.Prometheus)
+	go prometheus.StartPrometheusServer(cfg.Monitoring.Prometheus)
 
 	logrus.Info("start openflag server!")
 

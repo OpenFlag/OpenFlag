@@ -50,6 +50,7 @@ postgres:
 redis:
   master:
     address: 127.0.0.1:6379
+    password: ""
     pool-size: 0
     min-idle-conns: 20
     dial-timeout: 5s
@@ -62,6 +63,7 @@ redis:
     max-retry-backoff: 3s
   slave:
     address: 127.0.0.1:6379
+    password: ""
     pool-size: 0
     min-idle-conns: 20
     dial-timeout: 5s

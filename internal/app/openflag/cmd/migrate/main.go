@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/config"
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/postgres"
+	"github.com/OpenFlag/OpenFlag/pkg/postgres"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
@@ -18,16 +18,16 @@ const (
 	flagPath = "path"
 )
 
-func main(path string, cfg config.PostgresConfig) error {
-	db := postgres.WithRetry(postgres.Create, cfg)
+func main(path string, cfg postgres.Config) error {
+	pgDb := postgres.WithRetry(postgres.Create, cfg)
 
 	defer func() {
-		if err := db.Close(); err != nil {
+		if err := pgDb.Close(); err != nil {
 			logrus.Errorf("postgres connection close error: %s", err.Error())
 		}
 	}()
 
-	driver, err := psql.WithInstance(db.DB(), &psql.Config{})
+	driver, err := psql.WithInstance(pgDb.DB(), &psql.Config{})
 	if err != nil {
 		return err
 	}
