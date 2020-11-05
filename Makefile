@@ -48,7 +48,7 @@ ci-test:
 	go tool cover -func coverage.txt
 
 up:
-	docker-compose up -d
+	docker-compose up -d redis postgres
 
 down:
 	docker-compose down

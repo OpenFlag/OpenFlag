@@ -20,3 +20,18 @@ services:
       POSTGRES_USER: openflag
     ports:
       - 5432:5432
+
+  openflag:
+    build: .
+    hostname: openflag
+    container_name: openflag
+    environment:
+      - OPENFLAG_POSTGRES_MASTER_HOST=postgres
+      - OPENFLAG_POSTGRES_SLAVE_HOST=postgres
+      - OPENFLAG_REDIS_MASTER_ADDRESS=redis:6379
+      - OPENFLAG_REDIS_SLAVE_ADDRESS=redis:6379
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - 7677:7677
