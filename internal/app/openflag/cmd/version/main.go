@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Register register version command for openflag binary.
 func Register(root *cobra.Command) {
 	root.AddCommand(
 		&cobra.Command{

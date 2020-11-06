@@ -20,6 +20,7 @@ var (
 	Date string
 )
 
+// Validate validates the version variables.
 func Validate() error {
 	missingFields := []string{}
 
@@ -38,6 +39,7 @@ func Validate() error {
 	return errors.New("missing build flags")
 }
 
+// Middleware is an echo middleware for adding version variables to the response header of OpenFlag.
 func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if err := Validate(); err == nil {
@@ -51,6 +53,7 @@ func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+// String generates a string for representing the version of OpenFlag.
 func String() string {
 	return fmt.Sprintf(
 		"AppVersion = %s, VCSRef = %s, BuildVersion = %s, BuildDate = %s",

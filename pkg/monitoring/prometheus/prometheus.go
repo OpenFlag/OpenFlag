@@ -7,12 +7,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Config represents a struct for starting the Prometheus monitoring server configurations.
 type Config struct {
 	Enabled bool   `mapstructure:"enabled"`
 	Address string `mapstructure:"address" validate:"required"`
 }
 
-func StartPrometheusServer(cfg Config) {
+// StartServer starts the Prometheus metric server for scraping the metrics data.
+func StartServer(cfg Config) {
 	if cfg.Enabled {
 		metricServer := http.NewServeMux()
 		metricServer.Handle("/metrics", promhttp.Handler())

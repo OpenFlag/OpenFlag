@@ -47,6 +47,7 @@ func main(path string, cfg postgres.Config) error {
 	return nil
 }
 
+// Register register migrate command for openflag binary.
 func Register(root *cobra.Command, cfg config.Config) {
 	cmd := &cobra.Command{
 		Use:   "migrate",

@@ -8,12 +8,14 @@ import (
 )
 
 const (
+	// Namespace is the Prometheus metric namespace variable.
 	Namespace = "openflag"
 
 	labelDbName    = "db_name"
 	labelRedisName = "redis_name"
 )
 
+// Metrics keeps global Prometheus metrics.
 type Metrics struct {
 	DbConnectionStatus    *prometheus.GaugeVec
 	RedisConnectionStatus *prometheus.GaugeVec
@@ -35,6 +37,7 @@ var (
 	}
 )
 
+// ReportDbStatus reports status of database connection to the Prometheus.
 func ReportDbStatus(db *gorm.DB, dbName string) {
 	// 1 means query is ok and 0 means query is not ok
 	status := 1
@@ -45,6 +48,7 @@ func ReportDbStatus(db *gorm.DB, dbName string) {
 	metrics.DbConnectionStatus.With(prometheus.Labels{labelDbName: dbName}).Set(float64(status))
 }
 
+// ReportRedisStatus reports status of redis connection to the Prometheus.
 func ReportRedisStatus(cmdable redis.Cmdable, redisName string) {
 	// 1 means ping is ok and 0 means ping is not ok
 	status := 1

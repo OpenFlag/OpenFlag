@@ -6,6 +6,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+// AccessLogger represents a struct for echo access logger middleware configurations.
 type AccessLogger struct {
 	Enabled    bool   `mapstructure:"enabled"`
 	Path       string `mapstructure:"path" validate:"required"`
@@ -15,6 +16,7 @@ type AccessLogger struct {
 	MaxAge     int    `mapstructure:"max-age" validate:"required"`
 }
 
+// LoggerMiddleware is an echo middleware for access logging.
 func LoggerMiddleware(cfg AccessLogger) echo.MiddlewareFunc {
 	if !cfg.Enabled {
 		return func(next echo.HandlerFunc) echo.HandlerFunc {

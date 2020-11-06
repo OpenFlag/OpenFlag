@@ -84,7 +84,7 @@ func main(cfg config.Config) {
 		}
 	}()
 
-	go prometheus.StartPrometheusServer(cfg.Monitoring.Prometheus)
+	go prometheus.StartServer(cfg.Monitoring.Prometheus)
 
 	logrus.Info("start openflag server!")
 
@@ -102,6 +102,7 @@ func main(cfg config.Config) {
 	}
 }
 
+// Register register server command for openflag binary.
 func Register(root *cobra.Command, cfg config.Config) {
 	root.AddCommand(
 		&cobra.Command{

@@ -15,8 +15,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const ExitFailure = 1
+const exitFailure = 1
 
+// Execute executes the main functionality of openflag binary.
 func Execute() {
 	cfg := config.Init()
 
@@ -37,6 +38,6 @@ func Execute() {
 
 	if err := root.Execute(); err != nil {
 		logrus.Errorf("failed to execute root command: %s", err.Error())
-		os.Exit(ExitFailure)
+		os.Exit(exitFailure)
 	}
 }

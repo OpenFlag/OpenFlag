@@ -15,6 +15,7 @@ const (
 	maxAttempts         = 60
 )
 
+// Config represents a struct for creating PostgreSQL connection configurations.
 type Config struct {
 	Host               string        `mapstructure:"host" validate:"required"`
 	Port               int           `mapstructure:"port" validate:"required"`
@@ -27,6 +28,7 @@ type Config struct {
 	MaxIdleConnections int           `mapstructure:"max-idle-connections"`
 }
 
+// Create creates a PostgreSQL connection.
 func Create(cfg Config) (*gorm.DB, error) {
 	url := fmt.Sprintf(
 		"host=%s port=%d user=%s dbname=%s password=%s connect_timeout=%d sslmode=disable",
@@ -46,6 +48,7 @@ func Create(cfg Config) (*gorm.DB, error) {
 	return pgDb, nil
 }
 
+// WithRetry provides functionality for having retry for connecting to PostgreSQL.
 func WithRetry(fn func(cfg Config) (*gorm.DB, error), cfg Config) *gorm.DB {
 	for i := 0; i < maxAttempts; i++ {
 		pgDb, err := fn(cfg)

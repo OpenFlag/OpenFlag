@@ -9,6 +9,7 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
+// Init initializes a config struct using default, file, and environment variables.
 func Init(path string, cfg interface{}, defaultConfig string, prefix string) interface{} {
 	v := viper.New()
 	v.SetConfigType("yaml")

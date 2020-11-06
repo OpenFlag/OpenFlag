@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
+// Config represents a struct for creating Redis connection configurations.
 type Config struct {
 	Address         string        `mapstructure:"address" validate:"required"`
 	Password        string        `mapstructure:"password"`
@@ -21,6 +22,7 @@ type Config struct {
 	MaxRetryBackoff time.Duration `mapstructure:"max-retry-backoff"`
 }
 
+// Create creates a Redis connection.
 func Create(cfg Config) (client redis.Cmdable, closeFunc func() error) {
 	result := redis.NewClient(
 		&redis.Options{

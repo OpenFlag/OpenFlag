@@ -12,12 +12,13 @@ import (
 )
 
 const (
-	LabelEcoCode   = "code"
-	LabelEcoMethod = "method"
-	LabelEcoHost   = "host"
-	LabelEcoURL    = "url"
+	labelEcoCode   = "code"
+	labelEcoMethod = "method"
+	labelEcoHost   = "host"
+	labelEcoURL    = "url"
 )
 
+// Metrics keeps echo Prometheus metrics.
 type Metrics struct {
 	ReqQPS      *prometheus.CounterVec
 	ReqDuration *prometheus.HistogramVec
@@ -30,13 +31,13 @@ var (
 			Namespace: metric.Namespace,
 			Name:      "http_request_total",
 			Help:      "The total http requests received",
-		}, []string{LabelEcoCode, LabelEcoMethod, LabelEcoHost, LabelEcoURL}),
+		}, []string{labelEcoCode, labelEcoMethod, labelEcoHost, labelEcoURL}),
 
 		ReqDuration: promauto.NewHistogramVec(prometheus.HistogramOpts{
 			Namespace: metric.Namespace,
 			Name:      "http_request_duration_seconds",
 			Help:      "A histogram of latencies for requests received",
-		}, []string{LabelEcoCode, LabelEcoMethod, LabelEcoHost, LabelEcoURL}),
+		}, []string{labelEcoCode, labelEcoMethod, labelEcoHost, labelEcoURL}),
 	}
 )
 

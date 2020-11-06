@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// New creates a new application router.
 func New(cfg config.Config) *echo.Echo {
 	e := echo.New()
 

@@ -9,6 +9,7 @@ import (
 	"github.com/snowzach/rotatefilehook"
 )
 
+// AppLogger represents a struct for application logger configurations.
 type AppLogger struct {
 	Level      string `mapstructure:"level" validate:"required"`
 	Path       string `mapstructure:"path" validate:"required"`
@@ -18,6 +19,7 @@ type AppLogger struct {
 	StdOut     bool   `mapstructure:"stdout"`
 }
 
+// SetupLogger setup application logger.
 func SetupLogger(cfg AppLogger) {
 	logLevel, err := logrus.ParseLevel(cfg.Level)
 	if err != nil {
