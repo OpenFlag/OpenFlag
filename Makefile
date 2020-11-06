@@ -8,7 +8,7 @@ export APP_VERSION=v0.1.0
 
 export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
 
-export LDFLAGS="-w -s -X $(BUILD_INFO_PKG).AppVersion=$(APP_VERSION) -X $(BUILD_INFO_PKG).Date=$$(TZ=Asia/Tehran date '+%FT%T') -X $(BUILD_INFO_PKG).BuildVersion=$$(git rev-parse HEAD | cut -c 1-8) -X $(BUILD_INFO_PKG).VCSRef=$$(git rev-parse --abbrev-ref HEAD)"
+export LDFLAGS="-w -s -X '$(BUILD_INFO_PKG).AppVersion=$(APP_VERSION)' -X '$(BUILD_INFO_PKG).Date=$$(date)' -X '$(BUILD_INFO_PKG).BuildVersion=$$(git rev-parse HEAD | cut -c 1-8)' -X '$(BUILD_INFO_PKG).VCSRef=$$(git rev-parse --abbrev-ref HEAD)'"
 
 all: format lint build
 

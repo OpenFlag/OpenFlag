@@ -56,7 +56,10 @@ func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 // String generates a string for representing the version of OpenFlag.
 func String() string {
 	return fmt.Sprintf(
-		"AppVersion = %s, VCSRef = %s, BuildVersion = %s, BuildDate = %s",
+		"AppVersion = %s\n"+
+			"VCSRef = %s\n"+
+			"BuildVersion = %s\n"+
+			"BuildDate = %s",
 		AppVersion, VCSRef, BuildVersion, Date,
 	)
 }
