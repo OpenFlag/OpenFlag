@@ -7,8 +7,12 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
-ARG GO_PROXY
-ENV GOPROXY=${GO_PROXY}
+ARG BUILD_GO_PROXY
+ENV GOPROXY=${BUILD_GO_PROXY}
+
+ARG BUILD_HTTP_PROXY
+ENV HTTP_PROXY=${BUILD_HTTP_PROXY}
+ENV HTTPS_PROXY=${BUILD_HTTP_PROXY}
 
 RUN mkdir -p /src
 
@@ -29,6 +33,10 @@ RUN make install && \
 #
 FROM node:alpine AS openflag-ui
 
+ARG BUILD_HTTP_PROXY
+ENV HTTP_PROXY=${BUILD_HTTP_PROXY}
+ENV HTTPS_PROXY=${BUILD_HTTP_PROXY}
+
 WORKDIR /usr/src/browser/openflag-ui
 
 COPY browser/openflag-ui/package.json browser/openflag-ui/package-lock.json ./
@@ -44,16 +52,10 @@ RUN npm run build --prod
 #
 FROM alpine:3.9
 
-ENV TZ=Asia/Tehran \
-    PATH="/app:${PATH}"
+ENV PATH="/app:${PATH}"
 
 RUN apk add --update --no-cache \
-      tzdata \
-      ca-certificates \
-      bash \
-    && \
-    cp --remove-destination /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo "${TZ}" > /etc/timezone && \
+    ca-certificates bash && \
     mkdir -p /var/log && \
     chgrp -R 0 /var/log && \
     chmod -R g=u /var/log
