@@ -1,14 +1,14 @@
 #@IgnoreInspection BashAddShebang
 
+export ROOT=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+
 export APP=openflag
 
-export AppVersion=0.1.0
-
-export ROOT=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export APP_VERSION=v0.1.0
 
 export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
 
-export LDFLAGS="-w -s -X $(BUILD_INFO_PKG).AppVersion=$(AppVersion) -X $(BUILD_INFO_PKG).Date=$$(TZ=Asia/Tehran date '+%FT%T') -X $(BUILD_INFO_PKG).BuildVersion=$$(git rev-parse HEAD | cut -c 1-8) -X $(BUILD_INFO_PKG).VCSRef=$$(git rev-parse --abbrev-ref HEAD)"
+export LDFLAGS="-w -s -X $(BUILD_INFO_PKG).AppVersion=$(APP_VERSION) -X $(BUILD_INFO_PKG).Date=$$(TZ=Asia/Tehran date '+%FT%T') -X $(BUILD_INFO_PKG).BuildVersion=$$(git rev-parse HEAD | cut -c 1-8) -X $(BUILD_INFO_PKG).VCSRef=$$(git rev-parse --abbrev-ref HEAD)"
 
 all: format lint build
 
@@ -22,10 +22,13 @@ run-server:
 	go run -ldflags $(LDFLAGS) ./cmd/openflag server
 
 build:
-	CGO_ENABLED=1 go build -ldflags $(LDFLAGS)  ./cmd/openflag
+	go build -ldflags $(LDFLAGS)  ./cmd/openflag
 
 install:
-	CGO_ENABLED=1 go install -ldflags $(LDFLAGS) ./cmd/openflag
+	go install -ldflags $(LDFLAGS) ./cmd/openflag
+
+release:
+	./scripts/release.sh $(APP) $(APP_VERSION) $(LDFLAGS)
 
 check-formatter:
 	which goimports || GO111MODULE=off go get -u golang.org/x/tools/cmd/goimports
