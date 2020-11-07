@@ -12,7 +12,7 @@ OpenFlag is an open source feature flagging, A/B testing and dynamic configurati
 
 # Documentation
 
-You can find our documentation in <a href="https://openflag.github.io">here</a>.
+You can find documentation in <a href="https://openflag.github.io">here</a>.
 
 ### Supported Rules
 
