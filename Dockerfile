@@ -70,4 +70,4 @@ COPY --from=openflag-backend /src/internal/app/openflag/migrations /app/migratio
 
 COPY --from=openflag-ui /usr/src/browser/openflag-ui /app/browser/openflag-ui
 
-CMD ['run.sh']
+CMD /app/run.sh

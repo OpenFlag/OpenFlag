@@ -76,7 +76,7 @@ func Register(root *cobra.Command, cfg config.Config) {
 				return err
 			}
 
-			cmd.Println("migrations ran successfully")
+			logrus.Info("migrations ran successfully")
 
 			return nil
 		},
