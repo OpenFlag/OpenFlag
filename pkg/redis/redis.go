@@ -6,9 +6,8 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// Config represents a struct for creating Redis connection configurations.
-type Config struct {
-	Address         string        `mapstructure:"address" validate:"required"`
+// Options represents a struct for creating Redis connection configurations.
+type Options struct {
 	Password        string        `mapstructure:"password"`
 	PoolSize        int           `mapstructure:"pool-size"`
 	MinIdleConns    int           `mapstructure:"min-idle-conns"`
@@ -23,21 +22,21 @@ type Config struct {
 }
 
 // Create creates a Redis connection.
-func Create(cfg Config) (client redis.Cmdable, closeFunc func() error) {
+func Create(address string, options Options) (client redis.Cmdable, closeFunc func() error) {
 	result := redis.NewClient(
 		&redis.Options{
-			Addr:            cfg.Address,
-			Password:        cfg.Password,
-			PoolSize:        cfg.PoolSize,
-			DialTimeout:     cfg.DialTimeout,
-			ReadTimeout:     cfg.ReadTimeout,
-			WriteTimeout:    cfg.WriteTimeout,
-			PoolTimeout:     cfg.PoolTimeout,
-			IdleTimeout:     cfg.IdleTimeout,
-			MinIdleConns:    cfg.MinIdleConns,
-			MaxRetries:      cfg.MaxRetries,
-			MinRetryBackoff: cfg.MinRetryBackoff,
-			MaxRetryBackoff: cfg.MaxRetryBackoff,
+			Addr:            address,
+			Password:        options.Password,
+			PoolSize:        options.PoolSize,
+			DialTimeout:     options.DialTimeout,
+			ReadTimeout:     options.ReadTimeout,
+			WriteTimeout:    options.WriteTimeout,
+			PoolTimeout:     options.PoolTimeout,
+			IdleTimeout:     options.IdleTimeout,
+			MinIdleConns:    options.MinIdleConns,
+			MaxRetries:      options.MaxRetries,
+			MinRetryBackoff: options.MinRetryBackoff,
+			MaxRetryBackoff: options.MaxRetryBackoff,
 		},
 	)
 

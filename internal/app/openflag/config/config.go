@@ -51,8 +51,9 @@ type (
 
 	// Redis represents Redis configuration struct.
 	Redis struct {
-		Master redis.Config `mapstructure:"master" validate:"required"`
-		Slave  redis.Config `mapstructure:"slave" validate:"required"`
+		MasterAddress string        `mapstructure:"master-address" validate:"required"`
+		SlaveAddress  string        `mapstructure:"slave-address" validate:"required"`
+		Options       redis.Options `mapstructure:"options"`
 	}
 
 	// Monitoring represents monitoring configuration struct.
