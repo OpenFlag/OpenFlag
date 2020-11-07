@@ -7,13 +7,13 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/OpenFlag/OpenFlag/pkg/database"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/metric"
 	"github.com/OpenFlag/OpenFlag/pkg/monitoring/prometheus"
 	"github.com/carlescere/scheduler"
 
 	"github.com/OpenFlag/OpenFlag/pkg/redis"
-
-	"github.com/OpenFlag/OpenFlag/pkg/postgres"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/router"
 	"github.com/labstack/echo/v4"
@@ -31,16 +31,18 @@ const (
 func main(cfg config.Config) {
 	e := router.New(cfg)
 
-	pgDbMaster := postgres.WithRetry(postgres.Create, cfg.Postgres.Master)
-	pgDbSlave := postgres.WithRetry(postgres.Create, cfg.Postgres.Slave)
+	dbCfg := cfg.Database
+
+	dbMaster := database.WithRetry(database.Create, dbCfg.Driver, dbCfg.MasterConnStr, dbCfg.Options)
+	dbSlave := database.WithRetry(database.Create, dbCfg.Driver, dbCfg.SlaveConnStr, dbCfg.Options)
 
 	defer func() {
-		if err := pgDbMaster.Close(); err != nil {
-			logrus.Errorf("postgres master connection close error: %s", err.Error())
+		if err := dbMaster.Close(); err != nil {
+			logrus.Errorf("database master connection close error: %s", err.Error())
 		}
 
-		if err := pgDbSlave.Close(); err != nil {
-			logrus.Errorf("postgres slave connection close error: %s", err.Error())
+		if err := dbSlave.Close(); err != nil {
+			logrus.Errorf("database slave connection close error: %s", err.Error())
 		}
 	}()
 
@@ -58,8 +60,8 @@ func main(cfg config.Config) {
 	}()
 
 	_, err := scheduler.Every(healthCheckInterval).Seconds().Run(func() {
-		metric.ReportDbStatus(pgDbMaster, "pg_master")
-		metric.ReportDbStatus(pgDbMaster, "pg_slave")
+		metric.ReportDbStatus(dbMaster, "database_master")
+		metric.ReportDbStatus(dbMaster, "database_slave")
 		metric.ReportRedisStatus(redisMasterClient, "redis_master")
 		metric.ReportRedisStatus(redisSlaveClient, "redis_slave")
 	})

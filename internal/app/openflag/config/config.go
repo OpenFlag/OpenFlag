@@ -3,8 +3,9 @@ package config
 import (
 	"time"
 
+	"github.com/OpenFlag/OpenFlag/pkg/database"
+
 	"github.com/OpenFlag/OpenFlag/pkg/monitoring/prometheus"
-	"github.com/OpenFlag/OpenFlag/pkg/postgres"
 	"github.com/OpenFlag/OpenFlag/pkg/redis"
 
 	"github.com/OpenFlag/OpenFlag/pkg/config"
@@ -21,7 +22,7 @@ type (
 	Config struct {
 		Logger     Logger     `mapstructure:"logger" validate:"required"`
 		Server     Server     `mapstructure:"server" validate:"required"`
-		Postgres   Postgres   `mapstructure:"postgres" validate:"required"`
+		Database   Database   `mapstructure:"database" validate:"required"`
 		Redis      Redis      `mapstructure:"redis" validate:"required"`
 		Monitoring Monitoring `mapstructure:"monitoring" validate:"required"`
 	}
@@ -40,10 +41,12 @@ type (
 		GracefulTimeout time.Duration `mapstructure:"graceful-timeout" validate:"required"`
 	}
 
-	// Postgres represents PostgreSQL configuration struct.
-	Postgres struct {
-		Master postgres.Config `mapstructure:"master" validate:"required"`
-		Slave  postgres.Config `mapstructure:"slave" validate:"required"`
+	// Database represents database configuration struct.
+	Database struct {
+		Driver        string           `mapstructure:"driver" validate:"required"`
+		MasterConnStr string           `mapstructure:"master-conn-string" validate:"required"`
+		SlaveConnStr  string           `mapstructure:"slave-conn-string" validate:"required"`
+		Options       database.Options `mapstructure:"options" validate:"required"`
 	}
 
 	// Redis represents Redis configuration struct.
