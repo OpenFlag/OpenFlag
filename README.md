@@ -6,7 +6,33 @@
 [![Go Report][7]][8]
 [![PkgGoDev][9]][10]
 
+# Introduction
+
 OpenFlag is an open source feature flagging, A/B testing and dynamic configuration service.
+
+# Documentation
+
+<a href="https://openflag.github.io">Documentation</a>
+
+### Supported Rules
+
+* `contains`
+* `excludes`
+* `intersection`
+* `match`
+* `random`
+* `rollout`
+* `union`
+* `<`
+* `<=`
+* `>`
+* `>=`
+* `!`
+* `%`
+
+### TODO
+
+* Support custom rules using **pluggable** languages.
 
 [1]: https://img.shields.io/drone/build/OpenFlag/OpenFlag.svg?style=flat-square&logo=drone
 [2]: https://cloud.drone.io/OpenFlag/OpenFlag
