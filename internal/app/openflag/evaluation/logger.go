@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/google/martian/log"
+	"github.com/sirupsen/logrus"
+
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
@@ -51,11 +52,11 @@ func (l Logger) Log(result interface{}) {
 
 	output, err := json.Marshal(result)
 	if err != nil {
-		log.Errorf("failed to marshal evaluation result to json: %s", err.Error())
+		logrus.Errorf("failed to marshal evaluation result to json: %s", err.Error())
 	}
 
 	_, err = l.logWriter.Write(output)
 	if err != nil {
-		log.Errorf("failed to write evaluation result: %s", err.Error())
+		logrus.Errorf("failed to write evaluation result: %s", err.Error())
 	}
 }
