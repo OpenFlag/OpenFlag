@@ -8,12 +8,12 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang-migrate/migrate/v4 v4.13.0
+	github.com/google/martian v2.1.0+incompatible
 	github.com/jinzhu/gorm v1.9.16
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/prometheus/client_golang v0.9.3
 	github.com/sirupsen/logrus v1.7.0
-	github.com/snowzach/rotatefilehook v0.0.0-20180327172521-2f64f265f58c
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.1
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect

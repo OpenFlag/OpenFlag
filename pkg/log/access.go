@@ -32,6 +32,7 @@ func LoggerMiddleware(cfg AccessLogger) echo.MiddlewareFunc {
 			MaxSize:    cfg.MaxSize,
 			MaxBackups: cfg.MaxBackups,
 			MaxAge:     cfg.MaxAge,
+			LocalTime:  true,
 			Compress:   true,
 		},
 		Format: cfg.Format,

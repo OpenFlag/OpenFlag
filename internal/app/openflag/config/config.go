@@ -3,6 +3,8 @@ package config
 import (
 	"time"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/evaluation"
+
 	"github.com/OpenFlag/OpenFlag/pkg/database"
 
 	"github.com/OpenFlag/OpenFlag/pkg/monitoring/prometheus"
@@ -29,8 +31,9 @@ type (
 
 	// Logger represents logger configuration struct.
 	Logger struct {
-		AccessLogger log.AccessLogger `mapstructure:"access" validate:"required"`
-		AppLogger    log.AppLogger    `mapstructure:"app" validate:"required"`
+		AccessLogger log.AccessLogger        `mapstructure:"access" validate:"required"`
+		AppLogger    log.AppLogger           `mapstructure:"app" validate:"required"`
+		Evaluation   evaluation.LoggerConfig `mapstructure:"evaluation" validate:"required"`
 	}
 
 	// Server represents server configuration struct.

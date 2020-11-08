@@ -18,6 +18,12 @@ logger:
     max-backups: 7
     max-age: 7
     stdout: true
+  evaluation:
+    enabled: true
+    path: "/var/log/openflag/evaluation.log"
+    max-size: 1024
+    max-backups: 7
+    max-age: 7
 
 server:
   address: :7677

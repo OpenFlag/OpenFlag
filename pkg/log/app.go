@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/snowzach/rotatefilehook"
 )
 
 // AppLogger represents a struct for application logger configurations.
@@ -31,11 +30,13 @@ func SetupLogger(cfg AppLogger) {
 	if !cfg.StdOut {
 		logrus.SetOutput(ioutil.Discard)
 
-		rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
+		logrus.AddHook(NewRotateFileHook(RotateFileConfig{
 			Filename:   cfg.Path,
 			MaxSize:    cfg.MaxSize,
 			MaxBackups: cfg.MaxBackups,
 			MaxAge:     cfg.MaxAge,
+			LocalTime:  true,
+			Compress:   true,
 			Level:      logLevel,
 			Formatter: &logrus.JSONFormatter{
 				TimestampFormat:  time.RFC3339,
@@ -45,12 +46,7 @@ func SetupLogger(cfg AppLogger) {
 					logrus.FieldKeyTime: "timestamp",
 				},
 			},
-		})
-		if err != nil {
-			logrus.Fatalf("failed to create log rotation: %s", err.Error())
-		}
-
-		logrus.AddHook(rotateFileHook)
+		}))
 	} else {
 		logrus.SetOutput(os.Stdout)
 
