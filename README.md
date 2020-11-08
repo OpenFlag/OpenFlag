@@ -14,7 +14,7 @@ OpenFlag is an open source feature flagging, A/B testing and dynamic configurati
 
 You can find documentation in <a href="https://openflag.github.io">here</a>.
 
-### Supported Rules
+### Supported Constraints
 
 * `contains`
 * `excludes`
@@ -32,7 +32,7 @@ You can find documentation in <a href="https://openflag.github.io">here</a>.
 
 ### TODO
 
-* Support custom rules using **pluggable** languages.
+* Support custom constraints using **pluggable** languages.
 
 [1]: https://img.shields.io/drone/build/OpenFlag/OpenFlag.svg?style=flat-square&logo=drone
 [2]: https://cloud.drone.io/OpenFlag/OpenFlag

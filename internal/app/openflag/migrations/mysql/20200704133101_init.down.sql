@@ -1,1 +1,1 @@
-drop table if exists rules;
+drop table if exists flags;

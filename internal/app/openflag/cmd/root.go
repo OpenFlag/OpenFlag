@@ -15,7 +15,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const exitFailure = 1
+const (
+	exitFailure = 1
+)
 
 // Execute executes the main functionality of openflag binary.
 func Execute() {
