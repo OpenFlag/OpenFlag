@@ -8,27 +8,13 @@
 
 # Introduction
 
-OpenFlag is an open source feature flagging, A/B testing and dynamic configuration service.
+OpenFlag is an open source feature flagging, A/B testing and dynamic configuration service. 
+It delivers the right experience to the right entity and monitors the impact.
+It has clear swagger REST APIs for flags management and flag evaluation.
 
-# Documentation
+## Documentation
 
 You can find documentation in <a href="https://openflag.github.io">here</a>.
-
-### Supported Constraints
-
-* `contains`
-* `excludes`
-* `intersection`
-* `match`
-* `random`
-* `rollout`
-* `union`
-* `<`
-* `<=`
-* `>`
-* `>=`
-* `!`
-* `%`
 
 ### TODO
 

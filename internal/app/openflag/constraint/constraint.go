@@ -1,0 +1,116 @@
+package constraint
+
+import (
+	"encoding/json"
+	"errors"
+
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+)
+
+// Represents constraint names.
+const (
+	ContainsConstraintName        = "contains"
+	ExcludesConstraintName        = "excludes"
+	IntersectionConstraintName    = "intersection"
+	MatchConstraintName           = "match"
+	RandomConstraintName          = "random"
+	RolloutConstraintName         = "rollout"
+	UnionConstraintName           = "union"
+	LessThanConstraintName        = "<"
+	LessThanEqualConstraintName   = "<="
+	BiggerThanConstraintName      = ">"
+	BiggerThanEqualConstraintName = ">="
+	NotConstraintName             = "!"
+	ModConstraintName             = "%"
+)
+
+var (
+	// ErrInvalidConstraintName represents an error for returning when the given name for a constraint not found.
+	ErrInvalidConstraintName = errors.New("invalid constraint name")
+)
+
+// Constraint represents an interface for defining OpenFlag Constraints.
+type Constraint interface {
+	// Name returns the constraint name.
+	Name() string
+	// Validate validates the constraint parameters.
+	Validate() error
+	// Initialize Initializes the constraint.
+	Initialize() error
+	// Evaluate evaluates an entity in a constraint.
+	Evaluate(model.Entity) bool
+}
+
+// Find finds the constraint using the given name.
+func Find(name string) (Constraint, error) {
+	switch name {
+	case ContainsConstraintName:
+		return &ContainsConstraint{}, nil
+	case ExcludesConstraintName:
+		return &ExcludesConstraint{}, nil
+	case IntersectionConstraintName:
+		return &IntersectionConstraint{}, nil
+	case MatchConstraintName:
+		return &MatchConstraint{}, nil
+	case RandomConstraintName:
+		return &RandomConstraint{}, nil
+	case RolloutConstraintName:
+		return &RolloutConstraint{}, nil
+	case UnionConstraintName:
+		return &UnionConstraint{}, nil
+	case LessThanConstraintName:
+		return &LessThanConstraint{}, nil
+	case LessThanEqualConstraintName:
+		return &LessThanEqualConstraint{}, nil
+	case BiggerThanConstraintName:
+		return &BiggerThanConstraint{}, nil
+	case BiggerThanEqualConstraintName:
+		return &BiggerThanEqualConstraint{}, nil
+	case NotConstraintName:
+		return &NotConstraint{}, nil
+	case ModConstraintName:
+		return &ModConstraint{}, nil
+	default:
+		return nil, ErrInvalidConstraintName
+	}
+}
+
+// Validate validates the constraint using the given name and parameters.
+func Validate(name string, parameters json.RawMessage) error {
+	c, err := Find(name)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(parameters, c); err != nil {
+		return err
+	}
+
+	if err := c.Initialize(); err != nil {
+		return err
+	}
+
+	return c.Validate()
+}
+
+// New create a new constraint using the given name and parameters.
+func New(name string, parameters json.RawMessage) (Constraint, error) {
+	c, err := Find(name)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(parameters, c); err != nil {
+		return nil, err
+	}
+
+	if err := c.Initialize(); err != nil {
+		return nil, err
+	}
+
+	if err := c.Validate(); err != nil {
+		return nil, err
+	}
+
+	return c, nil
+}
