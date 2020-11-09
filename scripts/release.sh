@@ -16,6 +16,7 @@ function release {
     mkdir ${FOLDER_NAME}
 
     mv ${APP} ${FOLDER_NAME}
+    cp -r internal/app/${APP}/migrations ${FOLDER_NAME}
     cp LICENSE ${FOLDER_NAME}
     cp README.md ${FOLDER_NAME}
     cp config.example.yaml ${FOLDER_NAME}/config.yaml
