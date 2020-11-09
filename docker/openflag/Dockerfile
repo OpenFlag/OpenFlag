@@ -19,7 +19,7 @@ COPY . /src
 
 RUN make install && \
     mkdir -p /app && \
-    cp -r $GOPATH/bin/openflag /app/
+    cp -r ${GOPATH}/bin/openflag /app/
 
 #
 # 2. OpenFlag UI Container
