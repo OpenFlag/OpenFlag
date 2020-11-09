@@ -40,15 +40,14 @@ func main(cfg config.Database) error {
 func Register(root *cobra.Command, cfg config.Config) {
 	cmd := &cobra.Command{
 		Use:   "migrate",
-		Short: "Provides database migration functionality",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Short: "Run database migrations",
+		Run: func(cmd *cobra.Command, args []string) {
 			if err := main(cfg.Database); err != nil {
-				return err
+				cmd.PrintErrf("failed to run database migrations: %s\n", err.Error())
+				return
 			}
 
 			cmd.Println("migrations ran successfully")
-
-			return nil
 		},
 	}
 

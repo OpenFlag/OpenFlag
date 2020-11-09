@@ -12,7 +12,7 @@ logger:
     max-backups: 7
     max-age: 7
   app:
-    level: debug
+    level: info
     path: "/var/log/openflag/app.log"
     max-size: 1024
     max-backups: 7
