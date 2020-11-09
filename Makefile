@@ -16,7 +16,7 @@ run-version:
 	go run -ldflags $(LDFLAGS) ./cmd/openflag version
 
 run-migrate:
-	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate --path ./internal/app/openflag/migrations
+	go run -ldflags $(LDFLAGS) ./cmd/openflag migrate
 
 run-server:
 	go run -ldflags $(LDFLAGS) ./cmd/openflag server
@@ -42,6 +42,13 @@ check-linter:
 
 lint: check-linter
 	golangci-lint run $(ROOT)/...
+
+check-go-bindata:
+	which go-bindata || GO111MODULE=off go get -u github.com/jteeuwen/go-bindata/...
+
+bindata: check-go-bindata
+	cd internal/app/openflag/migrations/postgres && go-bindata -pkg postgres -o ./../bindata/postgres/bindata.go .
+	cd internal/app/openflag/migrations/mysql && go-bindata -pkg mysql -o ./../bindata/mysql/bindata.go .
 
 test:
 	go test -v -race -p 1 ./...

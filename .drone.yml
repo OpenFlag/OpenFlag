@@ -26,6 +26,7 @@ steps:
   - name: build
     image: plugins/docker
     settings:
+      dockerfile: docker/openflag/Dockerfile
       repo: openflag/openflag
       tags:
         - latest

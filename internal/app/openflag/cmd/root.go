@@ -31,7 +31,7 @@ func Execute() {
 
 	var root = &cobra.Command{
 		Use:   "openflag",
-		Short: "OpenFlag is an open source feature flagging, A/B testing and dynamic configuration service.",
+		Short: "OpenFlag is an open-source feature flagging, A/B testing, and dynamic configuration service.",
 	}
 
 	versionCmd.Register(root)

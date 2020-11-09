@@ -7,13 +7,6 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
-ARG BUILD_GO_PROXY
-ENV GOPROXY=${BUILD_GO_PROXY}
-
-ARG BUILD_HTTP_PROXY
-ENV HTTP_PROXY=${BUILD_HTTP_PROXY}
-ENV HTTPS_PROXY=${BUILD_HTTP_PROXY}
-
 RUN mkdir -p /src
 
 RUN apk add build-base git
@@ -32,10 +25,6 @@ RUN make install && \
 # 2. OpenFlag UI Container
 #
 FROM node:alpine AS openflag-ui
-
-ARG BUILD_HTTP_PROXY
-ENV HTTP_PROXY=${BUILD_HTTP_PROXY}
-ENV HTTPS_PROXY=${BUILD_HTTP_PROXY}
 
 WORKDIR /usr/src/browser/openflag-ui
 
@@ -64,9 +53,7 @@ WORKDIR /app
 
 COPY --from=openflag-backend /app /app/
 
-COPY --from=openflag-backend /src/docker/run.sh /app/run.sh
-
-COPY --from=openflag-backend /src/internal/app/openflag/migrations /app/migrations
+COPY --from=openflag-backend /src/docker/openflag/run.sh /app/run.sh
 
 COPY --from=openflag-ui /usr/src/browser/openflag-ui /app/browser/openflag-ui
 

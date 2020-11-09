@@ -4,12 +4,17 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/mysql"    // MySQL driver should have blank import
 	_ "github.com/golang-migrate/migrate/v4/database/postgres" // PostgreSQL driver should have blank import
-	_ "github.com/golang-migrate/migrate/v4/source/file"       // Imported for its side effects
+	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 )
 
 // Migrate provides a method for database migration.
-func Migrate(driver string, connStr string, path string) error {
-	m, err := migrate.New("file://"+path+"/"+driver, connStr)
+func Migrate(source *bindata.AssetSource, connStr string) error {
+	driver, err := bindata.WithInstance(source)
+	if err != nil {
+		return err
+	}
+
+	m, err := migrate.NewWithSourceInstance("go-bindata", driver, connStr)
 	if err != nil {
 		return err
 	}
