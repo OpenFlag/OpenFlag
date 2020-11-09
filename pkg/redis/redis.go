@@ -8,6 +8,8 @@ import (
 
 // Options represents a struct for creating Redis connection configurations.
 type Options struct {
+	Sentinel        bool          `mapstructure:"sentinel"`
+	MasterName      string        `mapstructure:"master-name"`
 	Password        string        `mapstructure:"password"`
 	PoolSize        int           `mapstructure:"pool-size"`
 	MinIdleConns    int           `mapstructure:"min-idle-conns"`
@@ -22,23 +24,44 @@ type Options struct {
 }
 
 // Create creates a Redis connection.
-func Create(address string, options Options) (client redis.Cmdable, closeFunc func() error) {
-	result := redis.NewClient(
-		&redis.Options{
-			Addr:            address,
-			Password:        options.Password,
-			PoolSize:        options.PoolSize,
-			DialTimeout:     options.DialTimeout,
-			ReadTimeout:     options.ReadTimeout,
-			WriteTimeout:    options.WriteTimeout,
-			PoolTimeout:     options.PoolTimeout,
-			IdleTimeout:     options.IdleTimeout,
-			MinIdleConns:    options.MinIdleConns,
-			MaxRetries:      options.MaxRetries,
-			MinRetryBackoff: options.MinRetryBackoff,
-			MaxRetryBackoff: options.MaxRetryBackoff,
-		},
-	)
+func Create(address string, options Options, master bool) (client redis.Cmdable, closeFunc func() error) {
+	var result *redis.Client
+
+	if master && options.Sentinel {
+		result = redis.NewFailoverClient(
+			&redis.FailoverOptions{
+				SentinelAddrs:   []string{address},
+				MasterName:      options.MasterName,
+				PoolSize:        options.PoolSize,
+				DialTimeout:     options.DialTimeout,
+				ReadTimeout:     options.ReadTimeout,
+				WriteTimeout:    options.WriteTimeout,
+				PoolTimeout:     options.PoolTimeout,
+				IdleTimeout:     options.IdleTimeout,
+				MinIdleConns:    options.MinIdleConns,
+				MaxRetries:      options.MaxRetries,
+				MinRetryBackoff: options.MinRetryBackoff,
+				MaxRetryBackoff: options.MaxRetryBackoff,
+			},
+		)
+	} else {
+		result = redis.NewClient(
+			&redis.Options{
+				Addr:            address,
+				Password:        options.Password,
+				PoolSize:        options.PoolSize,
+				DialTimeout:     options.DialTimeout,
+				ReadTimeout:     options.ReadTimeout,
+				WriteTimeout:    options.WriteTimeout,
+				PoolTimeout:     options.PoolTimeout,
+				IdleTimeout:     options.IdleTimeout,
+				MinIdleConns:    options.MinIdleConns,
+				MaxRetries:      options.MaxRetries,
+				MinRetryBackoff: options.MinRetryBackoff,
+				MaxRetryBackoff: options.MaxRetryBackoff,
+			},
+		)
+	}
 
 	return result, result.Close
 }

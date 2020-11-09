@@ -43,6 +43,8 @@ redis:
   master-address: 127.0.0.1:6379
   slave-address: 127.0.0.1:6379
   options:
+    sentinel: false
+    master-name: mymaster
     password: ""
     pool-size: 0
     min-idle-conns: 20

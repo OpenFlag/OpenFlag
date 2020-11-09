@@ -48,8 +48,8 @@ func main(cfg config.Config) {
 
 	redisCfg := cfg.Redis
 
-	redisMasterClient, redisMasterClose := redis.Create(redisCfg.MasterAddress, redisCfg.Options)
-	redisSlaveClient, redisSlaveClose := redis.Create(redisCfg.SlaveAddress, redisCfg.Options)
+	redisMasterClient, redisMasterClose := redis.Create(redisCfg.MasterAddress, redisCfg.Options, true)
+	redisSlaveClient, redisSlaveClose := redis.Create(redisCfg.SlaveAddress, redisCfg.Options, false)
 
 	defer func() {
 		if err := redisMasterClose(); err != nil {
