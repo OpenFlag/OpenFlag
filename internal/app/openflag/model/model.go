@@ -44,18 +44,18 @@ type (
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
-		Description string     `json:"description" validate:"required"`
-		Constraint  Constraint `json:"constraint" validate:"required"`
-		Variants    []Variant  `json:"variants" validate:"required"`
+		Description     string     `json:"description" validate:"required"`
+		Constraint      Constraint `json:"constraint" validate:"required"`
+		ApplyVariants   []Variant  `json:"apply_variants" validate:"required"`
+		UnApplyVariants []Variant  `json:"un_apply_variants,omitempty"`
 	}
 
 	// Flag represents a feature flag, an experiment, or a configuration.
 	Flag struct {
-		// Tag is a descriptive label attached to a flag for easy lookup and evaluation.
-		Tag            *string   `json:"tag,omitempty"`
-		Description    string    `json:"description" validate:"required"`
-		Flag           string    `json:"flag" validate:"required"`
-		Segments       []Segment `json:"segments" validate:"required"`
-		DefaultVariant *Variant  `json:"default_variant,omitempty"`
+		// Tags is a descriptive label attached to a flag for easy lookup and evaluation.
+		Tags        *json.RawMessage `json:"tags,omitempty"`
+		Description string           `json:"description" validate:"required"`
+		Flag        string           `json:"flag" validate:"required"`
+		Segments    []Segment        `json:"segments" validate:"required"`
 	}
 )
