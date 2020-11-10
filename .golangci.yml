@@ -6,10 +6,14 @@ issues:
     - path: \.go
       linters:
         - stylecheck
-    - path: \_test.go
+    - path: _test\.go
       linters:
+        - dupl
         - funlen
         - gomnd
         - maligned
+    - path: internal/app/openflag/constraint
+      linters:
+        - dupl
 
   exclude-use-default: false
