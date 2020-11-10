@@ -50,7 +50,7 @@ func (b BiggerThanEqualConstraint) Evaluate(e model.Entity) bool {
 	value, err := strconv.ParseFloat(property, 64)
 	if err != nil {
 		logrus.Errorf(
-			"invalid property for bigger than constraint => property: %s, value: %s, err: %s",
+			"invalid property for bigger than equal constraint => property: %s, value: %s, err: %s",
 			b.Property, property, err.Error(),
 		)
 
