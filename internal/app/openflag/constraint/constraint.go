@@ -24,6 +24,11 @@ const (
 	ModConstraintName             = "%"
 )
 
+const (
+	// EntityTypeProperty represents entity type constraint property.
+	EntityTypeProperty = "type"
+)
+
 var (
 	// ErrInvalidConstraintName represents an error for returning when the given name for a constraint not found.
 	ErrInvalidConstraintName = errors.New("invalid constraint name")
@@ -75,14 +80,14 @@ func Find(name string) (Constraint, error) {
 	}
 }
 
-// Validate validates the constraint using the given name and parameters.
-func Validate(name string, parameters json.RawMessage) error {
-	c, err := Find(name)
+// Validate validates the constraint using the given raw constraint.
+func Validate(rawConstraint model.Constraint) error {
+	c, err := Find(rawConstraint.Name)
 	if err != nil {
 		return err
 	}
 
-	if err := json.Unmarshal(parameters, c); err != nil {
+	if err := json.Unmarshal(rawConstraint.Parameters, c); err != nil {
 		return err
 	}
 
@@ -93,14 +98,14 @@ func Validate(name string, parameters json.RawMessage) error {
 	return c.Validate()
 }
 
-// New create a new constraint using the given name and parameters.
-func New(name string, parameters json.RawMessage) (Constraint, error) {
-	c, err := Find(name)
+// New create a new constraint using the given raw constraint.
+func New(rawConstraint model.Constraint) (Constraint, error) {
+	c, err := Find(rawConstraint.Name)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := json.Unmarshal(parameters, c); err != nil {
+	if err := json.Unmarshal(rawConstraint.Parameters, c); err != nil {
 		return nil, err
 	}
 
