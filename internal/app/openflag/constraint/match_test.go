@@ -6,91 +6,93 @@ import (
 	"testing"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
-
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
 	"github.com/stretchr/testify/suite"
 )
 
-type LessThanConstraintSuite struct {
+type MatchConstraintSuite struct {
 	ConstraintSuite
 }
 
-func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
+func (suite *MatchConstraintSuite) TestMatchConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
 			Constraint: model.Constraint{
-				Name: constraint.LessThanConstraintName,
+				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
-					`{"value": 10}`,
+					`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$"}`,
 				),
 			},
 			ErrExpected: false,
 			Entity: model.Entity{
-				ID: 9,
+				ID: 11,
 			},
 			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
 			Constraint: model.Constraint{
-				Name: constraint.LessThanConstraintName,
+				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
-					fmt.Sprintf(`{"value": 10, "property": "%s"}`, constraint.EntityTypeProperty),
+					fmt.Sprintf(
+						`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$", "property": "%s"}`,
+						constraint.EntityTypeProperty,
+					),
 				),
 			},
 			ErrExpected: false,
 			Entity: model.Entity{
-				ID:   11,
-				Type: "9",
+				ID:   8,
+				Type: "hello.how.are.you",
 			},
 			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
 			Constraint: model.Constraint{
-				Name: constraint.LessThanConstraintName,
+				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
-					`{"value": 10, "property": "test"}`,
+					`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$", "property": "test"}`,
 				),
 			},
 			ErrExpected: false,
 			Entity: model.Entity{
-				ID:      11,
+				ID:      8,
 				Type:    "t",
-				Context: map[string]string{"test": "9"},
+				Context: map[string]string{"test": "hello.how.are.you"},
 			},
 			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
 			Constraint: model.Constraint{
-				Name: constraint.LessThanConstraintName,
+				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
-					`{"value": 0, "property": "test"}`,
+					`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$", "property": "test"}`,
 				),
 			},
 			ErrExpected: false,
 			Entity: model.Entity{
 				ID:      8,
 				Type:    "t",
-				Context: map[string]string{"test": "-1"},
+				Context: map[string]string{"test": "Hello, How are you?"},
 			},
-			EvaluateExpected: true,
+			EvaluateExpected: false,
 		},
 		{
-			Name: "successfully create constraint and evaluate 5",
+			Name: "failed to create constraint with invalid parameter",
 			Constraint: model.Constraint{
-				Name: constraint.LessThanConstraintName,
+				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
-					`{"value": 0, "property": "test"}`,
+					`{"property": "test"}`,
 				),
 			},
-			ErrExpected: false,
+			ErrExpected: true,
 			Entity: model.Entity{
 				ID:      8,
 				Type:    "t",
-				Context: map[string]string{"test": "t"},
+				Context: map[string]string{"test": "Hello, How are you?"},
 			},
 			EvaluateExpected: false,
 		},
@@ -99,6 +101,6 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 	suite.RunCases(cases)
 }
 
-func TestLessThanConstraintSuite(t *testing.T) {
-	suite.Run(t, new(LessThanConstraintSuite))
+func TestMatchConstraintSuite(t *testing.T) {
+	suite.Run(t, new(MatchConstraintSuite))
 }

@@ -122,7 +122,7 @@ func (suite *IntersectionConstraintSuite) TestIntersectionConstraint() {
 			EvaluateExpected: false,
 		},
 		{
-			Name: "failed to create constraint (bad parameters)",
+			Name: "failed to create constraint (invalid parameters)",
 			Constraint: model.Constraint{
 				Name: constraint.IntersectionConstraintName,
 				Parameters: json.RawMessage(

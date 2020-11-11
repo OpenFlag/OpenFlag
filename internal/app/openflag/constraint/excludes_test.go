@@ -17,7 +17,7 @@ type ExcludesConstraintSuite struct {
 func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 	cases := []ConstraintTestCase{
 		{
-			Name: "successfully create constraint and evaluate using entity id",
+			Name: "successfully create constraint and evaluate 1",
 			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
@@ -31,7 +31,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity type",
+			Name: "successfully create constraint and evaluate 2",
 			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
@@ -46,7 +46,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity context",
+			Name: "successfully create constraint and evaluate 3",
 			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
@@ -62,7 +62,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity id 2",
+			Name: "successfully create constraint and evaluate 4",
 			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
@@ -76,7 +76,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			EvaluateExpected: false,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity type 2",
+			Name: "successfully create constraint and evaluate 5",
 			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
@@ -91,7 +91,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			EvaluateExpected: false,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity context 2",
+			Name: "successfully create constraint and evaluate 6",
 			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(

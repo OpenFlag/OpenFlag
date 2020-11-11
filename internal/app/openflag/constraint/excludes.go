@@ -10,8 +10,8 @@ import (
 // ExcludesConstraint represents Openflag excludes constraint.
 type ExcludesConstraint struct {
 	valueMap map[string]struct{}
-	Property string   `json:"property,omitempty"`
 	Values   []string `json:"values"`
+	Property string   `json:"property,omitempty"`
 }
 
 // Name is an implementation for the Constraint interface.

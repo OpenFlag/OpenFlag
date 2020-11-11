@@ -14,8 +14,8 @@ const (
 // ContainsConstraint represents Openflag contains constraint.
 type ContainsConstraint struct {
 	valueMap map[string]struct{}
-	Property string   `json:"property,omitempty"`
 	Values   []string `json:"values"`
+	Property string   `json:"property,omitempty"`
 }
 
 // Name is an implementation for the Constraint interface.

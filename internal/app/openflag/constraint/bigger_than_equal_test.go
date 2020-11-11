@@ -18,7 +18,7 @@ type BiggerThanEqualConstraintSuite struct {
 func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 	cases := []ConstraintTestCase{
 		{
-			Name: "successfully create constraint and evaluate using entity id",
+			Name: "successfully create constraint and evaluate 1",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -32,7 +32,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity type",
+			Name: "successfully create constraint and evaluate 2",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -47,7 +47,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity context",
+			Name: "successfully create constraint and evaluate 3",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -63,7 +63,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using zero value",
+			Name: "successfully create constraint and evaluate 4",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -79,7 +79,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using invalid property",
+			Name: "successfully create constraint and evaluate 5",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -95,7 +95,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: false,
 		},
 		{
-			Name: "successfully create constraint and evaluate using negative property",
+			Name: "successfully create constraint and evaluate 6",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -111,7 +111,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: false,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity id equality",
+			Name: "successfully create constraint and evaluate 7",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -125,7 +125,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity type equality",
+			Name: "successfully create constraint and evaluate 8",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
@@ -140,7 +140,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			EvaluateExpected: true,
 		},
 		{
-			Name: "successfully create constraint and evaluate using entity context equality",
+			Name: "successfully create constraint and evaluate 9",
 			Constraint: model.Constraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
