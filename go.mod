@@ -3,6 +3,7 @@ module github.com/OpenFlag/OpenFlag
 go 1.15
 
 require (
+	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/carlescere/scheduler v0.0.0-20170109141437-ee74d2f83d82
