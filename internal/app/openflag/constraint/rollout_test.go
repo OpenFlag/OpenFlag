@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -17,7 +18,7 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.RolloutConstraintName,
 				Parameters: json.RawMessage(
 					`{"lower_bound": 10, "upper_bound": 20}`,
@@ -31,7 +32,7 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.RolloutConstraintName,
 				Parameters: json.RawMessage(
 					`{"lower_bound": 10, "upper_bound": 20}`,
@@ -45,7 +46,7 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 		},
 		{
 			Name: "failed to create constraint with invalid parameters",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.RolloutConstraintName,
 				Parameters: json.RawMessage(
 					`{"lower_bound": 20, "upper_bound": 10}`,

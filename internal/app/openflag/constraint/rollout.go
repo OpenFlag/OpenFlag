@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 

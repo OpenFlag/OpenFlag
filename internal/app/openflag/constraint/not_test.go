@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -18,7 +19,7 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.NotConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(
@@ -44,7 +45,7 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.NotConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(
@@ -70,7 +71,7 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 		},
 		{
 			Name: "failed to create constraint (creation of inside constraint)",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.NotConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(
@@ -96,7 +97,7 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 		},
 		{
 			Name: "failed to create constraint (invalid parameters)",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.NotConstraintName,
 				Parameters: json.RawMessage(
 					`{}`,

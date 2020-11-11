@@ -81,14 +81,14 @@ func Find(name string) (Constraint, error) {
 	}
 }
 
-// Validate validates the constraint using the given raw constraint.
-func Validate(rawConstraint model.Constraint) error {
-	c, err := Find(rawConstraint.Name)
+// Validate validates the constraint using the given name and parameters.
+func Validate(name string, parameters json.RawMessage) error {
+	c, err := Find(name)
 	if err != nil {
 		return err
 	}
 
-	if err := json.Unmarshal(rawConstraint.Parameters, c); err != nil {
+	if err := json.Unmarshal(parameters, c); err != nil {
 		return err
 	}
 
@@ -99,14 +99,14 @@ func Validate(rawConstraint model.Constraint) error {
 	return c.Validate()
 }
 
-// New create a new constraint using the given raw constraint.
-func New(rawConstraint model.Constraint) (Constraint, error) {
-	c, err := Find(rawConstraint.Name)
+// New create a new constraint using the given name and parameters.
+func New(name string, parameters json.RawMessage) (Constraint, error) {
+	c, err := Find(name)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := json.Unmarshal(rawConstraint.Parameters, c); err != nil {
+	if err := json.Unmarshal(parameters, c); err != nil {
 		return nil, err
 	}
 

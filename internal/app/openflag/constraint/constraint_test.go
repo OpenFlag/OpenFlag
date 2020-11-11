@@ -3,8 +3,9 @@ package constraint_test
 import (
 	"testing"
 
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 	"github.com/bmizerany/assert"
 	"github.com/stretchr/testify/suite"
 )
@@ -15,11 +16,11 @@ type (
 	}
 
 	ConstraintTestCase struct {
-		Name             string           `json:"name"`
-		Constraint       model.Constraint `json:"constraint"`
-		ErrExpected      bool             `json:"err_expected"`
-		Entity           model.Entity     `json:"entity"`
-		EvaluateExpected bool             `json:"evaluate_expected"`
+		Name             string
+		Constraint       constraint.RawConstraint
+		ErrExpected      bool
+		Entity           model.Entity
+		EvaluateExpected bool
 	}
 )
 
@@ -28,7 +29,9 @@ func (suite *ConstraintSuite) RunCases(cases []ConstraintTestCase) {
 		tc := cases[i]
 
 		suite.Run(tc.Name, func() {
-			c, err := constraint.New(tc.Constraint)
+			rc := tc.Constraint
+
+			c, err := constraint.New(rc.Name, rc.Parameters)
 			if tc.ErrExpected {
 				suite.Error(err)
 				return

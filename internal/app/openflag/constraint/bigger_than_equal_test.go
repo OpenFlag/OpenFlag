@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -19,7 +20,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 10}`,
@@ -33,7 +34,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(`{"value": 10, "property": "%s"}`, constraint.EntityTypeProperty),
@@ -48,7 +49,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 10, "property": "test"}`,
@@ -64,7 +65,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,
@@ -80,7 +81,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 5",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,
@@ -96,7 +97,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 6",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,
@@ -112,7 +113,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 7",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 1}`,
@@ -126,7 +127,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 8",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(`{"value": 10, "property": "%s"}`, constraint.EntityTypeProperty),
@@ -141,7 +142,7 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 9",
-			Constraint: model.Constraint{
+			Constraint: constraint.RawConstraint{
 				Name: constraint.BiggerThanEqualConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 10, "property": "test"}`,

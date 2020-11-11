@@ -8,7 +8,7 @@ import (
 // UnionConstraint represents Openflag union constraint.
 type UnionConstraint struct {
 	constraints    []Constraint
-	RawConstraints []model.Constraint `json:"constraints"`
+	RawConstraints []RawConstraint `json:"constraints"`
 }
 
 // Name is an implementation for the Constraint interface.
@@ -29,8 +29,8 @@ func (u UnionConstraint) Validate() error {
 
 // Initialize is an implementation for the Constraint interface.
 func (u *UnionConstraint) Initialize() error {
-	for _, rawConstraint := range u.RawConstraints {
-		c, err := New(rawConstraint)
+	for _, raw := range u.RawConstraints {
+		c, err := New(raw.Name, raw.Parameters)
 		if err != nil {
 			return err
 		}
