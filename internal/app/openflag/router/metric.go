@@ -6,7 +6,9 @@ import (
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/metric"
 
+	prom "github.com/OpenFlag/OpenFlag/pkg/monitoring/prometheus"
 	"github.com/labstack/echo/v4"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 )
@@ -37,6 +39,7 @@ var (
 			Namespace: metric.Namespace,
 			Name:      "http_request_duration_seconds",
 			Help:      "A histogram of latencies for requests received",
+			Buckets:   prom.HistogramBuckets,
 		}, []string{labelEcoCode, labelEcoMethod, labelEcoHost, labelEcoURL}),
 	}
 )
