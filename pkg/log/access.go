@@ -9,11 +9,11 @@ import (
 // AccessLogger represents a struct for echo access logger middleware configurations.
 type AccessLogger struct {
 	Enabled    bool   `mapstructure:"enabled"`
-	Path       string `mapstructure:"path" validate:"required"`
+	Path       string `mapstructure:"path"`
 	Format     string `mapstructure:"format"`
-	MaxSize    int    `mapstructure:"max-size" validate:"required"`
-	MaxBackups int    `mapstructure:"max-backups" validate:"required"`
-	MaxAge     int    `mapstructure:"max-age" validate:"required"`
+	MaxSize    int    `mapstructure:"max-size"`
+	MaxBackups int    `mapstructure:"max-backups"`
+	MaxAge     int    `mapstructure:"max-age"`
 }
 
 // LoggerMiddleware is an echo middleware for access logging.

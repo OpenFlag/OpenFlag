@@ -22,46 +22,46 @@ const (
 type (
 	// Config represents application configuration struct.
 	Config struct {
-		Logger     Logger     `mapstructure:"logger" validate:"required"`
-		Server     Server     `mapstructure:"server" validate:"required"`
-		Database   Database   `mapstructure:"database" validate:"required"`
-		Redis      Redis      `mapstructure:"redis" validate:"required"`
-		Monitoring Monitoring `mapstructure:"monitoring" validate:"required"`
+		Logger     Logger     `mapstructure:"logger"`
+		Server     Server     `mapstructure:"server"`
+		Database   Database   `mapstructure:"database"`
+		Redis      Redis      `mapstructure:"redis"`
+		Monitoring Monitoring `mapstructure:"monitoring"`
 	}
 
 	// Logger represents logger configuration struct.
 	Logger struct {
-		AccessLogger log.AccessLogger        `mapstructure:"access" validate:"required"`
-		AppLogger    log.AppLogger           `mapstructure:"app" validate:"required"`
-		Evaluation   evaluation.LoggerConfig `mapstructure:"evaluation" validate:"required"`
+		AccessLogger log.AccessLogger        `mapstructure:"access"`
+		AppLogger    log.AppLogger           `mapstructure:"app"`
+		Evaluation   evaluation.LoggerConfig `mapstructure:"evaluation"`
 	}
 
 	// Server represents server configuration struct.
 	Server struct {
-		Address         string        `mapstructure:"address" validate:"required"`
-		ReadTimeout     time.Duration `mapstructure:"read-timeout" validate:"required"`
-		WriteTimeout    time.Duration `mapstructure:"write-timeout" validate:"required"`
-		GracefulTimeout time.Duration `mapstructure:"graceful-timeout" validate:"required"`
+		Address         string        `mapstructure:"address"`
+		ReadTimeout     time.Duration `mapstructure:"read-timeout"`
+		WriteTimeout    time.Duration `mapstructure:"write-timeout"`
+		GracefulTimeout time.Duration `mapstructure:"graceful-timeout"`
 	}
 
 	// Database represents database configuration struct.
 	Database struct {
-		Driver        string           `mapstructure:"driver" validate:"required"`
-		MasterConnStr string           `mapstructure:"master-conn-string" validate:"required"`
-		SlaveConnStr  string           `mapstructure:"slave-conn-string" validate:"required"`
-		Options       database.Options `mapstructure:"options" validate:"required"`
+		Driver        string           `mapstructure:"driver"`
+		MasterConnStr string           `mapstructure:"master-conn-string"`
+		SlaveConnStr  string           `mapstructure:"slave-conn-string"`
+		Options       database.Options `mapstructure:"options"`
 	}
 
 	// Redis represents Redis configuration struct.
 	Redis struct {
-		MasterAddress string        `mapstructure:"master-address" validate:"required"`
-		SlaveAddress  string        `mapstructure:"slave-address" validate:"required"`
+		MasterAddress string        `mapstructure:"master-address"`
+		SlaveAddress  string        `mapstructure:"slave-address"`
 		Options       redis.Options `mapstructure:"options"`
 	}
 
 	// Monitoring represents monitoring configuration struct.
 	Monitoring struct {
-		Prometheus prometheus.Config `mapstructure:"prometheus" validate:"required"`
+		Prometheus prometheus.Config `mapstructure:"prometheus"`
 	}
 )
 

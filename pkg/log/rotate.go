@@ -9,19 +9,19 @@ import (
 
 // RotateFileConfig represents a configuration struct for the Logrus file rotation hook.
 type RotateFileConfig struct {
-	Filename   string `json:"filename"`
-	MaxSize    int    `json:"max_size"`
-	MaxBackups int    `json:"max_backups"`
-	MaxAge     int    `json:"max_age"`
-	LocalTime  bool   `json:"local_time"`
-	Compress   bool   `json:"compress"`
+	Filename   string
+	MaxSize    int
+	MaxBackups int
+	MaxAge     int
+	LocalTime  bool
+	Compress   bool
 	Level      logrus.Level
 	Formatter  logrus.Formatter
 }
 
 // RotateFileHook represents a struct for the Logrus file rotation hook.
 type RotateFileHook struct {
-	Config    RotateFileConfig `json:"config"`
+	Config    RotateFileConfig
 	logWriter io.Writer
 }
 

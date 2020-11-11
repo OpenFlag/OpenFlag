@@ -13,15 +13,15 @@ type (
 	// LoggerConfig represents a struct for evaluation logger configurations.
 	LoggerConfig struct {
 		Enabled    bool   `mapstructure:"enabled"`
-		Path       string `mapstructure:"path" validate:"required"`
-		MaxSize    int    `mapstructure:"max-size" validate:"required"`
-		MaxBackups int    `mapstructure:"max-backups" validate:"required"`
-		MaxAge     int    `mapstructure:"max-age" validate:"required"`
+		Path       string `mapstructure:"path"`
+		MaxSize    int    `mapstructure:"max-size"`
+		MaxBackups int    `mapstructure:"max-backups"`
+		MaxAge     int    `mapstructure:"max-age"`
 	}
 
 	// Logger represents a struct for evaluation logger.
 	Logger struct {
-		Config    LoggerConfig `json:"config"`
+		Config    LoggerConfig
 		logWriter io.Writer
 	}
 )

@@ -18,7 +18,7 @@ const (
 
 // Options represents a struct for creating database connection configurations.
 type Options struct {
-	ConnectionLifetime time.Duration `mapstructure:"connection-lifetime" validate:"required"`
+	ConnectionLifetime time.Duration `mapstructure:"connection-lifetime"`
 	MaxOpenConnections int           `mapstructure:"max-open-connections"`
 	MaxIdleConnections int           `mapstructure:"max-idle-connections"`
 }

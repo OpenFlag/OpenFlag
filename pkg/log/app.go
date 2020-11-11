@@ -10,11 +10,11 @@ import (
 
 // AppLogger represents a struct for application logger configurations.
 type AppLogger struct {
-	Level      string `mapstructure:"level" validate:"required"`
-	Path       string `mapstructure:"path" validate:"required"`
-	MaxSize    int    `mapstructure:"max-size" validate:"required"`
-	MaxBackups int    `mapstructure:"max-backups" validate:"required"`
-	MaxAge     int    `mapstructure:"max-age" validate:"required"`
+	Level      string `mapstructure:"level"`
+	Path       string `mapstructure:"path"`
+	MaxSize    int    `mapstructure:"max-size"`
+	MaxBackups int    `mapstructure:"max-backups"`
+	MaxAge     int    `mapstructure:"max-age"`
 	StdOut     bool   `mapstructure:"stdout"`
 }
 

@@ -10,7 +10,7 @@ import (
 // Config represents a struct for starting the Prometheus monitoring server configurations.
 type Config struct {
 	Enabled bool   `mapstructure:"enabled"`
-	Address string `mapstructure:"address" validate:"required"`
+	Address string `mapstructure:"address"`
 }
 
 // StartServer starts the Prometheus metric server for scraping the metrics data.
