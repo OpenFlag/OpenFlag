@@ -30,21 +30,9 @@ func (l *LessThanEqualConstraint) Initialize() error {
 
 // Evaluate is an implementation for the Constraint interface.
 func (l LessThanEqualConstraint) Evaluate(e model.Entity) bool {
-	if l.Property == "" {
-		return float64(e.ID) <= l.Value
-	}
-
-	var property string
-
-	if l.Property == EntityTypeProperty {
-		property = e.Type
-	} else {
-		var ok bool
-
-		property, ok = e.Context[l.Property]
-		if !ok {
-			return false
-		}
+	property, ok := GetProperty(l.Property, e)
+	if !ok {
+		return false
 	}
 
 	value, err := strconv.ParseFloat(property, 64)

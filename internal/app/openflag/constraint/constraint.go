@@ -3,6 +3,7 @@ package constraint
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
 )
@@ -118,4 +119,25 @@ func New(rawConstraint model.Constraint) (Constraint, error) {
 	}
 
 	return c, nil
+}
+
+// GetProperty returns the property value of a constraint for apply.
+func GetProperty(property string, e model.Entity) (string, bool) {
+	var value string
+
+	switch property {
+	case "":
+		value = fmt.Sprintf("%d", e.ID)
+	case EntityTypeProperty:
+		value = e.Type
+	default:
+		var ok bool
+
+		value, ok = e.Context[property]
+		if !ok {
+			return "", false
+		}
+	}
+
+	return value, true
 }

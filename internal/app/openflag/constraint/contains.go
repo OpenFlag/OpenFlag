@@ -1,8 +1,6 @@
 package constraint
 
 import (
-	"fmt"
-
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
 	validation "github.com/go-ozzo/ozzo-validation"
 )
@@ -49,23 +47,12 @@ func (c *ContainsConstraint) Initialize() error {
 
 // Evaluate is an implementation for the Constraint interface.
 func (c ContainsConstraint) Evaluate(e model.Entity) bool {
-	var property string
-
-	switch c.Property {
-	case "":
-		property = fmt.Sprintf("%d", e.ID)
-	case EntityTypeProperty:
-		property = e.Type
-	default:
-		var ok bool
-
-		property, ok = e.Context[c.Property]
-		if !ok {
-			return false
-		}
+	property, ok := GetProperty(c.Property, e)
+	if !ok {
+		return false
 	}
 
-	_, ok := c.valueMap[property]
+	_, ok = c.valueMap[property]
 
 	return ok
 }

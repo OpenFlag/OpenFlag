@@ -1,7 +1,6 @@
 package constraint
 
 import (
-	"fmt"
 	"regexp"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
@@ -44,20 +43,9 @@ func (m *MatchConstraint) Initialize() error {
 
 // Evaluate is an implementation for the Constraint interface.
 func (m MatchConstraint) Evaluate(e model.Entity) bool {
-	var property string
-
-	switch m.Property {
-	case "":
-		property = fmt.Sprintf("%d", e.ID)
-	case EntityTypeProperty:
-		property = e.Type
-	default:
-		var ok bool
-
-		property, ok = e.Context[m.Property]
-		if !ok {
-			return false
-		}
+	property, ok := GetProperty(m.Property, e)
+	if !ok {
+		return false
 	}
 
 	return m.regex.MatchString(property)
