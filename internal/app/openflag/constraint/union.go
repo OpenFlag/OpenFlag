@@ -2,10 +2,14 @@ package constraint
 
 import (
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 // UnionConstraint represents Openflag union constraint.
-type UnionConstraint struct{}
+type UnionConstraint struct {
+	constraints    []Constraint
+	RawConstraints []model.Constraint `json:"constraints"`
+}
 
 // Name is an implementation for the Constraint interface.
 func (u UnionConstraint) Name() string {
@@ -14,15 +18,36 @@ func (u UnionConstraint) Name() string {
 
 // Validate is an implementation for the Constraint interface.
 func (u UnionConstraint) Validate() error {
-	return nil
+	return validation.ValidateStruct(&u,
+		validation.Field(
+			&u.constraints,
+			validation.Required,
+			validation.Length(minConstraintsLen, 0),
+		),
+	)
 }
 
 // Initialize is an implementation for the Constraint interface.
 func (u *UnionConstraint) Initialize() error {
+	for _, rawConstraint := range u.RawConstraints {
+		c, err := New(rawConstraint)
+		if err != nil {
+			return err
+		}
+
+		u.constraints = append(u.constraints, c)
+	}
+
 	return nil
 }
 
 // Evaluate is an implementation for the Constraint interface.
 func (u UnionConstraint) Evaluate(e model.Entity) bool {
+	for _, c := range u.constraints {
+		if c.Evaluate(e) {
+			return true
+		}
+	}
+
 	return false
 }
