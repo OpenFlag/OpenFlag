@@ -7,27 +7,23 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
-const (
-	minValueLen = 1
-)
-
-// ContainsConstraint represents Openflag contains constraint.
-type ContainsConstraint struct {
+// ExcludesConstraint represents Openflag excludes constraint.
+type ExcludesConstraint struct {
 	valueMap map[string]struct{}
 	Property string   `json:"property,omitempty"`
 	Values   []string `json:"values"`
 }
 
 // Name is an implementation for the Constraint interface.
-func (c ContainsConstraint) Name() string {
-	return ContainsConstraintName
+func (ex ExcludesConstraint) Name() string {
+	return ExcludesConstraintName
 }
 
 // Validate is an implementation for the Constraint interface.
-func (c ContainsConstraint) Validate() error {
-	return validation.ValidateStruct(&c,
+func (ex ExcludesConstraint) Validate() error {
+	return validation.ValidateStruct(&ex,
 		validation.Field(
-			&c.Values,
+			&ex.Values,
 			validation.Required,
 			validation.Length(minValueLen, 0),
 		),
@@ -35,23 +31,23 @@ func (c ContainsConstraint) Validate() error {
 }
 
 // Initialize is an implementation for the Constraint interface.
-func (c *ContainsConstraint) Initialize() error {
+func (ex *ExcludesConstraint) Initialize() error {
 	valueMap := make(map[string]struct{})
 
-	for _, value := range c.Values {
+	for _, value := range ex.Values {
 		valueMap[value] = struct{}{}
 	}
 
-	c.valueMap = valueMap
+	ex.valueMap = valueMap
 
 	return nil
 }
 
 // Evaluate is an implementation for the Constraint interface.
-func (c ContainsConstraint) Evaluate(e model.Entity) bool {
+func (ex ExcludesConstraint) Evaluate(e model.Entity) bool {
 	var property string
 
-	switch c.Property {
+	switch ex.Property {
 	case "":
 		property = fmt.Sprintf("%d", e.ID)
 	case EntityTypeProperty:
@@ -59,13 +55,13 @@ func (c ContainsConstraint) Evaluate(e model.Entity) bool {
 	default:
 		var ok bool
 
-		property, ok = e.Context[c.Property]
+		property, ok = e.Context[ex.Property]
 		if !ok {
 			return false
 		}
 	}
 
-	_, ok := c.valueMap[property]
+	_, ok := ex.valueMap[property]
 
-	return ok
+	return !ok
 }
