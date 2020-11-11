@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	app       = "openflag"
 	cfgPath   = "config.yaml"
 	cfgPrefix = "openflag"
 )
@@ -69,7 +70,7 @@ type (
 func Init() Config {
 	var cfg Config
 
-	config.Init(cfgPath, &cfg, defaultConfig, cfgPrefix)
+	config.Init(app, cfgPath, &cfg, defaultConfig, cfgPrefix)
 
 	return cfg
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -11,7 +12,7 @@ import (
 )
 
 // Init initializes a config struct using default, file, and environment variables.
-func Init(path string, cfg interface{}, defaultConfig string, prefix string) interface{} {
+func Init(app string, path string, cfg interface{}, defaultConfig string, prefix string) interface{} {
 	v := viper.New()
 	v.SetConfigType("yaml")
 
@@ -21,6 +22,8 @@ func Init(path string, cfg interface{}, defaultConfig string, prefix string) int
 
 	v.SetConfigFile(path)
 	v.SetEnvPrefix(prefix)
+	v.AddConfigPath(fmt.Sprintf("/etc/%s/", app))
+	v.AddConfigPath(fmt.Sprintf("$HOME/.%s", app))
 	v.AddConfigPath(".")
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 	v.AutomaticEnv()
