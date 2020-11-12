@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	minIDValue    = 1
 	minVariantLen = 1
 	minSegmentLen = 1
 
@@ -27,6 +28,7 @@ type (
 	// if you have a variant for the green button,
 	// you can dynamically control what's the hex color of green you want to use (e.g. {"hex_color": "#42b983"}).
 	Variant struct {
+		ID         int             `json:"id"`
 		Key        string          `json:"key"`
 		Attachment json.RawMessage `json:"attachment,omitempty"`
 	}
@@ -40,6 +42,7 @@ type (
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
+		ID              int        `json:"id"`
 		Description     string     `json:"description,omitempty"`
 		Constraint      Constraint `json:"constraint"`
 		Variants        []Variant  `json:"variants"`
@@ -64,6 +67,11 @@ type (
 func (v Variant) Validate() error {
 	return validation.ValidateStruct(&v,
 		validation.Field(
+			&v.ID,
+			validation.Required,
+			validation.Min(minIDValue),
+		),
+		validation.Field(
 			&v.Key,
 			validation.Required,
 			validation.Match(nameRegex),
@@ -79,6 +87,15 @@ func (c Constraint) Validate() error {
 // Validate validates Segment struct.
 func (s Segment) Validate() error {
 	return validation.ValidateStruct(&s,
+		validation.Field(
+			&s.ID,
+			validation.Required,
+			validation.Min(minIDValue),
+		),
+		validation.Field(
+			&s.Description,
+			validation.Required,
+		),
 		validation.Field(
 			&s.Constraint,
 			validation.Required,

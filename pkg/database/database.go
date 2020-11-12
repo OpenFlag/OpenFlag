@@ -1,13 +1,11 @@
 package database
 
 import (
-	"strings"
 	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 
-	_ "github.com/go-sql-driver/mysql"           // MySQL driver should have blank import
 	_ "github.com/jinzhu/gorm/dialects/postgres" // PostgreSQL driver should have blank import
 )
 
@@ -25,10 +23,6 @@ type Options struct {
 
 // Create creates a database connection.
 func Create(driver string, connStr string, options Options) (*gorm.DB, error) {
-	if driver == "mysql" {
-		connStr = strings.Split(connStr, "://")[1]
-	}
-
 	db, err := gorm.Open(driver, connStr)
 	if err != nil {
 		return nil, err

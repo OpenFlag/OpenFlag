@@ -3,7 +3,6 @@ package migrate
 import (
 	"errors"
 
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/migrations/bindata/mysql"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/migrations/bindata/postgres"
 
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
@@ -23,8 +22,6 @@ func main(cfg config.Database) error {
 	switch cfg.Driver {
 	case "postgres":
 		source = bindata.Resource(postgres.AssetNames(), postgres.Asset)
-	case "mysql":
-		source = bindata.Resource(mysql.AssetNames(), mysql.Asset)
 	default:
 		return ErrInvalidDatabaseDriver
 	}

@@ -2,7 +2,6 @@ package database
 
 import (
 	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/mysql"    // MySQL driver should have blank import
 	_ "github.com/golang-migrate/migrate/v4/database/postgres" // PostgreSQL driver should have blank import
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 )

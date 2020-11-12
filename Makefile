@@ -48,7 +48,6 @@ check-go-bindata:
 
 bindata: check-go-bindata
 	cd internal/app/openflag/migrations/postgres && go-bindata -pkg postgres -o ./../bindata/postgres/bindata.go .
-	cd internal/app/openflag/migrations/mysql && go-bindata -pkg mysql -o ./../bindata/mysql/bindata.go .
 
 test:
 	go test -v -race -p 1 ./...
@@ -58,7 +57,7 @@ ci-test:
 	go tool cover -func coverage.txt
 
 up:
-	docker-compose up -d redis postgres mysql
+	docker-compose up -d redis postgres
 
 down:
 	docker-compose down

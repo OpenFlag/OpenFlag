@@ -21,18 +21,6 @@ services:
     ports:
       - 5432:5432
 
-  mysql:
-    image: mysql:5.7
-    hostname: mysql
-    container_name: mysql
-    environment:
-      MYSQL_DATABASE: openflag
-      MYSQL_PASSWORD: secret
-      MYSQL_USER: openflag
-      MYSQL_ROOT_PASSWORD: secret
-    ports:
-      - 3306:3306
-
   openflag:
     build: .
     hostname: openflag

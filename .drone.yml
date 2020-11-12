@@ -12,6 +12,13 @@ steps:
 
   - name: test
     image: golang:1.15
+    environment:
+      OPENFLAG_DATABASE_DRIVER: "postgres"
+      OPENFLAG_DATABASE_MASTER_CONN_STRING: "postgresql://openflag:secret@postgres:5432/openflag?sslmode=disable&connect_timeout=30"
+      OPENFLAG_DATABASE_SLAVE_CONN_STRING: "postgresql://openflag:secret@postgres:5432/openflag?sslmode=disable&connect_timeout=30"
+
+      OPENFLAG_REDIS_MASTER_ADDRESS: "redis:6379"
+      OPENFLAG_REDIS_SLAVE_ADDRESS: "redis:6379"
     commands:
       - make ci-test
 
@@ -32,3 +39,17 @@ steps:
         - latest
         - 0.1.0
       dry_run: true
+
+services:
+
+  - name: postgres
+    image: postgres:12.4
+    environment:
+      POSTGRES_DB: "openflag"
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_USER: "openflag"
+
+  - name: redis
+    image: bitnami/redis:5.0.5
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"

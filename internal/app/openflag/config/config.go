@@ -3,6 +3,9 @@ package config
 import (
 	"time"
 
+	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/sirupsen/logrus"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/evaluation"
 
 	"github.com/OpenFlag/OpenFlag/pkg/database"
@@ -16,7 +19,7 @@ import (
 
 const (
 	app       = "openflag"
-	cfgPath   = "config.yaml"
+	cfgFile   = "config.yaml"
 	cfgPrefix = "openflag"
 )
 
@@ -66,11 +69,34 @@ type (
 	}
 )
 
+// Validate validates Database struct.
+func (d Database) Validate() error {
+	return validation.ValidateStruct(&d,
+		validation.Field(
+			&d.Driver,
+			validation.In("postgres"),
+		),
+	)
+}
+
+// Validate validates Config struct.
+func (c Config) Validate() error {
+	return validation.ValidateStruct(&c,
+		validation.Field(
+			&c.Database,
+		),
+	)
+}
+
 // Init initializes application configuration.
 func Init() Config {
 	var cfg Config
 
-	config.Init(app, cfgPath, &cfg, defaultConfig, cfgPrefix)
+	config.Init(app, cfgFile, &cfg, defaultConfig, cfgPrefix)
+
+	if err := cfg.Validate(); err != nil {
+		logrus.Fatalf("failed to validate configurations: %s", err.Error())
+	}
 
 	return cfg
 }

@@ -31,9 +31,6 @@ database:
   driver: postgres
   master-conn-string: postgresql://openflag:secret@127.0.0.1:5432/openflag?sslmode=disable&connect_timeout=30
   slave-conn-string: postgresql://openflag:secret@127.0.0.1:5432/openflag?sslmode=disable&connect_timeout=30
-#  driver: mysql
-#  master-conn-string: mysql://openflag:secret@tcp(127.0.0.1:3306)/openflag?readTimeout=3s&timeout=30s
-#  slave-conn-string: mysql://openflag:secret@tcp(127.0.0.1:3306)/openflag?readTimeout=3s&timeout=30s
   options:
     connection-lifetime: 30m
     max-open-connections: 10
