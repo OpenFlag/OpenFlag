@@ -10,6 +10,7 @@ import (
 
 // Represents constraint names.
 const (
+	AlwaysConstraintName          = "always"
 	ContainsConstraintName        = "contains"
 	ExcludesConstraintName        = "excludes"
 	IntersectionConstraintName    = "intersection"
@@ -50,6 +51,8 @@ type Constraint interface {
 // Find finds the constraint using the given name.
 func Find(name string) (Constraint, error) {
 	switch name {
+	case AlwaysConstraintName:
+		return &AlwaysConstraint{}, nil
 	case ContainsConstraintName:
 		return &ContainsConstraint{}, nil
 	case ExcludesConstraintName:
