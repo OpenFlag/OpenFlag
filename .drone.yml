@@ -20,6 +20,8 @@ steps:
       OPENFLAG_REDIS_MASTER_ADDRESS: "redis:6379"
       OPENFLAG_REDIS_SLAVE_ADDRESS: "redis:6379"
     commands:
+      - sleep 10 # Wait 10 seconds for starting the Postgres and Redis services.
+      - make run-migrate
       - make ci-test
 
   - name: coverage
