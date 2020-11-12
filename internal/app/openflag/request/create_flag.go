@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
@@ -29,14 +30,14 @@ type (
 	Variant struct {
 		ID         int             `json:"id"`
 		Key        string          `json:"key"`
-		Attachment json.RawMessage `json:"attachment,omitempty"`
+		Attachment json.RawMessage `json:"attachment"`
 	}
 
 	// Constraint represents rules that we can use to define the audience of the segment.
 	// In other words, the audience in the segment is defined by a set of constraints.
 	Constraint struct {
 		Name       string          `json:"name"`
-		Parameters json.RawMessage `json:"parameters,omitempty"`
+		Parameters json.RawMessage `json:"parameters"`
 	}
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
@@ -83,23 +84,22 @@ func (v Variant) Validate() error {
 
 // Validate validates Constraint struct.
 func (c Constraint) Validate() error {
-	return validation.ValidateStruct(&c,
+	err := validation.ValidateStruct(&c,
 		validation.Field(
 			&c.Name,
 			validation.Required,
 			validation.Match(nameRegex),
-			validation.By(func(value interface{}) error {
-				return constraint.Validate(c.Name, c.Parameters)
-			}),
 		),
 		validation.Field(
 			&c.Parameters,
 			validation.Required,
-			validation.By(func(value interface{}) error {
-				return constraint.Validate(c.Name, c.Parameters)
-			}),
 		),
 	)
+	if err != nil {
+		return nil
+	}
+
+	return constraint.Validate(c.Name, c.Parameters)
 }
 
 // Validate validates Segment struct.

@@ -30,14 +30,14 @@ type (
 	Variant struct {
 		ID         int             `json:"id"`
 		Key        string          `json:"key"`
-		Attachment json.RawMessage `json:"attachment,omitempty"`
+		Attachment json.RawMessage `json:"attachment"`
 	}
 
 	// Constraint represents rules that we can use to define the audience of the segment.
 	// In other words, the audience in the segment is defined by a set of constraints.
 	Constraint struct {
 		Name       string          `json:"name"`
-		Parameters json.RawMessage `json:"parameters,omitempty"`
+		Parameters json.RawMessage `json:"parameters"`
 	}
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
