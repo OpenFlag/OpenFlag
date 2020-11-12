@@ -11,7 +11,6 @@ import (
 
 const (
 	minIDValue    = 1
-	minVariantLen = 1
 	minSegmentLen = 1
 
 	nameFormat = `^[a-z0-9]+(?:\.[a-z0-9]+)*$`
@@ -37,16 +36,15 @@ type (
 	// In other words, the audience in the segment is defined by a set of constraints.
 	Constraint struct {
 		Name       string          `json:"name"`
-		Parameters json.RawMessage `json:"parameters"`
+		Parameters json.RawMessage `json:"parameters,omitempty"`
 	}
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
-		ID              int        `json:"id"`
-		Description     string     `json:"description,omitempty"`
-		Constraint      Constraint `json:"constraint"`
-		Variants        []Variant  `json:"variants"`
-		DefaultVariants []Variant  `json:"default_variants,omitempty"`
+		ID          int        `json:"id"`
+		Description string     `json:"description"`
+		Constraint  Constraint `json:"constraint"`
+		Variant     Variant    `json:"variant"`
 	}
 
 	// Flag represents a feature flag, an experiment, or a configuration.
@@ -101,13 +99,8 @@ func (s Segment) Validate() error {
 			validation.Required,
 		),
 		validation.Field(
-			&s.Variants,
+			&s.Variant,
 			validation.Required,
-			validation.Length(minVariantLen, 0),
-		),
-		validation.Field(
-			&s.DefaultVariants,
-			validation.Length(minVariantLen, 0),
 		),
 	)
 }

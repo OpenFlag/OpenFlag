@@ -37,22 +37,21 @@ type (
 	// In other words, the audience in the segment is defined by a set of constraints.
 	Constraint struct {
 		Name       string          `json:"name"`
-		Parameters json.RawMessage `json:"parameters"`
+		Parameters json.RawMessage `json:"parameters,omitempty"`
 	}
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
-		ID              int        `json:"id"`
-		Description     string     `json:"description,omitempty"`
-		Constraint      Constraint `json:"constraint"`
-		Variants        []Variant  `json:"variants"`
-		DefaultVariants []Variant  `json:"default_variants,omitempty"`
+		ID          int        `json:"id"`
+		Description string     `json:"description"`
+		Constraint  Constraint `json:"constraint"`
+		Variant     Variant    `json:"variant"`
 	}
 
 	// Flag represents each row of flags table in SQL database.
 	Flag struct {
 		ID          int64      `gorm:"primary_key"`
-		Tags        *string    `json:"tags"`
+		Tags        *string    `json:"tags,omitempty"`
 		Description string     `json:"description"`
 		Flag        string     `json:"flag"`
 		Segments    string     `json:"segments"`
