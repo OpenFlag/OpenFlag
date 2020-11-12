@@ -74,12 +74,32 @@ func (v Variant) Validate() error {
 			validation.Required,
 			validation.Match(nameRegex),
 		),
+		validation.Field(
+			&v.Attachment,
+			validation.Required,
+		),
 	)
 }
 
 // Validate validates Constraint struct.
 func (c Constraint) Validate() error {
-	return constraint.Validate(c.Name, c.Parameters)
+	return validation.ValidateStruct(&c,
+		validation.Field(
+			&c.Name,
+			validation.Required,
+			validation.Match(nameRegex),
+			validation.By(func(value interface{}) error {
+				return constraint.Validate(c.Name, c.Parameters)
+			}),
+		),
+		validation.Field(
+			&c.Parameters,
+			validation.Required,
+			validation.By(func(value interface{}) error {
+				return constraint.Validate(c.Name, c.Parameters)
+			}),
+		),
+	)
 }
 
 // Validate validates Segment struct.
