@@ -1,6 +1,6 @@
 package prometheus
 
-//nolint:gochecknoglobals
+// nolint:gochecknoglobals
 var (
 	// HistogramBuckets represents a bucketing for histogram metrics.
 	HistogramBuckets = []float64{

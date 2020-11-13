@@ -48,6 +48,23 @@ type Constraint interface {
 	Evaluate(model.Entity) bool
 }
 
+// BasicConstraints returns basic constraints.
+func BasicConstraints() []string {
+	return []string{
+		AlwaysConstraintName,
+		ContainsConstraintName,
+		ExcludesConstraintName,
+		MatchConstraintName,
+		RandomConstraintName,
+		RolloutConstraintName,
+		LessThanConstraintName,
+		LessThanEqualConstraintName,
+		BiggerThanConstraintName,
+		BiggerThanEqualConstraintName,
+		ModConstraintName,
+	}
+}
+
 // Find finds the constraint using the given name.
 func Find(name string) (Constraint, error) {
 	switch name {

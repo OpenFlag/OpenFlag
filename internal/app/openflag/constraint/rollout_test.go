@@ -18,7 +18,7 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.RolloutConstraintName,
 				Parameters: json.RawMessage(
 					`{"lower_bound": 10, "upper_bound": 20}`,
@@ -32,7 +32,7 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.RolloutConstraintName,
 				Parameters: json.RawMessage(
 					`{"lower_bound": 10, "upper_bound": 20}`,
@@ -46,7 +46,7 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 		},
 		{
 			Name: "failed to create constraint with invalid parameters",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.RolloutConstraintName,
 				Parameters: json.RawMessage(
 					`{"lower_bound": 20, "upper_bound": 10}`,

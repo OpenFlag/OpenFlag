@@ -7,8 +7,8 @@ import (
 
 // NotConstraint represents Openflag not constraint.
 type NotConstraint struct {
-	constraint    Constraint
-	RawConstraint RawConstraint `json:"constraint"`
+	constraint Constraint
+	Constraint model.Constraint `json:"constraint"`
 }
 
 // Name is an implementation for the Constraint interface.
@@ -28,7 +28,7 @@ func (n NotConstraint) Validate() error {
 
 // Initialize is an implementation for the Constraint interface.
 func (n *NotConstraint) Initialize() error {
-	c, err := New(n.RawConstraint.Name, n.RawConstraint.Parameters)
+	c, err := New(n.Constraint.Name, n.Constraint.Parameters)
 	if err != nil {
 		return err
 	}

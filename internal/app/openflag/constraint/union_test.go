@@ -19,7 +19,7 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.UnionConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(
@@ -54,7 +54,7 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.UnionConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(
@@ -89,7 +89,7 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 		},
 		{
 			Name: "failed to create constraint (creation of inside constraint)",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.UnionConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(
@@ -124,7 +124,7 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 		},
 		{
 			Name: "failed to create constraint (invalid parameters)",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.UnionConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(

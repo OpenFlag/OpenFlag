@@ -5,6 +5,8 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -17,7 +19,7 @@ const (
 	nameFormat = `^[a-z0-9]+(?:\.[a-z0-9]+)*$`
 )
 
-//nolint:gochecknoglobals
+// nolint:gochecknoglobals
 var (
 	nameRegex = regexp.MustCompile(nameFormat)
 )
@@ -42,10 +44,11 @@ type (
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
-		ID          int        `json:"id"`
-		Description string     `json:"description"`
-		Constraint  Constraint `json:"constraint"`
-		Variant     Variant    `json:"variant"`
+		ID          int                   `json:"id"`
+		Description string                `json:"description"`
+		Constraints map[string]Constraint `json:"constraints"`
+		Expression  string                `json:"expression"`
+		Variant     Variant               `json:"variant"`
 	}
 
 	// Flag represents a feature flag, an experiment, or a configuration.
@@ -75,34 +78,11 @@ func (v Variant) Validate() error {
 			validation.Required,
 			validation.Match(nameRegex),
 		),
-		validation.Field(
-			&v.Attachment,
-			validation.Required,
-		),
 	)
-}
-
-// Validate validates Constraint struct.
-func (c Constraint) Validate() error {
-	err := validation.ValidateStruct(&c,
-		validation.Field(
-			&c.Name,
-			validation.Required,
-			validation.Match(nameRegex),
-		),
-		validation.Field(
-			&c.Parameters,
-			validation.Required,
-		),
-	)
-	if err != nil {
-		return nil
-	}
-
-	return constraint.Validate(c.Name, c.Parameters)
 }
 
 // Validate validates Segment struct.
+// nolint:funlen
 func (s Segment) Validate() error {
 	return validation.ValidateStruct(&s,
 		validation.Field(
@@ -115,8 +95,57 @@ func (s Segment) Validate() error {
 			validation.Required,
 		),
 		validation.Field(
-			&s.Constraint,
+			&s.Constraints,
 			validation.Required,
+			validation.By(func(value interface{}) error {
+				for _, c := range s.Constraints {
+					find := false
+
+					for _, name := range constraint.BasicConstraints() {
+						if c.Name == name {
+							find = true
+							break
+						}
+					}
+
+					if !find {
+						return errors.New("invalid segment constraints")
+					}
+
+					if err := constraint.Validate(c.Name, c.Parameters); err != nil {
+						return err
+					}
+				}
+
+				return nil
+			}),
+		),
+		validation.Field(
+			&s.Expression,
+			validation.Required,
+			validation.By(func(value interface{}) error {
+				parser := constraint.Parser{}
+
+				constraints := map[string]model.Constraint{}
+
+				for k, v := range s.Constraints {
+					constraints[k] = model.Constraint{
+						Name:       v.Name,
+						Parameters: v.Parameters,
+					}
+				}
+
+				c, err := parser.Parse(s.Expression, constraints)
+				if err != nil {
+					return err
+				}
+
+				if err := constraint.Validate(c.Name, c.Parameters); err != nil {
+					return err
+				}
+
+				return nil
+			}),
 		),
 		validation.Field(
 			&s.Variant,
@@ -147,7 +176,7 @@ func (f Flag) Validate() error {
 			validation.By(func(value interface{}) error {
 				for _, tag := range f.Tags {
 					if !nameRegex.MatchString(tag) {
-						return errors.New("invalid tag format")
+						return errors.New("invalid flag tag")
 					}
 				}
 

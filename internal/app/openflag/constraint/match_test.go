@@ -19,7 +19,7 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
 					`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$"}`,
@@ -33,7 +33,7 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(
@@ -51,7 +51,7 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
 					`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$", "property": "test"}`,
@@ -67,7 +67,7 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
 					`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$", "property": "test"}`,
@@ -83,7 +83,7 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 		},
 		{
 			Name: "failed to create constraint with invalid parameter",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.MatchConstraintName,
 				Parameters: json.RawMessage(
 					`{"property": "test"}`,

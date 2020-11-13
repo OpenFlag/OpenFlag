@@ -11,7 +11,7 @@ import (
 )
 
 func TestRandomRule(t *testing.T) {
-	rc := constraint.RawConstraint{
+	rc := model.Constraint{
 		Name:       constraint.RandomConstraintName,
 		Parameters: json.RawMessage(`{}`),
 	}

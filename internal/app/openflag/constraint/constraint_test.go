@@ -17,7 +17,7 @@ type (
 
 	ConstraintTestCase struct {
 		Name             string
-		Constraint       constraint.RawConstraint
+		Constraint       model.Constraint
 		ErrExpected      bool
 		Entity           model.Entity
 		EvaluateExpected bool

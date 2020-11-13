@@ -15,5 +15,10 @@ issues:
     - path: internal/app/openflag/constraint
       linters:
         - dupl
+    - path: internal/app/openflag/constraint/parser.go
+      linters:
+        - gomnd
+        - gocognit
+        - gocritic
 
   exclude-use-default: false

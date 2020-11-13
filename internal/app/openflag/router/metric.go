@@ -26,7 +26,7 @@ type Metrics struct {
 	ReqDuration *prometheus.HistogramVec
 }
 
-//nolint:gochecknoglobals
+// nolint:gochecknoglobals
 var (
 	metrics = Metrics{
 		ReqQPS: promauto.NewCounterVec(prometheus.CounterOpts{

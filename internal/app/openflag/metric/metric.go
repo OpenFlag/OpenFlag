@@ -21,7 +21,7 @@ type Metrics struct {
 	RedisConnectionStatus *prometheus.GaugeVec
 }
 
-//nolint:gochecknoglobals
+// nolint:gochecknoglobals
 var (
 	metrics = Metrics{
 		DbConnectionStatus: promauto.NewGaugeVec(prometheus.GaugeOpts{

@@ -10,7 +10,7 @@ import (
 )
 
 func TestAlwaysRule(t *testing.T) {
-	rc := constraint.RawConstraint{
+	rc := model.Constraint{
 		Name:       constraint.AlwaysConstraintName,
 		Parameters: json.RawMessage(`{}`),
 	}

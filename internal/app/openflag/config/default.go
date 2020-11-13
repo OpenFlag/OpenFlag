@@ -1,6 +1,6 @@
 package config
 
-//nolint:lll
+// nolint:lll
 const defaultConfig = `
 logger:
   access:

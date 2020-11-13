@@ -19,7 +19,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
 					`{"values": ["10", "11"]}`,
@@ -33,7 +33,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(`{"values": ["10", "11"], "property": "%s"}`, constraint.EntityTypeProperty),
@@ -48,7 +48,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
 					`{"values": ["10", "11"], "property": "test"}`,
@@ -64,7 +64,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
 					`{"values": ["10", "11"]}`,
@@ -78,7 +78,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 5",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(`{"values": ["10", "11"], "property": "%s"}`, constraint.EntityTypeProperty),
@@ -93,7 +93,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 6",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
 					`{"values": ["10", "11"], "property": "test"}`,
@@ -109,7 +109,7 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 		},
 		{
 			Name: "failed to create constraint with invalid parameters",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.ExcludesConstraintName,
 				Parameters: json.RawMessage(
 					`{"values": []}`,

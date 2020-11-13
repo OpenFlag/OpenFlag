@@ -20,7 +20,7 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.LessThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 10}`,
@@ -34,7 +34,7 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.LessThanConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(`{"value": 10, "property": "%s"}`, constraint.EntityTypeProperty),
@@ -49,7 +49,7 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.LessThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 10, "property": "test"}`,
@@ -65,7 +65,7 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.LessThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,
@@ -81,7 +81,7 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 5",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.LessThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,

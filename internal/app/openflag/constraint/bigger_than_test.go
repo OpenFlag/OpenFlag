@@ -20,7 +20,7 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 	cases := []ConstraintTestCase{
 		{
 			Name: "successfully create constraint and evaluate 1",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.BiggerThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 10}`,
@@ -34,7 +34,7 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.BiggerThanConstraintName,
 				Parameters: json.RawMessage(
 					fmt.Sprintf(`{"value": 10, "property": "%s"}`, constraint.EntityTypeProperty),
@@ -49,7 +49,7 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.BiggerThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 10, "property": "test"}`,
@@ -65,7 +65,7 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.BiggerThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,
@@ -81,7 +81,7 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 5",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.BiggerThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,
@@ -97,7 +97,7 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 		},
 		{
 			Name: "successfully create constraint and evaluate 6",
-			Constraint: constraint.RawConstraint{
+			Constraint: model.Constraint{
 				Name: constraint.BiggerThanConstraintName,
 				Parameters: json.RawMessage(
 					`{"value": 0, "property": "test"}`,

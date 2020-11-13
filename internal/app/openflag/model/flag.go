@@ -42,10 +42,11 @@ type (
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
-		ID          int        `json:"id"`
-		Description string     `json:"description"`
-		Constraint  Constraint `json:"constraint"`
-		Variant     Variant    `json:"variant"`
+		ID          int                   `json:"id"`
+		Description string                `json:"description"`
+		Constraints map[string]Constraint `json:"constraints"`
+		Expression  string                `json:"expression"`
+		Variant     Variant               `json:"variant"`
 	}
 
 	// Flag represents each row of flags table in SQL database.

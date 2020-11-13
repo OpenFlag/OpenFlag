@@ -65,7 +65,7 @@ func (suite *FlagRepoSuite) TestScenario() {
 		},
 	}
 
-	//nolint:scopelint
+	// nolint:scopelint
 	for _, f := range flags {
 		err := suite.repo.Create(&f)
 		suite.NoError(err)

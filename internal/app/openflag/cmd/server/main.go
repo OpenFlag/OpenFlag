@@ -27,7 +27,7 @@ const (
 	healthCheckInterval = 1
 )
 
-//nolint:funlen
+// nolint:funlen
 func main(cfg config.Config) {
 	e := router.New(cfg)
 

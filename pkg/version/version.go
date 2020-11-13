@@ -8,7 +8,7 @@ import (
 )
 
 // Following variables are set via -ldflags
-//nolint:gochecknoglobals
+// nolint:gochecknoglobals
 var (
 	// AppVersion represents the semantic version of the app
 	AppVersion string

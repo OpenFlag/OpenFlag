@@ -23,7 +23,7 @@ type Metrics struct {
 	Histogram  *prometheus.HistogramVec
 }
 
-//nolint:gochecknoglobals
+// nolint:gochecknoglobals
 var (
 	metrics = Metrics{
 		ErrCounter: promauto.NewCounterVec(
@@ -42,7 +42,7 @@ var (
 	DoNotReportErrors = []error{}
 )
 
-//nolint:unparam
+// nolint:unparam
 func (m Metrics) report(repoName, methodName string, startTime time.Time, err error) {
 	m.Histogram.With(prometheus.Labels{labelRepoName: repoName, labelRepoMethod: methodName}).
 		Observe(time.Since(startTime).Seconds())

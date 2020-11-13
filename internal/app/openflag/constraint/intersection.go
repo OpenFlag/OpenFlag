@@ -11,8 +11,8 @@ const (
 
 // IntersectionConstraint represents Openflag intersection constraint.
 type IntersectionConstraint struct {
-	constraints    []Constraint
-	RawConstraints []RawConstraint `json:"constraints"`
+	constraints []Constraint
+	Constraints []model.Constraint `json:"constraints"`
 }
 
 // Name is an implementation for the Constraint interface.
@@ -33,7 +33,7 @@ func (i IntersectionConstraint) Validate() error {
 
 // Initialize is an implementation for the Constraint interface.
 func (i *IntersectionConstraint) Initialize() error {
-	for _, raw := range i.RawConstraints {
+	for _, raw := range i.Constraints {
 		c, err := New(raw.Name, raw.Parameters)
 		if err != nil {
 			return err
