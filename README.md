@@ -16,6 +16,7 @@ You can find documentation in <a href="https://openflag.github.io">here</a>.
 
 ### TODO
 
+* Improve constraints expression parser.
 * Support custom constraints using **pluggable** languages.
 
 [1]: https://img.shields.io/drone/build/OpenFlag/OpenFlag.svg?style=flat-square&logo=drone
