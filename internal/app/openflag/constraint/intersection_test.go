@@ -47,45 +47,29 @@ func (suite *IntersectionConstraintSuite) TestIntersectionConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 8,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 8,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 11,
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID: 5,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
-		},
-		{
-			Name: "successfully create constraint and evaluate 2",
-			Constraint: model.Constraint{
-				Name: constraint.IntersectionConstraintName,
-				Parameters: json.RawMessage(
-					fmt.Sprintf(
-						`
-						{
-							"constraints": [
-								{
-									"name": "%s",
-									"parameters": {
-										"value": 10
-									}
-								},
-								{
-									"name": "%s",
-									"parameters": {
-										"value": 6
-									}
-								}
-							]
-						}
-					`,
-						constraint.LessThanConstraintName,
-						constraint.BiggerThanConstraintName,
-					),
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint (creation of inside constraint)",
@@ -117,10 +101,6 @@ func (suite *IntersectionConstraintSuite) TestIntersectionConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint (invalid parameters)",
@@ -134,7 +114,7 @@ func (suite *IntersectionConstraintSuite) TestIntersectionConstraint() {
 								{
 									"name": "%s",
 									"parameters": {
-										"value": "10"
+										"value": 10
 									}
 								}
 							]
@@ -145,10 +125,6 @@ func (suite *IntersectionConstraintSuite) TestIntersectionConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 	}
 

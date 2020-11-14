@@ -25,24 +25,29 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 15,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 15,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 5,
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID: 25,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
-		},
-		{
-			Name: "successfully create constraint and evaluate 2",
-			Constraint: model.Constraint{
-				Name: constraint.RolloutConstraintName,
-				Parameters: json.RawMessage(
-					`{"lower_bound": 10, "upper_bound": 20}`,
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint with invalid parameters",
@@ -53,10 +58,6 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 	}
 

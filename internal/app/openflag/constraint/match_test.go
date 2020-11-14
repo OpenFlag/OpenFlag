@@ -26,10 +26,17 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 11,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 11,
+					},
+					ResultExpected: true,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
@@ -43,11 +50,25 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:   8,
-				Type: "hello.how.are.you",
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:   8,
+						Type: "hello.how.are.you",
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:   8,
+						Type: "hello.how are.you",
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
@@ -58,28 +79,27 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "hello.how.are.you"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "hello.how.are.you"},
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "hello.how are.you"},
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
-		},
-		{
-			Name: "successfully create constraint and evaluate 4",
-			Constraint: model.Constraint{
-				Name: constraint.MatchConstraintName,
-				Parameters: json.RawMessage(
-					`{"expresion": "^[a-z0-9]+(?:\\.[a-z0-9]+)*$", "property": "test"}`,
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "Hello, How are you?"},
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint with invalid parameter",
@@ -90,12 +110,6 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "Hello, How are you?"},
-			},
-			EvaluateExpected: false,
 		},
 	}
 

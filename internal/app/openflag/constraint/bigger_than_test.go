@@ -27,10 +27,29 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 11,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 11,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 9,
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID: 10,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
@@ -41,11 +60,32 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:   8,
-				Type: "11",
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:   8,
+						Type: "11",
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:   8,
+						Type: "9",
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID:   8,
+						Type: "10",
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
@@ -56,12 +96,35 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "11"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "11"},
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "9"},
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "10"},
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
@@ -72,12 +135,35 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "1"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "1"},
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "0"},
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "-1"},
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 5",
@@ -88,28 +174,27 @@ func (suite *BiggerThanConstraintSuite) TestBiggerThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "t"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "t"},
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "1"},
+					},
+					ResultExpected: true,
+				},
 			},
-			EvaluateExpected: false,
-		},
-		{
-			Name: "successfully create constraint and evaluate 6",
-			Constraint: model.Constraint{
-				Name: constraint.BiggerThanConstraintName,
-				Parameters: json.RawMessage(
-					`{"value": 0, "property": "test"}`,
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "-1"},
-			},
-			EvaluateExpected: false,
 		},
 	}
 

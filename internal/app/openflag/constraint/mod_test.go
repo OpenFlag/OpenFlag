@@ -26,10 +26,23 @@ func (suite *ModConstraintSuite) TestModConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 10,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 10,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 11,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
@@ -43,11 +56,25 @@ func (suite *ModConstraintSuite) TestModConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:   9,
-				Type: "10",
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:   9,
+						Type: "10",
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:   9,
+						Type: "11",
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
@@ -58,28 +85,27 @@ func (suite *ModConstraintSuite) TestModConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      9,
-				Type:    "9",
-				Context: map[string]string{"test": "8"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      9,
+						Type:    "9",
+						Context: map[string]string{"test": "8"},
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:      9,
+						Type:    "9",
+						Context: map[string]string{"test": "11"},
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
-		},
-		{
-			Name: "successfully create constraint and evaluate 4",
-			Constraint: model.Constraint{
-				Name: constraint.ModConstraintName,
-				Parameters: json.RawMessage(
-					`{"value": 2, "property": "test"}`,
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      9,
-				Type:    "9",
-				Context: map[string]string{"test": "9"},
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint with invalid parameter",
@@ -90,10 +116,6 @@ func (suite *ModConstraintSuite) TestModConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 8,
-			},
-			EvaluateExpected: false,
 		},
 	}
 

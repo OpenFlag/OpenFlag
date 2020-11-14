@@ -26,10 +26,23 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 8,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 8,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 10,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
@@ -40,11 +53,25 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:   8,
-				Type: "8",
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:   8,
+						Type: "8",
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:   8,
+						Type: "10",
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
@@ -55,57 +82,27 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "8"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "8"},
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "10"},
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
-		},
-		{
-			Name: "successfully create constraint and evaluate 4",
-			Constraint: model.Constraint{
-				Name: constraint.ExcludesConstraintName,
-				Parameters: json.RawMessage(
-					`{"values": ["10", "11"]}`,
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 10,
-			},
-			EvaluateExpected: false,
-		},
-		{
-			Name: "successfully create constraint and evaluate 5",
-			Constraint: model.Constraint{
-				Name: constraint.ExcludesConstraintName,
-				Parameters: json.RawMessage(
-					fmt.Sprintf(`{"values": ["10", "11"], "property": "%s"}`, constraint.EntityTypeProperty),
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID:   8,
-				Type: "10",
-			},
-			EvaluateExpected: false,
-		},
-		{
-			Name: "successfully create constraint and evaluate 6",
-			Constraint: model.Constraint{
-				Name: constraint.ExcludesConstraintName,
-				Parameters: json.RawMessage(
-					`{"values": ["10", "11"], "property": "test"}`,
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "10"},
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint with invalid parameters",
@@ -116,9 +113,6 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 8,
-			},
 		},
 	}
 

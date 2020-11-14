@@ -27,10 +27,29 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 9,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 9,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 10,
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID: 11,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 2",
@@ -41,11 +60,32 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:   11,
-				Type: "9",
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:   11,
+						Type: "9",
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:   11,
+						Type: "10",
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID:   11,
+						Type: "11",
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 3",
@@ -56,12 +96,35 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      11,
-				Type:    "t",
-				Context: map[string]string{"test": "9"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      11,
+						Type:    "t",
+						Context: map[string]string{"test": "9"},
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID:      11,
+						Type:    "t",
+						Context: map[string]string{"test": "10"},
+					},
+					ResultExpected: false,
+				},
+				{
+					Entity: model.Entity{
+						ID:      11,
+						Type:    "t",
+						Context: map[string]string{"test": "11"},
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 4",
@@ -72,12 +135,19 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "-1"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "-1"},
+					},
+					ResultExpected: true,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "successfully create constraint and evaluate 5",
@@ -88,12 +158,19 @@ func (suite *LessThanConstraintSuite) TestLessThanConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID:      8,
-				Type:    "t",
-				Context: map[string]string{"test": "t"},
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID:      8,
+						Type:    "t",
+						Context: map[string]string{"test": "t"},
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: false,
 		},
 	}
 

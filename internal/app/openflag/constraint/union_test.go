@@ -42,50 +42,34 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 						}
 					`,
 						constraint.LessThanConstraintName,
-						constraint.BiggerThanConstraintName,
-					),
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 8,
-			},
-			EvaluateExpected: true,
-		},
-		{
-			Name: "successfully create constraint and evaluate 2",
-			Constraint: model.Constraint{
-				Name: constraint.UnionConstraintName,
-				Parameters: json.RawMessage(
-					fmt.Sprintf(
-						`
-						{
-							"constraints": [
-								{
-									"name": "%s",
-									"parameters": {
-										"value": 10
-									}
-								},
-								{
-									"name": "%s",
-									"parameters": {
-										"value": 6
-									}
-								}
-							]
-						}
-					`,
 						constraint.LessThanConstraintName,
-						constraint.BiggerThanConstraintName,
 					),
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 5,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 8,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 5,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 11,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
 		},
 		{
 			Name: "failed to create constraint (creation of inside constraint)",
@@ -117,10 +101,6 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint (invalid parameters)",
@@ -134,7 +114,7 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 								{
 									"name": "%s",
 									"parameters": {
-										"value": "10"
+										"value": 10
 									}
 								}
 							]
@@ -145,10 +125,6 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 	}
 

@@ -158,7 +158,7 @@ func (suite *ParserSuite) TestParserSuite() {
 		{
 			name: "successfully parse expression 4",
 			cExp: fmt.Sprintf(
-				"(A %s B) %s C",
+				"A %s B %s C",
 				constraint.IntersectionConstraintName,
 				constraint.UnionConstraintName,
 			),
@@ -268,7 +268,7 @@ func (suite *ParserSuite) TestParserSuite() {
 		{
 			name: "successfully parse expression 6",
 			cExp: fmt.Sprintf(
-				"(%s(A %s B)) %s C",
+				"%s(A %s B) %s C",
 				constraint.NotConstraintName,
 				constraint.IntersectionConstraintName,
 				constraint.UnionConstraintName,
@@ -324,6 +324,150 @@ func (suite *ParserSuite) TestParserSuite() {
 				},
 			},
 		},
+		{
+			name: "successfully parse expression 7",
+			cExp: fmt.Sprintf(
+				"%sA",
+				constraint.NotConstraintName,
+			),
+			cMap: map[string]model.Constraint{
+				"A": {
+					Name: constraint.LessThanConstraintName,
+					Parameters: json.RawMessage(`
+						{"value": 100}
+					`),
+				},
+			},
+			errExpected: false,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 110,
+					},
+					resultExpected: true,
+				},
+			},
+		},
+		{
+			name: "successfully parse expression 8",
+			cExp: fmt.Sprintf(
+				"%sA %s B",
+				constraint.NotConstraintName,
+				constraint.IntersectionConstraintName,
+			),
+			cMap: map[string]model.Constraint{
+				"A": {
+					Name: constraint.LessThanConstraintName,
+					Parameters: json.RawMessage(`
+						{"value": 100}
+					`),
+				},
+				"B": {
+					Name: constraint.LessThanConstraintName,
+					Parameters: json.RawMessage(`
+						{"value": 200}
+					`),
+				},
+			},
+			errExpected: false,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 110,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 210,
+					},
+					resultExpected: false,
+				},
+			},
+		},
+		{
+			name: "successfully parse expression 9",
+			cExp: fmt.Sprintf(
+				"(A %s B) %s (C %s D)",
+				constraint.IntersectionConstraintName,
+				constraint.UnionConstraintName,
+				constraint.IntersectionConstraintName,
+			),
+			cMap: map[string]model.Constraint{
+				"A": {
+					Name: constraint.BiggerThanConstraintName,
+					Parameters: json.RawMessage(`
+						{"value": 100}
+					`),
+				},
+				"B": {
+					Name: constraint.LessThanConstraintName,
+					Parameters: json.RawMessage(`
+						{"value": 200}
+					`),
+				},
+				"C": {
+					Name: constraint.BiggerThanConstraintName,
+					Parameters: json.RawMessage(`
+						{"value": 200}
+					`),
+				},
+				"D": {
+					Name: constraint.LessThanConstraintName,
+					Parameters: json.RawMessage(`
+						{"value": 300}
+					`),
+				},
+			},
+			errExpected: false,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 110,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 210,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 310,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 90,
+					},
+					resultExpected: false,
+				},
+			},
+		},
 	}
 
 	parser := constraint.Parser{}
@@ -339,6 +483,9 @@ func (suite *ParserSuite) TestParserSuite() {
 			}
 
 			suite.NoError(err)
+
+			r, _ := json.Marshal(&c)
+			fmt.Println(string(r))
 
 			co, err := constraint.New(c.Name, c.Parameters)
 			suite.NoError(err)

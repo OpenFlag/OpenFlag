@@ -16,11 +16,13 @@ type (
 	}
 
 	ConstraintTestCase struct {
-		Name             string
-		Constraint       model.Constraint
-		ErrExpected      bool
-		Entity           model.Entity
-		EvaluateExpected bool
+		Name        string
+		Constraint  model.Constraint
+		ErrExpected bool
+		Evaluations []struct {
+			Entity         model.Entity
+			ResultExpected bool
+		}
 	}
 )
 
@@ -39,8 +41,10 @@ func (suite *ConstraintSuite) RunCases(cases []ConstraintTestCase) {
 
 			suite.NoError(err)
 
-			result := c.Evaluate(tc.Entity)
-			suite.Equal(tc.EvaluateExpected, result)
+			for _, ev := range tc.Evaluations {
+				result := c.Evaluate(ev.Entity)
+				suite.Equal(ev.ResultExpected, result)
+			}
 		})
 	}
 }

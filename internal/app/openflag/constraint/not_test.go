@@ -38,36 +38,23 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 				),
 			},
 			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 15,
+			Evaluations: []struct {
+				Entity         model.Entity
+				ResultExpected bool
+			}{
+				{
+					Entity: model.Entity{
+						ID: 15,
+					},
+					ResultExpected: true,
+				},
+				{
+					Entity: model.Entity{
+						ID: 9,
+					},
+					ResultExpected: false,
+				},
 			},
-			EvaluateExpected: true,
-		},
-		{
-			Name: "successfully create constraint and evaluate 2",
-			Constraint: model.Constraint{
-				Name: constraint.NotConstraintName,
-				Parameters: json.RawMessage(
-					fmt.Sprintf(
-						`
-						{
-							"constraint": {
-								"name": "%s",
-								"parameters": {
-									"value": 10
-								}
-							}
-						}
-					`,
-						constraint.LessThanConstraintName,
-					),
-				),
-			},
-			ErrExpected: false,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint (creation of inside constraint)",
@@ -80,7 +67,7 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 							"constraint": {
 								"name": "%s",
 								"parameters": {
-									"value": "10""
+									"value": "10"
 								}
 							}
 						}
@@ -90,10 +77,6 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 15,
-			},
-			EvaluateExpected: false,
 		},
 		{
 			Name: "failed to create constraint (invalid parameters)",
@@ -104,10 +87,6 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 				),
 			},
 			ErrExpected: true,
-			Entity: model.Entity{
-				ID: 5,
-			},
-			EvaluateExpected: false,
 		},
 	}
 

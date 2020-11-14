@@ -47,9 +47,9 @@ func (p Parser) findConstraint(key string, constraints map[string]model.Constrai
 func (p Parser) precedence(c string) int {
 	table := map[string]int{
 		"(":                        0,
-		IntersectionConstraintName: 1,
 		UnionConstraintName:        1,
-		NotConstraintName:          2,
+		IntersectionConstraintName: 2,
+		NotConstraintName:          3,
 	}
 
 	return table[c]
@@ -147,7 +147,7 @@ func (p Parser) Parse(expression string, constraints map[string]model.Constraint
 			parserStack.Push(char)
 			i++
 		} else if p.isOperator(char) {
-			if parserStack.Peek() != nil || p.precedence(char) > p.precedence(parserStack.Peek().(string)) {
+			if parserStack.Peek() != nil && p.precedence(char) > p.precedence(parserStack.Peek().(string)) {
 				parserStack.Push(char)
 				i++
 			} else {
