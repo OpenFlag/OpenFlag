@@ -16,12 +16,14 @@ type ParserSuite struct {
 
 func (suite *ParserSuite) TestParserSuite() {
 	cases := []struct {
-		name             string
-		cExp             string
-		cMap             map[string]model.Constraint
-		errExpected      bool
-		entity           model.Entity
-		evaluateExpected bool
+		name        string
+		cExp        string
+		cMap        map[string]model.Constraint
+		errExpected bool
+		evaluations []struct {
+			entity         model.Entity
+			resultExpected bool
+		}
 	}{
 		{
 			name: "successfully parse expression 1",
@@ -35,10 +37,23 @@ func (suite *ParserSuite) TestParserSuite() {
 				},
 			},
 			errExpected: false,
-			entity: model.Entity{
-				ID: 9,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 9,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: false,
+				},
 			},
-			evaluateExpected: true,
 		},
 		{
 			name: "successfully parse expression 2",
@@ -58,10 +73,29 @@ func (suite *ParserSuite) TestParserSuite() {
 				},
 			},
 			errExpected: false,
-			entity: model.Entity{
-				ID: 8,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 8,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 5,
+					},
+					resultExpected: false,
+				},
 			},
-			evaluateExpected: true,
 		},
 		{
 			name: "successfully parse expression 3",
@@ -91,10 +125,35 @@ func (suite *ParserSuite) TestParserSuite() {
 				},
 			},
 			errExpected: false,
-			entity: model.Entity{
-				ID: 8,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 8,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 7,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 5,
+					},
+					resultExpected: false,
+				},
 			},
-			evaluateExpected: true,
 		},
 		{
 			name: "successfully parse expression 4",
@@ -124,10 +183,41 @@ func (suite *ParserSuite) TestParserSuite() {
 				},
 			},
 			errExpected: false,
-			entity: model.Entity{
-				ID: 11,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 7,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 8,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 5,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 12,
+					},
+					resultExpected: false,
+				},
 			},
-			evaluateExpected: true,
 		},
 		{
 			name: "successfully parse expression 5",
@@ -151,10 +241,29 @@ func (suite *ParserSuite) TestParserSuite() {
 				},
 			},
 			errExpected: false,
-			entity: model.Entity{
-				ID: 11,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 8,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 5,
+					},
+					resultExpected: true,
+				},
 			},
-			evaluateExpected: true,
 		},
 		{
 			name: "successfully parse expression 6",
@@ -185,10 +294,35 @@ func (suite *ParserSuite) TestParserSuite() {
 				},
 			},
 			errExpected: false,
-			entity: model.Entity{
-				ID: 11,
+			evaluations: []struct {
+				entity         model.Entity
+				resultExpected bool
+			}{
+				{
+					entity: model.Entity{
+						ID: 11,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 12,
+					},
+					resultExpected: false,
+				},
+				{
+					entity: model.Entity{
+						ID: 5,
+					},
+					resultExpected: true,
+				},
+				{
+					entity: model.Entity{
+						ID: 110,
+					},
+					resultExpected: true,
+				},
 			},
-			evaluateExpected: true,
 		},
 	}
 
@@ -209,8 +343,10 @@ func (suite *ParserSuite) TestParserSuite() {
 			co, err := constraint.New(c.Name, c.Parameters)
 			suite.NoError(err)
 
-			result := co.Evaluate(tc.entity)
-			suite.Equal(tc.evaluateExpected, result)
+			for _, ev := range tc.evaluations {
+				result := co.Evaluate(ev.entity)
+				suite.Equal(ev.resultExpected, result)
+			}
 		})
 	}
 }
