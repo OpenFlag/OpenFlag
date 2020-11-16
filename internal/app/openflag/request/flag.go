@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"regexp"
+	"time"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
 
@@ -14,6 +15,7 @@ import (
 
 const (
 	minSegmentLen = 1
+	maxLimit      = 100
 
 	nameFormat = `^[a-z0-9]+(?:\.[a-z0-9]+)*$`
 )
@@ -60,7 +62,61 @@ type (
 	CreateFlagRequest struct {
 		Flag
 	}
+
+	// FindFlagsByTagRequest represents a request body for finding flags that hav given tag.
+	FindFlagsByTagRequest struct {
+		Tag string `json:"tag"`
+	}
+
+	// FindFlagHistoryRequest represents a request body for finding history of a flag.
+	FindFlagHistoryRequest struct {
+		Flag string `json:"flag"`
+	}
+
+	// FindFlagsRequest represents a request body for finding flags using offset and limit.
+	FindFlagsRequest struct {
+		Offset    int        `json:"offset"`
+		Limit     int        `json:"limit"`
+		Timestamp *time.Time `json:"timestamp"`
+	}
 )
+
+// Validate validates FindFlagsRequest struct.
+func (f FindFlagsRequest) Validate() error {
+	return validation.ValidateStruct(&f,
+		validation.Field(
+			&f.Offset,
+			validation.Min(0),
+		),
+		validation.Field(
+			&f.Limit,
+			validation.Required,
+			validation.Min(0), validation.Max(maxLimit),
+		),
+	)
+}
+
+// Validate validates FindFlagsByTagRequest struct.
+func (f FindFlagsByTagRequest) Validate() error {
+	return validation.ValidateStruct(&f,
+		validation.Field(
+			&f.Tag,
+			validation.Required,
+			validation.Match(nameRegex),
+		),
+	)
+}
+
+// Validate validates FindFlagHistoryRequest struct.
+func (f FindFlagHistoryRequest) Validate() error {
+	return validation.ValidateStruct(&f,
+		validation.Field(
+			&f.Flag,
+			validation.Required,
+			validation.Match(nameRegex),
+		),
+	)
+}
 
 // Validate validates Variant struct.
 func (v Variant) Validate() error {

@@ -89,6 +89,12 @@ func main(cfg config.Config) {
 	v1 := e.Group("v1")
 
 	v1.POST("/flag", flagHandler.Create)
+	v1.DELETE("/flag/:id", flagHandler.Delete)
+	v1.PUT("/flag/:id", flagHandler.Update)
+	v1.GET("/flag/:id", flagHandler.FindByID)
+	v1.POST("/flag/tag", flagHandler.FindByTag)
+	v1.POST("/flag/history", flagHandler.FindByFlag)
+	v1.POST("/flags", flagHandler.FindFlags)
 
 	e.Static("/", "browser/openflag-ui/build")
 
