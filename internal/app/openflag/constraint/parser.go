@@ -35,8 +35,8 @@ func (p Parser) isValidCharacter(c string) bool {
 	return p.isOperand(c) || p.isOperator(c) || p.isParentheses(c)
 }
 
-func (p Parser) findConstraint(key string, constraints map[string]model.Constraint) *model.Constraint {
-	c, ok := constraints[key]
+func (p Parser) findConstraint(identifier string, constraints map[string]model.Constraint) *model.Constraint {
+	c, ok := constraints[identifier]
 	if ok {
 		return &c
 	}

@@ -7,6 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/handler"
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
+
 	"github.com/OpenFlag/OpenFlag/pkg/database"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/metric"
@@ -73,9 +76,19 @@ func main(cfg config.Config) {
 
 	e.GET("/healthz", func(c echo.Context) error { return c.NoContent(http.StatusNoContent) })
 
-	// ==========
-	// Codes
-	// ==========
+	flagRepo := model.SQLFlagRepo{
+		Driver:   dbCfg.Driver,
+		MasterDB: dbMaster,
+		SlaveDB:  dbSlave,
+	}
+
+	flagHandler := handler.FlagHandler{
+		FlagRepo: flagRepo,
+	}
+
+	v1 := e.Group("v1")
+
+	v1.POST("/flag", flagHandler.Create)
 
 	e.Static("/", "browser/openflag-ui/build")
 

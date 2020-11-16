@@ -28,21 +28,19 @@ type (
 	// if you have a variant for the green button,
 	// you can dynamically control what's the hex color of green you want to use (e.g. {"hex_color": "#42b983"}).
 	Variant struct {
-		ID         int             `json:"id"`
 		Key        string          `json:"key"`
-		Attachment json.RawMessage `json:"attachment"`
+		Attachment json.RawMessage `json:"attachment,omitempty"`
 	}
 
 	// Constraint represents rules that we can use to define the audience of the segment.
 	// In other words, the audience in the segment is defined by a set of constraints.
 	Constraint struct {
 		Name       string          `json:"name"`
-		Parameters json.RawMessage `json:"parameters"`
+		Parameters json.RawMessage `json:"parameters,omitempty"`
 	}
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
-		ID          int                   `json:"id"`
 		Description string                `json:"description"`
 		Constraints map[string]Constraint `json:"constraints"`
 		Expression  string                `json:"expression"`
@@ -51,13 +49,13 @@ type (
 
 	// Flag represents each row of flags table in SQL database.
 	Flag struct {
-		ID          int64      `gorm:"primary_key"`
-		Tags        *string    `json:"tags,omitempty"`
-		Description string     `json:"description"`
-		Flag        string     `json:"flag"`
-		Segments    string     `json:"segments"`
-		CreatedAt   time.Time  `json:"created_at"`
-		DeletedAt   *time.Time `json:"-"`
+		ID          int64 `gorm:"primary_key"`
+		Tags        *string
+		Description string
+		Flag        string
+		Segments    string
+		CreatedAt   time.Time
+		DeletedAt   *time.Time
 	}
 )
 
@@ -75,8 +73,9 @@ type FlagRepo interface {
 
 // SQLFlagRepo is an implementation of FlagRepo for SQL databases.
 type SQLFlagRepo struct {
-	Driver string
-	DB     *gorm.DB
+	Driver   string
+	MasterDB *gorm.DB
+	SlaveDB  *gorm.DB
 }
 
 // Create creates a flag in SQL database.
@@ -85,7 +84,7 @@ func (s SQLFlagRepo) Create(flag *Flag) (finalErr error) {
 
 	defer func() { metrics.report(flagName, "create", startTime, finalErr) }()
 
-	return s.DB.Transaction(func(tx *gorm.DB) error {
+	return s.MasterDB.Transaction(func(tx *gorm.DB) error {
 		err := tx.Where("flag = ?", flag.Flag).Take(&Flag{}).Error
 		if err == nil {
 			return ErrDuplicateFlagFound
@@ -107,7 +106,7 @@ func (s SQLFlagRepo) Delete(id int64) (finalErr error) {
 
 	defer func() { metrics.report(flagName, "delete", startTime, finalErr) }()
 
-	return s.DB.Where("id = ?", id).Delete(&Flag{}).Error
+	return s.MasterDB.Where("id = ?", id).Delete(&Flag{}).Error
 }
 
 // Update updates a flag in SQL database.
@@ -116,7 +115,7 @@ func (s SQLFlagRepo) Update(id int64, flag *Flag) (finalErr error) {
 
 	defer func() { metrics.report(flagName, "update", startTime, finalErr) }()
 
-	return s.DB.Transaction(func(tx *gorm.DB) error {
+	return s.MasterDB.Transaction(func(tx *gorm.DB) error {
 		var f Flag
 
 		if err := tx.Where("id = ?", id).Find(&f).Error; err != nil {
@@ -151,7 +150,7 @@ func (s SQLFlagRepo) FindAll() (_ []Flag, finalErr error) {
 
 	var result []Flag
 
-	if err := s.DB.Find(&result).Error; err != nil {
+	if err := s.SlaveDB.Find(&result).Error; err != nil {
 		return nil, err
 	}
 
@@ -166,7 +165,7 @@ func (s SQLFlagRepo) FindByID(id int64) (_ *Flag, finalErr error) {
 
 	var result Flag
 
-	if err := s.DB.Unscoped().Where("id = ?", id).Find(&result).Error; err != nil {
+	if err := s.SlaveDB.Unscoped().Where("id = ?", id).Find(&result).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, ErrFlagNotFound
 		}
@@ -191,7 +190,7 @@ func (s SQLFlagRepo) FindByTag(tag string) (_ []Flag, finalErr error) {
 		query = fmt.Sprintf("select * from flags where tags::jsonb ? '%s' and deleted_at is null;", tag)
 	}
 
-	if err := s.DB.Raw(query).Scan(&result).Error; err != nil {
+	if err := s.SlaveDB.Raw(query).Scan(&result).Error; err != nil {
 		return nil, err
 	}
 
@@ -206,7 +205,7 @@ func (s SQLFlagRepo) FindByFlag(flag string) (_ []Flag, finalErr error) {
 
 	var result []Flag
 
-	if err := s.DB.Unscoped().Where("flag = ?", flag).Find(&result).Error; err != nil {
+	if err := s.SlaveDB.Unscoped().Where("flag = ?", flag).Find(&result).Error; err != nil {
 		return nil, err
 	}
 
@@ -221,7 +220,7 @@ func (s SQLFlagRepo) FindFlags(offset int, limit int, t time.Time) (_ []Flag, fi
 
 	var result []Flag
 
-	if err := s.DB.Where("created_at < ?", t).Order("id desc").Offset(offset).Limit(limit).
+	if err := s.SlaveDB.Where("created_at < ?", t).Order("id desc").Offset(offset).Limit(limit).
 		Find(&result).Error; err != nil {
 		return nil, err
 	}

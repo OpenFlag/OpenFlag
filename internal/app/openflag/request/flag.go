@@ -13,7 +13,6 @@ import (
 )
 
 const (
-	minIDValue    = 1
 	minSegmentLen = 1
 
 	nameFormat = `^[a-z0-9]+(?:\.[a-z0-9]+)*$`
@@ -30,21 +29,19 @@ type (
 	// if you have a variant for the green button,
 	// you can dynamically control what's the hex color of green you want to use (e.g. {"hex_color": "#42b983"}).
 	Variant struct {
-		ID         int             `json:"id"`
 		Key        string          `json:"key"`
-		Attachment json.RawMessage `json:"attachment"`
+		Attachment json.RawMessage `json:"attachment,omitempty"`
 	}
 
 	// Constraint represents rules that we can use to define the audience of the segment.
 	// In other words, the audience in the segment is defined by a set of constraints.
 	Constraint struct {
 		Name       string          `json:"name"`
-		Parameters json.RawMessage `json:"parameters"`
+		Parameters json.RawMessage `json:"parameters,omitempty"`
 	}
 
 	// Segment represents the segmentation, i.e. the set of audience we want to target.
 	Segment struct {
-		ID          int                   `json:"id"`
 		Description string                `json:"description"`
 		Constraints map[string]Constraint `json:"constraints"`
 		Expression  string                `json:"expression"`
@@ -69,11 +66,6 @@ type (
 func (v Variant) Validate() error {
 	return validation.ValidateStruct(&v,
 		validation.Field(
-			&v.ID,
-			validation.Required,
-			validation.Min(minIDValue),
-		),
-		validation.Field(
 			&v.Key,
 			validation.Required,
 			validation.Match(nameRegex),
@@ -85,11 +77,6 @@ func (v Variant) Validate() error {
 // nolint:funlen
 func (s Segment) Validate() error {
 	return validation.ValidateStruct(&s,
-		validation.Field(
-			&s.ID,
-			validation.Required,
-			validation.Min(minIDValue),
-		),
 		validation.Field(
 			&s.Description,
 			validation.Required,
@@ -170,30 +157,6 @@ func (f Flag) Validate() error {
 			&f.Segments,
 			validation.Required,
 			validation.Length(minSegmentLen, 0),
-			validation.By(func(value interface{}) error {
-				sMap := map[int]struct{}{}
-				vMap := map[int]struct{}{}
-
-				for _, s := range f.Segments {
-					_, ok := sMap[s.ID]
-					if ok {
-						return errors.New("duplicate segment id")
-					}
-
-					sMap[s.ID] = struct{}{}
-				}
-
-				for _, s := range f.Segments {
-					_, ok := vMap[s.Variant.ID]
-					if ok {
-						return errors.New("duplicate variant id")
-					}
-
-					vMap[s.Variant.ID] = struct{}{}
-				}
-
-				return nil
-			}),
 		),
 		validation.Field(
 			&f.Tags,

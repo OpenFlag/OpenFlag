@@ -19,26 +19,31 @@ func (suite *FlagRepoSuite) SetupSuite() {
 	cfg := config.Init()
 	dbCfg := cfg.Database
 
-	db, err := database.Create(dbCfg.Driver, dbCfg.MasterConnStr, dbCfg.Options)
+	masterDb, err := database.Create(dbCfg.Driver, dbCfg.MasterConnStr, dbCfg.Options)
 	suite.NoError(err)
-	suite.NotNil(db)
+	suite.NotNil(masterDb)
+
+	slaveDb, err := database.Create(dbCfg.Driver, dbCfg.SlaveConnStr, dbCfg.Options)
+	suite.NoError(err)
+	suite.NotNil(slaveDb)
 
 	suite.repo = model.SQLFlagRepo{
-		Driver: dbCfg.Driver,
-		DB:     db,
+		Driver:   dbCfg.Driver,
+		MasterDB: masterDb,
+		SlaveDB:  slaveDb,
 	}
 }
 
 func (suite *FlagRepoSuite) TearDownSuite() {
-	suite.NoError(suite.repo.DB.Close())
+	suite.NoError(suite.repo.MasterDB.Close())
 }
 
 func (suite *FlagRepoSuite) SetupTest() {
-	suite.NoError(suite.repo.DB.Exec(`truncate table flags`).Error)
+	suite.NoError(suite.repo.MasterDB.Exec(`truncate table flags`).Error)
 }
 
 func (suite *FlagRepoSuite) TearDownTest() {
-	suite.NoError(suite.repo.DB.Exec(`truncate table flags`).Error)
+	suite.NoError(suite.repo.MasterDB.Exec(`truncate table flags`).Error)
 }
 
 func (suite *FlagRepoSuite) TestScenario() {
