@@ -170,6 +170,30 @@ func (f Flag) Validate() error {
 			&f.Segments,
 			validation.Required,
 			validation.Length(minSegmentLen, 0),
+			validation.By(func(value interface{}) error {
+				sMap := map[int]struct{}{}
+				vMap := map[int]struct{}{}
+
+				for _, s := range f.Segments {
+					_, ok := sMap[s.ID]
+					if ok {
+						return errors.New("duplicate segment id")
+					}
+
+					sMap[s.ID] = struct{}{}
+				}
+
+				for _, s := range f.Segments {
+					_, ok := vMap[s.Variant.ID]
+					if ok {
+						return errors.New("duplicate variant id")
+					}
+
+					vMap[s.Variant.ID] = struct{}{}
+				}
+
+				return nil
+			}),
 		),
 		validation.Field(
 			&f.Tags,
