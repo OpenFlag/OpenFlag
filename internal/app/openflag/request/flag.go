@@ -63,6 +63,11 @@ type (
 		Flag
 	}
 
+	// UpdateFlagRequest represents a request body for updating a flag.
+	UpdateFlagRequest struct {
+		Flag
+	}
+
 	// FindFlagsByTagRequest represents a request body for finding flags that hav given tag.
 	FindFlagsByTagRequest struct {
 		Tag string `json:"tag"`

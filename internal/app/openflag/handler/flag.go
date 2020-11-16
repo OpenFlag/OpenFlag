@@ -87,7 +87,7 @@ func (f FlagHandler) Update(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	req := request.CreateFlagRequest{}
+	req := request.UpdateFlagRequest{}
 
 	if err := c.Bind(&req); err != nil {
 		logrus.Errorf("flag handler bind data: %s", err.Error())
@@ -176,19 +176,13 @@ func (f FlagHandler) FindByTag(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	resps := []response.Flag{}
-
-	for _, flag := range flags {
-		resp, err := f.responseFromFlag(&flag)
-		if err != nil {
-			logrus.Errorf("flag handler response from flag failed: %s", err.Error())
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
-
-		resps = append(resps, *resp)
+	resp, err := f.responseFromFlags(flags)
+	if err != nil {
+		logrus.Errorf("flag handler response from flags failed: %s", err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, resps)
+	return c.JSON(http.StatusOK, resp)
 }
 
 // FindByFlag finds history of a flag using an http request.
@@ -211,19 +205,13 @@ func (f FlagHandler) FindByFlag(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	resps := []response.Flag{}
-
-	for _, flag := range flags {
-		resp, err := f.responseFromFlag(&flag)
-		if err != nil {
-			logrus.Errorf("flag handler response from flag failed: %s", err.Error())
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
-
-		resps = append(resps, *resp)
+	resp, err := f.responseFromFlags(flags)
+	if err != nil {
+		logrus.Errorf("flag handler response from flags failed: %s", err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, resps)
+	return c.JSON(http.StatusOK, resp)
 }
 
 // FindFlags finds flags with offset and limit using an http request.
@@ -251,19 +239,13 @@ func (f FlagHandler) FindFlags(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	resps := []response.Flag{}
-
-	for _, flag := range flags {
-		resp, err := f.responseFromFlag(&flag)
-		if err != nil {
-			logrus.Errorf("flag handler response from flag failed: %s", err.Error())
-			return echo.NewHTTPError(http.StatusInternalServerError)
-		}
-
-		resps = append(resps, *resp)
+	resp, err := f.responseFromFlags(flags)
+	if err != nil {
+		logrus.Errorf("flag handler response from flags failed: %s", err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, resps)
+	return c.JSON(http.StatusOK, resp)
 }
 
 func (f FlagHandler) flagFromRequest(req request.Flag) (*model.Flag, error) {
@@ -368,4 +350,21 @@ func (f FlagHandler) responseFromFlag(flag *model.Flag) (*response.Flag, error) 
 	}
 
 	return &resp, nil
+}
+
+func (f FlagHandler) responseFromFlags(flags []model.Flag) ([]response.Flag, error) {
+	resps := []response.Flag{}
+
+	for _, flag := range flags {
+		fl := flag
+
+		resp, err := f.responseFromFlag(&fl)
+		if err != nil {
+			return nil, err
+		}
+
+		resps = append(resps, *resp)
+	}
+
+	return resps, nil
 }

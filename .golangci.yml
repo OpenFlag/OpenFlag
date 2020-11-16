@@ -20,5 +20,8 @@ issues:
         - gomnd
         - gocognit
         - gocritic
+    - path: internal/app/openflag/handler/flag.go
+      linters:
+        - dupl
 
   exclude-use-default: false
