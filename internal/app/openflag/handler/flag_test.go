@@ -19,11 +19,22 @@ import (
 
 type fakeFlagRepo struct {
 	model.FlagRepo
-	repoError error
+	repoError    error
+	toBeDeleteID int64
 }
 
 func (f *fakeFlagRepo) Create(flag *model.Flag) error {
 	return f.repoError
+}
+
+func (f *fakeFlagRepo) Delete(id int64) error {
+	if f.repoError != nil {
+		return f.repoError
+	}
+
+	f.toBeDeleteID = id
+
+	return nil
 }
 
 type FlagHandlerSuite struct {
@@ -45,7 +56,7 @@ func (suite *FlagHandlerSuite) SetupSuite() {
 	suite.engine.POST("/v1/flags", handler.FlagHandler{FlagRepo: suite.fakeFlagRepo}.FindFlags)
 }
 
-func (suite *FlagHandlerSuite) TestCreateRule() {
+func (suite *FlagHandlerSuite) TestCreateFlag() {
 	cases := []struct {
 		name      string
 		req       request.CreateFlagRequest
@@ -379,6 +390,53 @@ func (suite *FlagHandlerSuite) TestCreateRule() {
 
 			suite.engine.ServeHTTP(w, req)
 			suite.Equal(tc.status, w.Code, tc.name)
+		})
+	}
+}
+
+func (suite *FlagHandlerSuite) TestDeleteFlag() {
+	cases := []struct {
+		name      string
+		flagID    string
+		status    int
+		repoError error
+	}{
+		{
+			name:      "successfully delete flag 1",
+			flagID:    "10",
+			status:    http.StatusNoContent,
+			repoError: nil,
+		},
+		{
+			name:      "failed to delete flag 1",
+			flagID:    "10",
+			status:    http.StatusInternalServerError,
+			repoError: errors.New("fake flag repo error"),
+		},
+		{
+			name:      "failed to delete flag 2",
+			flagID:    "10s",
+			status:    http.StatusBadRequest,
+			repoError: nil,
+		},
+	}
+
+	for i := range cases {
+		tc := cases[i]
+		suite.Run(tc.name, func() {
+			suite.fakeFlagRepo.repoError = tc.repoError
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("DELETE", fmt.Sprintf("/v1/flag/%s", tc.flagID), nil)
+
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+			suite.engine.ServeHTTP(w, req)
+			suite.Equal(tc.status, w.Code, tc.name)
+
+			if tc.status == http.StatusNoContent {
+				suite.Equal(tc.flagID, fmt.Sprintf("%d", suite.fakeFlagRepo.toBeDeleteID))
+			}
 		})
 	}
 }
