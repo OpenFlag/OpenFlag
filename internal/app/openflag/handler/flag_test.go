@@ -842,6 +842,61 @@ func (suite *FlagHandlerSuite) TestFindByFlag() {
 	}
 }
 
+func (suite *FlagHandlerSuite) TestFindFlags() {
+	cases := []struct {
+		name      string
+		req       request.FindFlagsRequest
+		status    int
+		repoError error
+	}{
+		{
+			name: "successfully find flags 1",
+			req: request.FindFlagsRequest{
+				Offset: 0,
+				Limit:  10,
+			},
+			repoError: nil,
+			status:    http.StatusOK,
+		},
+		{
+			name: "failed to find flags 1",
+			req: request.FindFlagsRequest{
+				Offset: 0,
+				Limit:  0,
+			},
+			repoError: nil,
+			status:    http.StatusBadRequest,
+		},
+		{
+			name: "failed to find flags 2",
+			req: request.FindFlagsRequest{
+				Offset: 0,
+				Limit:  10,
+			},
+			repoError: errors.New("fake flag repo error"),
+			status:    http.StatusInternalServerError,
+		},
+	}
+
+	for i := range cases {
+		tc := cases[i]
+		suite.Run(tc.name, func() {
+			suite.fakeFlagRepo.repoError = tc.repoError
+
+			data, err := json.Marshal(tc.req)
+			suite.NoError(err)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("POST", "/v1/flags", bytes.NewReader(data))
+
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+			suite.engine.ServeHTTP(w, req)
+			suite.Equal(tc.status, w.Code, tc.name)
+		})
+	}
+}
+
 func TestFlagHandlerSuite(t *testing.T) {
 	suite.Run(t, new(FlagHandlerSuite))
 }
