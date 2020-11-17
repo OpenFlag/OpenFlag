@@ -790,6 +790,58 @@ func (suite *FlagHandlerSuite) TestFindByTag() {
 	}
 }
 
+func (suite *FlagHandlerSuite) TestFindByFlag() {
+	cases := []struct {
+		name      string
+		req       request.FindFlagHistoryRequest
+		status    int
+		repoError error
+	}{
+		{
+			name: "successfully find flag history 1",
+			req: request.FindFlagHistoryRequest{
+				Flag: "flag1",
+			},
+			repoError: nil,
+			status:    http.StatusOK,
+		},
+		{
+			name: "failed to find flag history 1",
+			req: request.FindFlagHistoryRequest{
+				Flag: "tag 1",
+			},
+			repoError: nil,
+			status:    http.StatusBadRequest,
+		},
+		{
+			name: "failed to find flag history 2",
+			req: request.FindFlagHistoryRequest{
+				Flag: "tag1",
+			},
+			repoError: errors.New("fake flag repo error"),
+			status:    http.StatusInternalServerError,
+		},
+	}
+
+	for i := range cases {
+		tc := cases[i]
+		suite.Run(tc.name, func() {
+			suite.fakeFlagRepo.repoError = tc.repoError
+
+			data, err := json.Marshal(tc.req)
+			suite.NoError(err)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("POST", "/v1/flag/history", bytes.NewReader(data))
+
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+			suite.engine.ServeHTTP(w, req)
+			suite.Equal(tc.status, w.Code, tc.name)
+		})
+	}
+}
+
 func TestFlagHandlerSuite(t *testing.T) {
 	suite.Run(t, new(FlagHandlerSuite))
 }
