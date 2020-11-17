@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/response"
 
@@ -94,6 +95,30 @@ func (f *fakeFlagRepo) FindByID(id int64) (*model.Flag, error) {
 	}
 
 	return nil, model.ErrFlagNotFound
+}
+
+func (f *fakeFlagRepo) FindByTag(tag string) ([]model.Flag, error) {
+	if f.repoError != nil {
+		return nil, f.repoError
+	}
+
+	return []model.Flag{}, nil
+}
+
+func (f *fakeFlagRepo) FindByFlag(flag string) ([]model.Flag, error) {
+	if f.repoError != nil {
+		return nil, f.repoError
+	}
+
+	return []model.Flag{}, nil
+}
+
+func (f *fakeFlagRepo) FindFlags(offset int, limit int, t time.Time) ([]model.Flag, error) {
+	if f.repoError != nil {
+		return nil, f.repoError
+	}
+
+	return []model.Flag{}, nil
 }
 
 type FlagHandlerSuite struct {
@@ -709,6 +734,58 @@ func (suite *FlagHandlerSuite) TestFindByID() {
 				suite.Equal(tc.resp.Segments[0].Expression, resp.Segments[0].Expression)
 				suite.Equal(tc.resp.Segments[0].Variant.Key, resp.Segments[0].Variant.Key)
 			}
+		})
+	}
+}
+
+func (suite *FlagHandlerSuite) TestFindByTag() {
+	cases := []struct {
+		name      string
+		req       request.FindFlagsByTagRequest
+		status    int
+		repoError error
+	}{
+		{
+			name: "successfully find flag by tag 1",
+			req: request.FindFlagsByTagRequest{
+				Tag: "tag1",
+			},
+			repoError: nil,
+			status:    http.StatusOK,
+		},
+		{
+			name: "failed to find flag by tag 1",
+			req: request.FindFlagsByTagRequest{
+				Tag: "tag 1",
+			},
+			repoError: nil,
+			status:    http.StatusBadRequest,
+		},
+		{
+			name: "failed to find flag by tag 2",
+			req: request.FindFlagsByTagRequest{
+				Tag: "tag1",
+			},
+			repoError: errors.New("fake flag repo error"),
+			status:    http.StatusInternalServerError,
+		},
+	}
+
+	for i := range cases {
+		tc := cases[i]
+		suite.Run(tc.name, func() {
+			suite.fakeFlagRepo.repoError = tc.repoError
+
+			data, err := json.Marshal(tc.req)
+			suite.NoError(err)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("POST", "/v1/flag/tag", bytes.NewReader(data))
+
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+			suite.engine.ServeHTTP(w, req)
+			suite.Equal(tc.status, w.Code, tc.name)
 		})
 	}
 }
