@@ -21,6 +21,7 @@ type fakeFlagRepo struct {
 	model.FlagRepo
 	repoError    error
 	toBeDeleteID int64
+	toBeUpdateID int64
 }
 
 func (f *fakeFlagRepo) Create(flag *model.Flag) error {
@@ -33,6 +34,16 @@ func (f *fakeFlagRepo) Delete(id int64) error {
 	}
 
 	f.toBeDeleteID = id
+
+	return nil
+}
+
+func (f *fakeFlagRepo) Update(id int64, flag *model.Flag) error {
+	if f.repoError != nil {
+		return f.repoError
+	}
+
+	f.toBeUpdateID = id
 
 	return nil
 }
@@ -436,6 +447,136 @@ func (suite *FlagHandlerSuite) TestDeleteFlag() {
 
 			if tc.status == http.StatusNoContent {
 				suite.Equal(tc.flagID, fmt.Sprintf("%d", suite.fakeFlagRepo.toBeDeleteID))
+			}
+		})
+	}
+}
+
+func (suite *FlagHandlerSuite) TestUpdateFlag() {
+	cases := []struct {
+		name      string
+		flagID    string
+		req       request.UpdateFlagRequest
+		status    int
+		repoError error
+	}{
+		{
+			name:   "successfully update flag 1",
+			flagID: "10",
+			req: request.UpdateFlagRequest{
+				Flag: request.Flag{
+					Tags:        []string{"tag"},
+					Description: "description",
+					Flag:        "flag",
+					Segments: []request.Segment{
+						{
+							Description: "description",
+							Constraints: map[string]request.Constraint{
+								"A": {
+									Name:       constraint.LessThanConstraintName,
+									Parameters: json.RawMessage(`{"value": 10}`),
+								},
+								"B": {
+									Name:       constraint.BiggerThanConstraintName,
+									Parameters: json.RawMessage(`{"value": 5}`),
+								},
+							},
+							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
+							Variant: request.Variant{
+								Key: "on",
+							},
+						},
+					},
+				},
+			},
+			repoError: nil,
+			status:    http.StatusOK,
+		},
+		{
+			name:   "failed to update flag 1",
+			flagID: "10",
+			req: request.UpdateFlagRequest{
+				Flag: request.Flag{
+					Tags:        []string{"tag"},
+					Description: "description",
+					Flag:        "flag",
+					Segments: []request.Segment{
+						{
+							Description: "description",
+							Constraints: map[string]request.Constraint{
+								"A": {
+									Name:       constraint.LessThanConstraintName,
+									Parameters: json.RawMessage(`{"value": 10}`),
+								},
+								"B": {
+									Name:       constraint.BiggerThanConstraintName,
+									Parameters: json.RawMessage(`{"value": 5}`),
+								},
+							},
+							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
+							Variant: request.Variant{
+								Key: "on",
+							},
+						},
+					},
+				},
+			},
+			repoError: model.ErrFlagNotFound,
+			status:    http.StatusNotFound,
+		},
+		{
+			name:   "failed to update flag 2",
+			flagID: "10",
+			req: request.UpdateFlagRequest{
+				Flag: request.Flag{
+					Tags:        []string{"tag"},
+					Description: "description",
+					Flag:        "flag",
+					Segments: []request.Segment{
+						{
+							Description: "description",
+							Constraints: map[string]request.Constraint{
+								"A": {
+									Name:       constraint.LessThanConstraintName,
+									Parameters: json.RawMessage(`{"value": 10}`),
+								},
+								"B": {
+									Name:       constraint.BiggerThanConstraintName,
+									Parameters: json.RawMessage(`{"value": 5}`),
+								},
+							},
+							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
+							Variant: request.Variant{
+								Key: "on",
+							},
+						},
+					},
+				},
+			},
+			repoError: model.ErrInvalidFlagForUpdate,
+			status:    http.StatusBadRequest,
+		},
+	}
+
+	for i := range cases {
+		tc := cases[i]
+		suite.Run(tc.name, func() {
+			suite.fakeFlagRepo.repoError = tc.repoError
+
+			data, err := json.Marshal(tc.req)
+			suite.NoError(err)
+
+			w := httptest.NewRecorder()
+			url := fmt.Sprintf("/v1/flag/%s", tc.flagID)
+			req := httptest.NewRequest("PUT", url, bytes.NewReader(data))
+
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+			suite.engine.ServeHTTP(w, req)
+			suite.Equal(tc.status, w.Code, tc.name)
+
+			if tc.status == http.StatusOK {
+				suite.Equal(tc.flagID, fmt.Sprintf("%d", suite.fakeFlagRepo.toBeUpdateID))
 			}
 		})
 	}
