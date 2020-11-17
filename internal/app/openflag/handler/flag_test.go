@@ -9,6 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/response"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/constraint"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/handler"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
@@ -46,6 +48,52 @@ func (f *fakeFlagRepo) Update(id int64, flag *model.Flag) error {
 	f.toBeUpdateID = id
 
 	return nil
+}
+
+func (f *fakeFlagRepo) FindByID(id int64) (*model.Flag, error) {
+	if f.repoError != nil {
+		return nil, f.repoError
+	}
+
+	tags := `["tag1"]`
+
+	flag := &model.Flag{
+		ID:          10,
+		Tags:        &tags,
+		Description: "description 1",
+		Flag:        "flag1",
+		Segments: `
+			[
+				{
+					"description": "segment 1",
+					"constraints": {
+						"A": {
+							"name": "<",
+							"parameters": {
+								"value": 10
+							}
+						},
+						"B": {
+							"name": ">",
+							"parameters": {
+								"value": 5
+							}
+						}
+					},
+					"expression": "A ∩ B",
+					"variant": {
+						"key": "on"
+					}
+				}
+			]
+		`,
+	}
+
+	if id == flag.ID {
+		return flag, nil
+	}
+
+	return nil, model.ErrFlagNotFound
 }
 
 type FlagHandlerSuite struct {
@@ -577,6 +625,89 @@ func (suite *FlagHandlerSuite) TestUpdateFlag() {
 
 			if tc.status == http.StatusOK {
 				suite.Equal(tc.flagID, fmt.Sprintf("%d", suite.fakeFlagRepo.toBeUpdateID))
+			}
+		})
+	}
+}
+
+func (suite *FlagHandlerSuite) TestFindByID() {
+	cases := []struct {
+		name      string
+		flagID    string
+		status    int
+		repoError error
+		resp      response.Flag
+	}{
+		{
+			name:      "successfully find flag by its id 1",
+			flagID:    "10",
+			status:    http.StatusOK,
+			repoError: nil,
+			resp: response.Flag{
+				ID:          10,
+				Tags:        []string{"tag1"},
+				Description: "description 1",
+				Flag:        "flag1",
+				Segments: []response.Segment{
+					{
+						Description: "segment 1",
+						Constraints: map[string]response.Constraint{
+							"A": {
+								Name:       constraint.LessThanConstraintName,
+								Parameters: json.RawMessage(`{"value": 10}`),
+							},
+							"B": {
+								Name:       constraint.BiggerThanConstraintName,
+								Parameters: json.RawMessage(`{"value": 5}`),
+							},
+						},
+						Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
+						Variant: response.Variant{
+							Key: "on",
+						},
+					},
+				},
+			},
+		},
+		{
+			name:      "failed to find flag by its id 1",
+			flagID:    "11",
+			status:    http.StatusNotFound,
+			repoError: nil,
+		},
+		{
+			name:      "failed to find flag by its id 1",
+			flagID:    "10",
+			status:    http.StatusInternalServerError,
+			repoError: errors.New("fake flag repo error"),
+		},
+	}
+
+	for i := range cases {
+		tc := cases[i]
+		suite.Run(tc.name, func() {
+			suite.fakeFlagRepo.repoError = tc.repoError
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("GET", fmt.Sprintf("/v1/flag/%s", tc.flagID), nil)
+
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+			suite.engine.ServeHTTP(w, req)
+			suite.Equal(tc.status, w.Code, tc.name)
+
+			if tc.status == http.StatusOK {
+				var resp response.Flag
+
+				suite.NoError(json.Unmarshal(w.Body.Bytes(), &resp))
+
+				suite.Equal(tc.resp.ID, resp.ID)
+				suite.Equal(tc.resp.Description, resp.Description)
+				suite.Equal(tc.resp.Flag, resp.Flag)
+				suite.Equal(tc.resp.Tags, resp.Tags)
+				suite.Equal(tc.resp.Segments[0].Description, resp.Segments[0].Description)
+				suite.Equal(tc.resp.Segments[0].Expression, resp.Segments[0].Expression)
+				suite.Equal(tc.resp.Segments[0].Variant.Key, resp.Segments[0].Variant.Key)
 			}
 		})
 	}
