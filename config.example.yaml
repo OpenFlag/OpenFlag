@@ -55,7 +55,8 @@ redis:
     max-retry-backoff: 3s
 
 evaluation:
-  update-flags-cron-pattern: "0 0/5 * * * *" # Every 5 minutes
+  entity-context-cache-expiration: 1h
+  update-flags-cron-pattern: "0 0/5 * * * *"
 
 monitoring:
   prometheus:

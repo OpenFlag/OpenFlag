@@ -13,10 +13,12 @@ import (
 
 // EvaluationHandler represents a requests handler for evaluations.
 type EvaluationHandler struct {
-	Engine engine.Engine
+	Engine     engine.Engine
+	EntityRepo model.EntityRepo
 }
 
 // Evaluate evaluates some entities using an http request.
+// nolint:funlen
 func (e EvaluationHandler) Evaluate(c echo.Context) error {
 	req := request.EvaluationRequest{}
 
@@ -38,6 +40,16 @@ func (e EvaluationHandler) Evaluate(c echo.Context) error {
 			EntityType:    entity.EntityType,
 			EntityContext: entity.EntityContext,
 		})
+	}
+
+	if req.UseContextCache {
+		var err error
+
+		entities, err = e.EntityRepo.Find(entities)
+		if err != nil {
+			logrus.Errorf("evaluation handler failed (evaluate): %s", err.Error())
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
 	}
 
 	resps := []response.EvaluationResponse{}
@@ -69,6 +81,13 @@ func (e EvaluationHandler) Evaluate(c echo.Context) error {
 			},
 			Evaluations: evaluations,
 		})
+	}
+
+	if req.SaveContext {
+		if err := e.EntityRepo.Save(entities); err != nil {
+			logrus.Errorf("evaluation handler failed (evaluate): %s", err.Error())
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
 	}
 
 	return c.JSON(http.StatusOK, resps)

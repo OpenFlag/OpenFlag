@@ -59,6 +59,7 @@ redis:
     max-retry-backoff: 3s
 
 evaluation:
+  entity-context-cache-expiration: 1h
   update-flags-cron-pattern: "0 0/5 * * * *"
 
 monitoring:

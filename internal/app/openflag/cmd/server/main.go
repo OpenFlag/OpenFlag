@@ -78,11 +78,10 @@ func main(cfg config.Config) {
 
 	e.GET("/healthz", func(c echo.Context) error { return c.NoContent(http.StatusNoContent) })
 
-	flagRepo := model.SQLFlagRepo{
-		Driver:   dbCfg.Driver,
-		MasterDB: dbMaster,
-		SlaveDB:  dbSlave,
-	}
+	flagRepo := model.SQLFlagRepo{Driver: dbCfg.Driver, MasterDB: dbMaster, SlaveDB: dbSlave}
+	entityRepo := model.NewRedisEntityRepo(
+		redisMasterClient, redisSlaveClient, cfg.Evaluation.EntityContextCacheExpiration,
+	)
 
 	evaluationLogger := engine.NewLogger(cfg.Logger.Evaluation)
 	evaluationEngine := engine.New(evaluationLogger, flagRepo)
@@ -97,7 +96,7 @@ func main(cfg config.Config) {
 	}
 
 	flagHandler := handler.FlagHandler{FlagRepo: flagRepo}
-	evaluationHandler := handler.EvaluationHandler{Engine: evaluationEngine}
+	evaluationHandler := handler.EvaluationHandler{Engine: evaluationEngine, EntityRepo: entityRepo}
 
 	v1 := e.Group("/api/v1")
 

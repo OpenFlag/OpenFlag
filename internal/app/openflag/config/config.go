@@ -66,7 +66,8 @@ type (
 
 	// Evaluation represents evaluation configuration struct.
 	Evaluation struct {
-		UpdateFlagsCronPattern string `mapstructure:"update-flags-cron-pattern"`
+		EntityContextCacheExpiration time.Duration `mapstructure:"entity-context-cache-expiration"`
+		UpdateFlagsCronPattern       string        `mapstructure:"update-flags-cron-pattern"`
 	}
 
 	// Monitoring represents monitoring configuration struct.

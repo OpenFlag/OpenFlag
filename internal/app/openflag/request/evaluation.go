@@ -22,8 +22,10 @@ type (
 
 	// EvaluationRequest represents a request for evaluation of some entities.
 	EvaluationRequest struct {
-		Entities []Entity `json:"entities"`
-		Flags    []string `json:"flags,omitempty"`
+		Entities        []Entity `json:"entities"`
+		Flags           []string `json:"flags,omitempty"`
+		SaveContext     bool     `json:"save_context,omitempty"`
+		UseContextCache bool     `json:"use_context_cache,omitempty"`
 	}
 )
 
