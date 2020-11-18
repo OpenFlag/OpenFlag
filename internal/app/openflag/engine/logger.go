@@ -60,6 +60,8 @@ func (l EvaluationLogger) Log(result Result) {
 		logrus.Errorf("failed to marshal evaluation result to json: %s", err.Error())
 	}
 
+	output = []byte(string(output) + "\n")
+
 	_, err = l.logWriter.Write(output)
 	if err != nil {
 		logrus.Errorf("failed to write evaluation result: %s", err.Error())

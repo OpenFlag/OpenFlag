@@ -96,9 +96,8 @@ func main(cfg config.Config) {
 		logrus.Fatalf("Failed to start evaluation engine: %s", err.Error())
 	}
 
-	flagHandler := handler.FlagHandler{
-		FlagRepo: flagRepo,
-	}
+	flagHandler := handler.FlagHandler{FlagRepo: flagRepo}
+	evaluationHandler := handler.EvaluationHandler{Engine: evaluationEngine}
 
 	v1 := e.Group("/api/v1")
 
@@ -109,6 +108,8 @@ func main(cfg config.Config) {
 	v1.POST("/flag/tag", flagHandler.FindByTag)
 	v1.POST("/flag/history", flagHandler.FindByFlag)
 	v1.POST("/flags", flagHandler.FindFlags)
+
+	v1.POST("/evaluation", evaluationHandler.Evaluate)
 
 	e.Static("/", "browser/openflag-ui/build")
 
