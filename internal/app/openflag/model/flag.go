@@ -59,7 +59,7 @@ type (
 	}
 )
 
-// FlagRepo provides an interface for communicating with database.
+// FlagRepo represents an interface for working with persist flags.
 type FlagRepo interface {
 	Create(flag *Flag) error
 	Delete(id int64) error

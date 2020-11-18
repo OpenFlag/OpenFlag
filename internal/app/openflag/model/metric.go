@@ -42,7 +42,6 @@ var (
 	DoNotReportErrors = []error{}
 )
 
-// nolint:unparam
 func (m Metrics) report(repoName, methodName string, startTime time.Time, err error) {
 	for _, doNotReportError := range DoNotReportErrors {
 		if err == doNotReportError {
