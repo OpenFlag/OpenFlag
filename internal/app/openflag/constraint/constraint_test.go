@@ -51,9 +51,9 @@ func (suite *ConstraintSuite) RunCases(cases []ConstraintTestCase) {
 
 func TestGetProperty(t *testing.T) {
 	e := model.Entity{
-		ID:      10,
-		Type:    "test",
-		Context: map[string]string{"context": "context"},
+		EntityID:      10,
+		EntityType:    "test",
+		EntityContext: map[string]string{"context": "context"},
 	}
 
 	property, ok := constraint.GetProperty("", e)

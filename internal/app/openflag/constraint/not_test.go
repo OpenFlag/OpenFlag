@@ -44,13 +44,13 @@ func (suite *MotConstraintSuite) TestMotConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 15,
+						EntityID: 15,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 9,
+						EntityID: 9,
 					},
 					ResultExpected: false,
 				},

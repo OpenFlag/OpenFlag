@@ -43,13 +43,13 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 9,
+						EntityID: 9,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: false,
 				},
@@ -79,19 +79,19 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 8,
+						EntityID: 8,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 5,
+						EntityID: 5,
 					},
 					resultExpected: false,
 				},
@@ -131,25 +131,25 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 8,
+						EntityID: 8,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 7,
+						EntityID: 7,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 5,
+						EntityID: 5,
 					},
 					resultExpected: false,
 				},
@@ -189,31 +189,31 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 7,
+						EntityID: 7,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 8,
+						EntityID: 8,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 5,
+						EntityID: 5,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 12,
+						EntityID: 12,
 					},
 					resultExpected: false,
 				},
@@ -247,19 +247,19 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 8,
+						EntityID: 8,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 5,
+						EntityID: 5,
 					},
 					resultExpected: true,
 				},
@@ -300,25 +300,25 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 12,
+						EntityID: 12,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 5,
+						EntityID: 5,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 110,
+						EntityID: 110,
 					},
 					resultExpected: true,
 				},
@@ -345,13 +345,13 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 110,
+						EntityID: 110,
 					},
 					resultExpected: true,
 				},
@@ -385,19 +385,19 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 110,
+						EntityID: 110,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 210,
+						EntityID: 210,
 					},
 					resultExpected: false,
 				},
@@ -444,25 +444,25 @@ func (suite *ParserSuite) TestParserSuite() {
 			}{
 				{
 					entity: model.Entity{
-						ID: 110,
+						EntityID: 110,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 210,
+						EntityID: 210,
 					},
 					resultExpected: true,
 				},
 				{
 					entity: model.Entity{
-						ID: 310,
+						EntityID: 310,
 					},
 					resultExpected: false,
 				},
 				{
 					entity: model.Entity{
-						ID: 90,
+						EntityID: 90,
 					},
 					resultExpected: false,
 				},

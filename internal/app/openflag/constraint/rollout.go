@@ -58,6 +58,6 @@ func (r RolloutConstraint) Initialize() error {
 
 // Evaluate is an implementation for the Constraint interface.
 func (r RolloutConstraint) Evaluate(e model.Entity) bool {
-	return (e.ID%maxPercentage) >= int64(r.LowerBound) &&
-		(e.ID%maxPercentage) <= int64(r.UpperBound)
+	return (e.EntityID%maxPercentage) >= int64(r.LowerBound) &&
+		(e.EntityID%maxPercentage) <= int64(r.UpperBound)
 }

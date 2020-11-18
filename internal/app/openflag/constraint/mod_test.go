@@ -32,13 +32,13 @@ func (suite *ModConstraintSuite) TestModConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 10,
+						EntityID: 10,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					ResultExpected: false,
 				},
@@ -62,15 +62,15 @@ func (suite *ModConstraintSuite) TestModConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:   9,
-						Type: "10",
+						EntityID:   9,
+						EntityType: "10",
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:   9,
-						Type: "11",
+						EntityID:   9,
+						EntityType: "11",
 					},
 					ResultExpected: false,
 				},
@@ -91,17 +91,17 @@ func (suite *ModConstraintSuite) TestModConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      9,
-						Type:    "9",
-						Context: map[string]string{"test": "8"},
+						EntityID:      9,
+						EntityType:    "9",
+						EntityContext: map[string]string{"test": "8"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      9,
-						Type:    "9",
-						Context: map[string]string{"test": "11"},
+						EntityID:      9,
+						EntityType:    "9",
+						EntityContext: map[string]string{"test": "11"},
 					},
 					ResultExpected: false,
 				},

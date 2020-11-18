@@ -28,7 +28,7 @@ const (
 
 const (
 	// EntityTypeProperty represents entity type constraint property.
-	EntityTypeProperty = "type"
+	EntityTypeProperty = "entity_type"
 )
 
 var (
@@ -147,13 +147,13 @@ func GetProperty(property string, e model.Entity) (string, bool) {
 
 	switch property {
 	case "":
-		value = fmt.Sprintf("%d", e.ID)
+		value = fmt.Sprintf("%d", e.EntityID)
 	case EntityTypeProperty:
-		value = e.Type
+		value = e.EntityType
 	default:
 		var ok bool
 
-		value, ok = e.Context[property]
+		value, ok = e.EntityContext[property]
 		if !ok {
 			return "", false
 		}

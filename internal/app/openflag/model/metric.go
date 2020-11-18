@@ -44,9 +44,6 @@ var (
 
 // nolint:unparam
 func (m Metrics) report(repoName, methodName string, startTime time.Time, err error) {
-	m.Histogram.With(prometheus.Labels{labelRepoName: repoName, labelRepoMethod: methodName}).
-		Observe(time.Since(startTime).Seconds())
-
 	for _, doNotReportError := range DoNotReportErrors {
 		if err == doNotReportError {
 			return
@@ -55,5 +52,10 @@ func (m Metrics) report(repoName, methodName string, startTime time.Time, err er
 
 	if err != nil {
 		m.ErrCounter.With(prometheus.Labels{labelRepoName: repoName, labelRepoMethod: methodName}).Add(errorIncrementStep)
+
+		return
 	}
+
+	m.Histogram.With(prometheus.Labels{labelRepoName: repoName, labelRepoMethod: methodName}).
+		Observe(time.Since(startTime).Seconds())
 }

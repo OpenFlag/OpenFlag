@@ -31,19 +31,19 @@ func (suite *RolloutConstraintSuite) TestRolloutConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 15,
+						EntityID: 15,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 5,
+						EntityID: 5,
 					},
 					ResultExpected: false,
 				},
 				{
 					Entity: model.Entity{
-						ID: 25,
+						EntityID: 25,
 					},
 					ResultExpected: false,
 				},

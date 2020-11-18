@@ -33,19 +33,19 @@ func (suite *LessThanEqualConstraintSuite) TestLessThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 9,
+						EntityID: 9,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 10,
+						EntityID: 10,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					ResultExpected: false,
 				},
@@ -66,22 +66,22 @@ func (suite *LessThanEqualConstraintSuite) TestLessThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:   11,
-						Type: "9",
+						EntityID:   11,
+						EntityType: "9",
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:   11,
-						Type: "10",
+						EntityID:   11,
+						EntityType: "10",
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:   11,
-						Type: "11",
+						EntityID:   11,
+						EntityType: "11",
 					},
 					ResultExpected: false,
 				},
@@ -102,25 +102,25 @@ func (suite *LessThanEqualConstraintSuite) TestLessThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      11,
-						Type:    "t",
-						Context: map[string]string{"test": "9"},
+						EntityID:      11,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "9"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      11,
-						Type:    "t",
-						Context: map[string]string{"test": "10"},
+						EntityID:      11,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "10"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      11,
-						Type:    "t",
-						Context: map[string]string{"test": "11"},
+						EntityID:      11,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "11"},
 					},
 					ResultExpected: false,
 				},
@@ -141,9 +141,9 @@ func (suite *LessThanEqualConstraintSuite) TestLessThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "-1"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "-1"},
 					},
 					ResultExpected: true,
 				},
@@ -164,9 +164,9 @@ func (suite *LessThanEqualConstraintSuite) TestLessThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "t"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "t"},
 					},
 					ResultExpected: false,
 				},

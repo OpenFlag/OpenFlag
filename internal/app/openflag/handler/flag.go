@@ -266,8 +266,8 @@ func (f FlagHandler) flagFromRequest(req request.Flag) (*model.Flag, error) {
 			Constraints: constraints,
 			Expression:  segment.Expression,
 			Variant: model.Variant{
-				Key:        segment.Variant.Key,
-				Attachment: segment.Variant.Attachment,
+				VariantKey:        segment.Variant.VariantKey,
+				VariantAttachment: segment.Variant.VariantAttachment,
 			},
 		})
 	}
@@ -325,8 +325,8 @@ func (f FlagHandler) responseFromFlag(flag *model.Flag) (*response.Flag, error) 
 			Constraints: constraints,
 			Expression:  segment.Expression,
 			Variant: response.Variant{
-				Key:        segment.Variant.Key,
-				Attachment: segment.Variant.Attachment,
+				VariantKey:        segment.Variant.VariantKey,
+				VariantAttachment: segment.Variant.VariantAttachment,
 			},
 		})
 	}

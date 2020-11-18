@@ -32,13 +32,13 @@ func (suite *ContainsConstraintSuite) TestContainsConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 9,
+						EntityID: 9,
 					},
 					ResultExpected: false,
 				},
@@ -59,15 +59,15 @@ func (suite *ContainsConstraintSuite) TestContainsConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "11",
+						EntityID:   8,
+						EntityType: "11",
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "9",
+						EntityID:   8,
+						EntityType: "9",
 					},
 					ResultExpected: false,
 				},
@@ -88,17 +88,17 @@ func (suite *ContainsConstraintSuite) TestContainsConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "11"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "11"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "9"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "9"},
 					},
 					ResultExpected: false,
 				},

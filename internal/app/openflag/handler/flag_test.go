@@ -169,7 +169,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -199,7 +199,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -230,7 +230,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -261,7 +261,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -292,7 +292,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -323,7 +323,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -345,7 +345,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							Constraints: map[string]request.Constraint{},
 							Expression:  fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -375,7 +375,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 								},
 							},
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -447,7 +447,7 @@ func (suite *FlagHandlerSuite) TestCreateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -556,7 +556,7 @@ func (suite *FlagHandlerSuite) TestUpdateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -588,7 +588,7 @@ func (suite *FlagHandlerSuite) TestUpdateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -620,7 +620,7 @@ func (suite *FlagHandlerSuite) TestUpdateFlag() {
 							},
 							Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 							Variant: request.Variant{
-								Key: "on",
+								VariantKey: "on",
 							},
 						},
 					},
@@ -688,7 +688,7 @@ func (suite *FlagHandlerSuite) TestFindByID() {
 						},
 						Expression: fmt.Sprintf("A %s B", constraint.IntersectionConstraintName),
 						Variant: response.Variant{
-							Key: "on",
+							VariantKey: "on",
 						},
 					},
 				},
@@ -732,7 +732,7 @@ func (suite *FlagHandlerSuite) TestFindByID() {
 				suite.Equal(tc.resp.Tags, resp.Tags)
 				suite.Equal(tc.resp.Segments[0].Description, resp.Segments[0].Description)
 				suite.Equal(tc.resp.Segments[0].Expression, resp.Segments[0].Expression)
-				suite.Equal(tc.resp.Segments[0].Variant.Key, resp.Segments[0].Variant.Key)
+				suite.Equal(tc.resp.Segments[0].Variant.VariantKey, resp.Segments[0].Variant.VariantKey)
 			}
 		})
 	}

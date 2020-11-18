@@ -33,19 +33,19 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 9,
+						EntityID: 9,
 					},
 					ResultExpected: false,
 				},
 				{
 					Entity: model.Entity{
-						ID: 10,
+						EntityID: 10,
 					},
 					ResultExpected: true,
 				},
@@ -66,22 +66,22 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "11",
+						EntityID:   8,
+						EntityType: "11",
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "9",
+						EntityID:   8,
+						EntityType: "9",
 					},
 					ResultExpected: false,
 				},
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "10",
+						EntityID:   8,
+						EntityType: "10",
 					},
 					ResultExpected: true,
 				},
@@ -102,25 +102,25 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "11"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "11"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "9"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "9"},
 					},
 					ResultExpected: false,
 				},
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "10"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "10"},
 					},
 					ResultExpected: true,
 				},
@@ -141,17 +141,17 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "1"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "1"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "-1"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "-1"},
 					},
 					ResultExpected: false,
 				},
@@ -172,17 +172,17 @@ func (suite *BiggerThanEqualConstraintSuite) TestBiggerThanEqualConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "t"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "t"},
 					},
 					ResultExpected: false,
 				},
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "1"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "1"},
 					},
 					ResultExpected: true,
 				},

@@ -1,4 +1,4 @@
-package evaluation
+package engine
 
 import (
 	"encoding/json"
@@ -19,16 +19,21 @@ type (
 		MaxAge     int    `mapstructure:"max-age"`
 	}
 
-	// Logger represents a struct for evaluation logger.
-	Logger struct {
+	// EvaluationLogger represents a struct for evaluation logger.
+	EvaluationLogger struct {
 		Config    LoggerConfig
 		logWriter io.Writer
 	}
 )
 
+// Logger represents an evaluation result logger interface.
+type Logger interface {
+	Log(result Result)
+}
+
 // NewLogger creates a new evaluation logger.
-func NewLogger(cfg LoggerConfig) Logger {
-	logger := Logger{
+func NewLogger(cfg LoggerConfig) EvaluationLogger {
+	logger := EvaluationLogger{
 		Config: cfg,
 	}
 
@@ -45,12 +50,12 @@ func NewLogger(cfg LoggerConfig) Logger {
 }
 
 // Log logs the evaluation result.
-func (l Logger) Log(result interface{}) {
+func (l EvaluationLogger) Log(result Result) {
 	if !l.Config.Enabled {
 		return
 	}
 
-	output, err := json.Marshal(result)
+	output, err := json.Marshal(&result)
 	if err != nil {
 		logrus.Errorf("failed to marshal evaluation result to json: %s", err.Error())
 	}

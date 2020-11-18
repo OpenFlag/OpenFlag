@@ -32,13 +32,13 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 8,
+						EntityID: 8,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 10,
+						EntityID: 10,
 					},
 					ResultExpected: false,
 				},
@@ -59,15 +59,15 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "8",
+						EntityID:   8,
+						EntityType: "8",
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "10",
+						EntityID:   8,
+						EntityType: "10",
 					},
 					ResultExpected: false,
 				},
@@ -88,17 +88,17 @@ func (suite *ExcludesConstraintSuite) TestExcludesConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "8"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "8"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "10"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "10"},
 					},
 					ResultExpected: false,
 				},

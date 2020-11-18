@@ -11,8 +11,8 @@ type (
 	// if you have a variant for the green button,
 	// you can dynamically control what's the hex color of green you want to use (e.g. {"hex_color": "#42b983"}).
 	Variant struct {
-		Key        string          `json:"key"`
-		Attachment json.RawMessage `json:"attachment,omitempty"`
+		VariantKey        string          `json:"variant_key"`
+		VariantAttachment json.RawMessage `json:"variant_attachment,omitempty"`
 	}
 
 	// Constraint represents rules that we can use to define the audience of the segment.

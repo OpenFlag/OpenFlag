@@ -6,7 +6,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/sirupsen/logrus"
 
-	"github.com/OpenFlag/OpenFlag/internal/app/openflag/evaluation"
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/engine"
 
 	"github.com/OpenFlag/OpenFlag/pkg/database"
 
@@ -35,9 +35,9 @@ type (
 
 	// Logger represents logger configuration struct.
 	Logger struct {
-		AccessLogger log.AccessLogger        `mapstructure:"access"`
-		AppLogger    log.AppLogger           `mapstructure:"app"`
-		Evaluation   evaluation.LoggerConfig `mapstructure:"evaluation"`
+		AccessLogger log.AccessLogger    `mapstructure:"access"`
+		AppLogger    log.AppLogger       `mapstructure:"app"`
+		Evaluation   engine.LoggerConfig `mapstructure:"evaluation"`
 	}
 
 	// Server represents server configuration struct.

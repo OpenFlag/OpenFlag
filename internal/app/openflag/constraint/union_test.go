@@ -53,19 +53,19 @@ func (suite *UnionConstraintSuite) TestUnionConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 8,
+						EntityID: 8,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 5,
+						EntityID: 5,
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					ResultExpected: false,
 				},

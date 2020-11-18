@@ -32,7 +32,7 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID: 11,
+						EntityID: 11,
 					},
 					ResultExpected: true,
 				},
@@ -56,15 +56,15 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "hello.how.are.you",
+						EntityID:   8,
+						EntityType: "hello.how.are.you",
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:   8,
-						Type: "hello.how are.you",
+						EntityID:   8,
+						EntityType: "hello.how are.you",
 					},
 					ResultExpected: false,
 				},
@@ -85,17 +85,17 @@ func (suite *MatchConstraintSuite) TestMatchConstraint() {
 			}{
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "hello.how.are.you"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "hello.how.are.you"},
 					},
 					ResultExpected: true,
 				},
 				{
 					Entity: model.Entity{
-						ID:      8,
-						Type:    "t",
-						Context: map[string]string{"test": "hello.how are.you"},
+						EntityID:      8,
+						EntityType:    "t",
+						EntityContext: map[string]string{"test": "hello.how are.you"},
 					},
 					ResultExpected: false,
 				},

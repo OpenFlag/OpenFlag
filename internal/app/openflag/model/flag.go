@@ -28,8 +28,8 @@ type (
 	// if you have a variant for the green button,
 	// you can dynamically control what's the hex color of green you want to use (e.g. {"hex_color": "#42b983"}).
 	Variant struct {
-		Key        string          `json:"key"`
-		Attachment json.RawMessage `json:"attachment,omitempty"`
+		VariantKey        string          `json:"variant_key"`
+		VariantAttachment json.RawMessage `json:"variant_attachment,omitempty"`
 	}
 
 	// Constraint represents rules that we can use to define the audience of the segment.
@@ -49,13 +49,13 @@ type (
 
 	// Flag represents each row of flags table in SQL database.
 	Flag struct {
-		ID          int64 `gorm:"primary_key"`
-		Tags        *string
-		Description string
-		Flag        string
-		Segments    string
-		CreatedAt   time.Time
-		DeletedAt   *time.Time
+		ID          int64      `json:"id" gorm:"primary_key"`
+		Tags        *string    `json:"tags,omitempty"`
+		Description string     `json:"description"`
+		Flag        string     `json:"flag"`
+		Segments    string     `json:"segments"`
+		CreatedAt   time.Time  `json:"created_at"`
+		DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 	}
 )
 
