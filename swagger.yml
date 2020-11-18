@@ -1,0 +1,142 @@
+openapi: 3.0.0
+
+info:
+  description: Documentation of OpenFlag API
+  title: OpenFlag
+  version: 1.0.0
+
+servers:
+  - url: 'http://try-openflag.herokuapp.com/api/v1'
+    description: Testing URL of OpenFlag
+
+tags:
+  - name: health
+    description: Is OpenFlag up and running?
+  - name: evaluation
+    description: Ebaluation requests.
+
+paths:
+  /healthz:
+    get:
+      operationId: health
+      responses:
+        204:
+          description: The OpenFlag is up and running
+      summary: Returns 204 with an empty body if OpenFlag is up and running.
+      servers:
+        - url: 'http://try-openflag.herokuapp.com/healthz'
+      tags:
+        - health
+
+  /evaluation:
+    post:
+      summary: Request for evaluation of some entities.
+      operationId: evaluation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                entities:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Entity'
+                flags:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - flag1
+                    - flag2
+                save_contexts:
+                  type: boolean
+                  example: false
+                use_stored_contexts:
+                  type: boolean
+                  example: true
+              required:
+                - entities
+      responses:
+        200:
+          $ref: '#/components/responses/EvaluationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - evaluation
+
+components:
+  responses:
+    400:
+      description: The request is wrongly composed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: <message>
+
+    500:
+      description: An internal error occurred
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: <message>
+
+    EvaluationResponse:
+      description: List of evaluations.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                entity:
+                  $ref: '#/components/schemas/Entity'
+                evaluations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      flag:
+                        type: string
+                        example: "flag1"
+                      variant:
+                        type: object
+                        properties:
+                          variant_key:
+                            type: string
+                            example: green
+                          variant_attachment:
+                            type: object
+                            example:
+                              hex_color: "#42b983"
+
+
+  schemas:
+    Entity:
+      description: Entity represents the context of what we are going to assign the variant on.
+      properties:
+        entity_id:
+          format: int64
+          type: integer
+          example: 623723547
+        entity_type:
+          type: string
+          example: type1
+        entity_context:
+          type: object
+          example:
+            state: CA
+      required:
+        - entity_id
+        - entity_type

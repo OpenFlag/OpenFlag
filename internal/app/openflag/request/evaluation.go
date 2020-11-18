@@ -29,6 +29,20 @@ type (
 	}
 )
 
+// Validate validates Entity struct.
+func (e Entity) Validate() error {
+	return validation.ValidateStruct(&e,
+		validation.Field(
+			&e.EntityID,
+			validation.Required,
+		),
+		validation.Field(
+			&e.EntityType,
+			validation.Required,
+		),
+	)
+}
+
 // Validate validates EvaluationRequest struct.
 func (e EvaluationRequest) Validate() error {
 	return validation.ValidateStruct(&e,
