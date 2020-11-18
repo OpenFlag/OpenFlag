@@ -47,15 +47,15 @@ type Engine interface {
 
 // EvaluationEngine represents an engine for evaluation of an entity.
 type EvaluationEngine struct {
-	Logger   EvaluationLogger
+	Logger   Logger
 	FlagRepo model.FlagRepo
 	cache    *cache.Cache
 }
 
 // New creates a new evaluation engine.
-func New(flagRepo model.FlagRepo, cfg LoggerConfig) *EvaluationEngine {
+func New(logger Logger, flagRepo model.FlagRepo) *EvaluationEngine {
 	return &EvaluationEngine{
-		Logger:   NewLogger(cfg),
+		Logger:   logger,
 		FlagRepo: flagRepo,
 		cache:    cache.New(cache.NoExpiration, cache.NoExpiration),
 	}
@@ -165,7 +165,7 @@ func (e *EvaluationEngine) Evaluate(flags []string, entity model.Entity) (*Resul
 
 	for _, flag := range flags {
 		f, ok := flagMap[flag]
-		if ok {
+		if !ok {
 			logrus.Warnf("failed to find flag %s in our flags for evaluation", flag)
 
 			continue

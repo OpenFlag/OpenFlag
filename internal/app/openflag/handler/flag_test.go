@@ -83,7 +83,7 @@ func (f *fakeFlagRepo) FindByID(id int64) (*model.Flag, error) {
 					},
 					"expression": "A ∩ B",
 					"variant": {
-						"key": "on"
+						"variant_key": "on"
 					}
 				}
 			]

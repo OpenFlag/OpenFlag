@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/engine"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/handler"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
 
@@ -82,11 +84,23 @@ func main(cfg config.Config) {
 		SlaveDB:  dbSlave,
 	}
 
+	evaluationLogger := engine.NewLogger(cfg.Logger.Evaluation)
+	evaluationEngine := engine.New(evaluationLogger, flagRepo)
+
+	// This is for fist fetch in program start up
+	if err := evaluationEngine.Fetch(); err != nil {
+		logrus.Fatalf("failed to fetch flags: %s", err.Error())
+	}
+
+	if err := evaluationEngine.Start(cfg.Evaluation.UpdateFlagsCronPattern); err != nil {
+		logrus.Fatalf("Failed to start evaluation engine: %s", err.Error())
+	}
+
 	flagHandler := handler.FlagHandler{
 		FlagRepo: flagRepo,
 	}
 
-	v1 := e.Group("v1")
+	v1 := e.Group("/api/v1")
 
 	v1.POST("/flag", flagHandler.Create)
 	v1.DELETE("/flag/:id", flagHandler.Delete)

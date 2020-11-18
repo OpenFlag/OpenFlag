@@ -58,6 +58,9 @@ redis:
     min-retry-backoff: 1s
     max-retry-backoff: 3s
 
+evaluation:
+  update-flags-cron-pattern: "0 0/5 * * * *"
+
 monitoring:
   prometheus:
     enabled: true

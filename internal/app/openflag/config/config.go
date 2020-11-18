@@ -30,6 +30,7 @@ type (
 		Server     Server     `mapstructure:"server"`
 		Database   Database   `mapstructure:"database"`
 		Redis      Redis      `mapstructure:"redis"`
+		Evaluation Evaluation `mapstructure:"evaluation"`
 		Monitoring Monitoring `mapstructure:"monitoring"`
 	}
 
@@ -61,6 +62,11 @@ type (
 		MasterAddress string        `mapstructure:"master-address"`
 		SlaveAddress  string        `mapstructure:"slave-address"`
 		Options       redis.Options `mapstructure:"options"`
+	}
+
+	// Evaluation represents evaluation configuration struct.
+	Evaluation struct {
+		UpdateFlagsCronPattern string `mapstructure:"update-flags-cron-pattern"`
 	}
 
 	// Monitoring represents monitoring configuration struct.
