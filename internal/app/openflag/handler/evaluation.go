@@ -23,12 +23,12 @@ func (e EvaluationHandler) Evaluate(c echo.Context) error {
 	req := request.EvaluationRequest{}
 
 	if err := c.Bind(&req); err != nil {
-		logrus.Errorf("evaluation handler bind: %s", err.Error())
+		logrus.Errorf("evaluation handler bind (evaluate): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, ErrInvalidJSONSyntax.Error())
 	}
 
 	if err := req.Validate(); err != nil {
-		logrus.Errorf("evaluation handler validate: %s", err.Error())
+		logrus.Errorf("evaluation handler validate (evaluate): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -42,12 +42,12 @@ func (e EvaluationHandler) Evaluate(c echo.Context) error {
 		})
 	}
 
-	if req.UseContextCache {
+	if req.UseStoredContexts {
 		var err error
 
 		entities, err = e.EntityRepo.Find(entities)
 		if err != nil {
-			logrus.Errorf("evaluation handler failed (evaluate): %s", err.Error())
+			logrus.Errorf("evaluation handler failed to use stored contexts: %s", err.Error())
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 	}
@@ -57,7 +57,7 @@ func (e EvaluationHandler) Evaluate(c echo.Context) error {
 	for _, entity := range entities {
 		result, err := e.Engine.Evaluate(req.Flags, entity)
 		if err != nil {
-			logrus.Errorf("evaluation handler failed (evaluate): %s", err.Error())
+			logrus.Errorf("evaluation handler failed to evaluate: %s", err.Error())
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
@@ -83,9 +83,9 @@ func (e EvaluationHandler) Evaluate(c echo.Context) error {
 		})
 	}
 
-	if req.SaveContext {
+	if req.SaveContexts {
 		if err := e.EntityRepo.Save(entities); err != nil {
-			logrus.Errorf("evaluation handler failed (evaluate): %s", err.Error())
+			logrus.Errorf("evaluation handler failed to save contexts: %s", err.Error())
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 	}

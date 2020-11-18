@@ -17,13 +17,13 @@ const (
 )
 
 type (
-	// Evaluation represents one of an evaluation for a flag.
+	// Evaluation represents evaluation result for a flag.
 	Evaluation struct {
 		Flag    string        `json:"flag"`
 		Variant model.Variant `json:"variant"`
 	}
 
-	// Result represents of all evaluations for an entity.
+	// Result represents evaluation result for an entity.
 	Result struct {
 		Entity      model.Entity `json:"entity"`
 		Evaluations []Evaluation `json:"evaluations"`
@@ -154,7 +154,6 @@ func (e *EvaluationEngine) Evaluate(flags []string, entity model.Entity) (*Resul
 		Timestamp:   time.Now(),
 	}
 
-	// Use all flags if we don't receive any entered flags.
 	if len(flags) == 0 {
 		flags = []string{}
 

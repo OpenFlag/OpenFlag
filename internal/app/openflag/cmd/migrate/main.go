@@ -13,9 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ErrInvalidDatabaseDriver represents an error for returning when we don't support the database driver.
-var ErrInvalidDatabaseDriver = errors.New("invalid database driver")
-
 func main(cfg config.Database) error {
 	var source *bindata.AssetSource
 
@@ -23,7 +20,7 @@ func main(cfg config.Database) error {
 	case "postgres":
 		source = bindata.Resource(postgres.AssetNames(), postgres.Asset)
 	default:
-		return ErrInvalidDatabaseDriver
+		return errors.New("invalid database driver")
 	}
 
 	if err := database.Migrate(source, cfg.MasterConnStr); err != nil {
@@ -33,7 +30,7 @@ func main(cfg config.Database) error {
 	return nil
 }
 
-// Register register migrate command for openflag binary.
+// Register registers migrate command for openflag binary.
 func Register(root *cobra.Command, cfg config.Config) {
 	cmd := &cobra.Command{
 		Use:   "migrate",

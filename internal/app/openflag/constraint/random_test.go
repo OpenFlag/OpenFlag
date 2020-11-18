@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRandomRule(t *testing.T) {
+func TestRandomConstraint(t *testing.T) {
 	rc := model.Constraint{
 		Name:       constraint.RandomConstraintName,
 		Parameters: json.RawMessage(`{}`),

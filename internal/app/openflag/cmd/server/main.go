@@ -86,7 +86,6 @@ func main(cfg config.Config) {
 	evaluationLogger := engine.NewLogger(cfg.Logger.Evaluation)
 	evaluationEngine := engine.New(evaluationLogger, flagRepo)
 
-	// This is for fist fetch in program start up
 	if err := evaluationEngine.Fetch(); err != nil {
 		logrus.Fatalf("failed to fetch flags: %s", err.Error())
 	}
@@ -139,7 +138,7 @@ func main(cfg config.Config) {
 	}
 }
 
-// Register register server command for openflag binary.
+// Register registers server command for openflag binary.
 func Register(root *cobra.Command, cfg config.Config) {
 	root.AddCommand(
 		&cobra.Command{

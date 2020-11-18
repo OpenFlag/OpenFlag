@@ -205,7 +205,7 @@ func (s SQLFlagRepo) FindByFlag(flag string) (_ []Flag, finalErr error) {
 
 	var result []Flag
 
-	if err := s.SlaveDB.Unscoped().Where("flag = ?", flag).Find(&result).Error; err != nil {
+	if err := s.SlaveDB.Unscoped().Where("flag = ?", flag).Order("id desc").Find(&result).Error; err != nil {
 		return nil, err
 	}
 

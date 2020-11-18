@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAlwaysRule(t *testing.T) {
+func TestAlwaysConstraint(t *testing.T) {
 	rc := model.Constraint{
 		Name:       constraint.AlwaysConstraintName,
 		Parameters: json.RawMessage(`{}`),

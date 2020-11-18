@@ -8,7 +8,7 @@ import (
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
 )
 
-// Represents constraint names.
+// Represents constraints names.
 const (
 	AlwaysConstraintName          = "always"
 	ContainsConstraintName        = "contains"
@@ -27,13 +27,8 @@ const (
 )
 
 const (
-	// EntityTypeProperty represents entity type constraint property.
+	// EntityTypeProperty represents entity type constraint property name.
 	EntityTypeProperty = "entity_type"
-)
-
-var (
-	// ErrInvalidConstraintName represents an error for returning when the given name for a constraint not found.
-	ErrInvalidConstraintName = errors.New("invalid constraint name")
 )
 
 // Constraint represents an interface for defining OpenFlag Constraints.
@@ -42,7 +37,7 @@ type Constraint interface {
 	Name() string
 	// Validate validates the constraint parameters.
 	Validate() error
-	// Initialize Initializes the constraint.
+	// Initialize initializes the constraint.
 	Initialize() error
 	// Evaluate evaluates an entity in a constraint.
 	Evaluate(model.Entity) bool
@@ -97,7 +92,7 @@ func Find(name string) (Constraint, error) {
 	case ModConstraintName:
 		return &ModConstraint{}, nil
 	default:
-		return nil, ErrInvalidConstraintName
+		return nil, errors.New("invalid constraint name")
 	}
 }
 
@@ -141,7 +136,7 @@ func New(name string, parameters json.RawMessage) (Constraint, error) {
 	return c, nil
 }
 
-// GetProperty returns the property value of a constraint for apply.
+// GetProperty returns the property value of a constraint for applying.
 func GetProperty(property string, e model.Entity) (string, bool) {
 	var value string
 

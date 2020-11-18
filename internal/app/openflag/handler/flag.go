@@ -29,12 +29,12 @@ func (f FlagHandler) Create(c echo.Context) error {
 	req := request.CreateFlagRequest{}
 
 	if err := c.Bind(&req); err != nil {
-		logrus.Errorf("flag handler bind: %s", err.Error())
+		logrus.Errorf("flag handler bind (create): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, ErrInvalidJSONSyntax.Error())
 	}
 
 	if err := req.Validate(); err != nil {
-		logrus.Errorf("flag handler validate: %s", err.Error())
+		logrus.Errorf("flag handler validate (create): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -49,7 +49,7 @@ func (f FlagHandler) Create(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusConflict, err.Error())
 		}
 
-		logrus.Errorf("flag handler failed (create): %s", err.Error())
+		logrus.Errorf("flag handler failed to create flag: %s", err.Error())
 
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
@@ -67,12 +67,12 @@ func (f FlagHandler) Create(c echo.Context) error {
 func (f FlagHandler) Delete(c echo.Context) error {
 	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
 	if err != nil {
-		logrus.Errorf("flag handler param: %s", err.Error())
+		logrus.Errorf("flag handler param (delete): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
 	if err := f.FlagRepo.Delete(id); err != nil {
-		logrus.Errorf("flag handler failed (delete): %s", err.Error())
+		logrus.Errorf("flag handler failed to delete flag: %s", err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
@@ -83,19 +83,19 @@ func (f FlagHandler) Delete(c echo.Context) error {
 func (f FlagHandler) Update(c echo.Context) error {
 	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
 	if err != nil {
-		logrus.Errorf("flag handler param: %s", err.Error())
+		logrus.Errorf("flag handler param (update): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
 	req := request.UpdateFlagRequest{}
 
 	if err := c.Bind(&req); err != nil {
-		logrus.Errorf("flag handler bind data: %s", err.Error())
+		logrus.Errorf("flag handler bind data (update): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, ErrInvalidJSONSyntax.Error())
 	}
 
 	if err := req.Validate(); err != nil {
-		logrus.Errorf("flag handler validate: %s", err.Error())
+		logrus.Errorf("flag handler validate (update): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -114,7 +114,7 @@ func (f FlagHandler) Update(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		logrus.Errorf("flag handler failed (update): %s", err.Error())
+		logrus.Errorf("flag handler failed to update flag: %s", err.Error())
 
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
@@ -132,7 +132,7 @@ func (f FlagHandler) Update(c echo.Context) error {
 func (f FlagHandler) FindByID(c echo.Context) error {
 	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
 	if err != nil {
-		logrus.Errorf("flag handler param: %s", err.Error())
+		logrus.Errorf("flag handler param (find by id): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
@@ -142,7 +142,7 @@ func (f FlagHandler) FindByID(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusNotFound, err.Error())
 		}
 
-		logrus.Errorf("flag handler failed (find by id): %s", err.Error())
+		logrus.Errorf("flag handler failed to find by id: %s", err.Error())
 
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
@@ -161,18 +161,18 @@ func (f FlagHandler) FindByTag(c echo.Context) error {
 	req := request.FindFlagsByTagRequest{}
 
 	if err := c.Bind(&req); err != nil {
-		logrus.Errorf("flag handler bind: %s", err.Error())
+		logrus.Errorf("flag handler bind (find by tag): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, ErrInvalidJSONSyntax.Error())
 	}
 
 	if err := req.Validate(); err != nil {
-		logrus.Errorf("flag handler validate: %s", err.Error())
+		logrus.Errorf("flag handler validate (find by tag): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	flags, err := f.FlagRepo.FindByTag(req.Tag)
 	if err != nil {
-		logrus.Errorf("flag handler failed (find by tag): %s", err.Error())
+		logrus.Errorf("flag handler failed to find by tag: %s", err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
@@ -190,18 +190,18 @@ func (f FlagHandler) FindByFlag(c echo.Context) error {
 	req := request.FindFlagHistoryRequest{}
 
 	if err := c.Bind(&req); err != nil {
-		logrus.Errorf("flag handler bind: %s", err.Error())
+		logrus.Errorf("flag handler bind (find by flag): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, ErrInvalidJSONSyntax.Error())
 	}
 
 	if err := req.Validate(); err != nil {
-		logrus.Errorf("flag handler validate: %s", err.Error())
+		logrus.Errorf("flag handler validate (find by flag): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	flags, err := f.FlagRepo.FindByFlag(req.Flag)
 	if err != nil {
-		logrus.Errorf("flag handler failed (find by flag): %s", err.Error())
+		logrus.Errorf("flag handler failed to find by flag: %s", err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
@@ -219,12 +219,12 @@ func (f FlagHandler) FindFlags(c echo.Context) error {
 	req := request.FindFlagsRequest{}
 
 	if err := c.Bind(&req); err != nil {
-		logrus.Errorf("flag handler bind: %s", err.Error())
+		logrus.Errorf("flag handler bind (find flags): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, ErrInvalidJSONSyntax.Error())
 	}
 
 	if err := req.Validate(); err != nil {
-		logrus.Errorf("flag handler validate: %s", err.Error())
+		logrus.Errorf("flag handler validate (find flags): %s", err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -235,7 +235,7 @@ func (f FlagHandler) FindFlags(c echo.Context) error {
 
 	flags, err := f.FlagRepo.FindFlags(req.Offset, req.Limit, timestamp)
 	if err != nil {
-		logrus.Errorf("flag handler failed (find flags): %s", err.Error())
+		logrus.Errorf("flag handler failed to find flags: %s", err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 

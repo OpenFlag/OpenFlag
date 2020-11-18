@@ -10,7 +10,7 @@ type (
 		EntityContext map[string]string `json:"entity_context,omitempty"`
 	}
 
-	// Evaluation represents one of an evaluation for a flag.
+	// Evaluation represents evaluation result for a flag.
 	Evaluation struct {
 		Flag    string  `json:"flag"`
 		Variant Variant `json:"variant"`
