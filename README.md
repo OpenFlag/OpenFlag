@@ -1,7 +1,7 @@
 # OpenFlag [Under Development]
 
 [![Build Status][1]][2]
-[![codecov][3]][4]
+[![CodeCov][3]][4]
 [![MIT Licence][5]][6]
 [![Go Report][7]][8]
 [![PkgGoDev][9]][10]
@@ -13,6 +13,40 @@ OpenFlag is an open-source feature flagging, A/B testing, and dynamic configurat
 ## Documentation
 
 You can find documentation in <a href="https://openflag.github.io">here</a>.
+
+## Quick demo
+
+Try it with Docker.
+
+```bash
+# Download docker-compose file
+wget https://raw.githubusercontent.com/OpenFlag/OpenFlag/master/docker-compose.yml
+
+# Start OpenFlag using docker-compose
+docker-compose up -d
+
+# Open the OpenFlag UI
+open 127.0.0.1:7677
+```
+
+Or try it on https://try-openflag.herokuapp.com, it may take a while for a cold start.
+
+```bash
+curl --location --request POST 'https://try-openflag.herokuapp.com/api/v1/evaluation' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "entities": [
+        {
+            "entity_id": 1234567,
+            "entity_type": "type1",
+            "entity_context": {
+                "state": "CA"
+            }
+        }
+    ],
+    "flags": ["flag1", "flag2"]
+}'
+```
 
 ### TODO
 

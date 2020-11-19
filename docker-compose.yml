@@ -22,7 +22,8 @@ services:
       - 5432:5432
 
   openflag:
-    build: .
+    image: openflag/openflag:latest
+    # build: ./docker/openflag/Dockerfile
     hostname: openflag
     container_name: openflag
     environment:
