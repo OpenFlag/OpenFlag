@@ -52,8 +52,8 @@ bindata: check-go-bindata
 test:
 	go test -v -race -p 1 ./...
 
-coverage: test
-	go test -v -race -p 1 -coverprofile=coverage.txt -covermode=atomic ./internal/...
+ci-test:
+	go test -v -race -p 1 -coverprofile=coverage.txt -covermode=atomic ./...
 	go tool cover -func coverage.txt
 
 up:

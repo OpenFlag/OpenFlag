@@ -22,7 +22,7 @@ steps:
     commands:
       - sleep 10 # Wait 10 seconds for starting the Postgres and Redis services.
       - make run-migrate
-      - make coverage
+      - make ci-test
 
   - name: coverage
     image: plugins/codecov
