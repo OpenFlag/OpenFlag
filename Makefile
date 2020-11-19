@@ -50,9 +50,9 @@ bindata: check-go-bindata
 	cd internal/app/openflag/migrations/postgres && go-bindata -pkg postgres -o ./../bindata/postgres/bindata.go .
 
 test:
-	go test -v -race -p 1 ./internal/...
+	go test -v -race -p 1 ./...
 
-ci-test:
+coverage: test
 	go test -v -race -p 1 -coverprofile=coverage.txt -covermode=atomic ./internal/...
 	go tool cover -func coverage.txt
 
