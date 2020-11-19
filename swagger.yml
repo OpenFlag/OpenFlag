@@ -12,51 +12,191 @@ servers:
 tags:
   - name: health
     description: Is OpenFlag up and running?
+  - name: flag
+    description: Flag requests.
   - name: evaluation
     description: Ebaluation requests.
 
 paths:
   /healthz:
     get:
-      operationId: health
+      summary: Returns 204 with an empty body if OpenFlag is up and running.
       responses:
         204:
-          description: The OpenFlag is up and running
-      summary: Returns 204 with an empty body if OpenFlag is up and running.
+          description: The OpenFlag is up and running.
       servers:
         - url: 'http://try-openflag.herokuapp.com/healthz'
       tags:
         - health
 
-  /evaluation:
+  /flag:
     post:
-      summary: Request for evaluation of some entities.
-      operationId: evaluation
+      summary: Represents a request for creating a flag.
+      requestBody:
+        $ref: '#/components/requestBodies/FlagRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/FlagResponse'
+        400:
+          $ref: '#/components/responses/400'
+        409:
+          $ref: '#/components/responses/409'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - flag
+
+  /flag/{id}:
+    put:
+      summary: Represents a request for updating a flag (This request changes the flag id).
+      parameters:
+        - in: path
+          name: id
+          description: id of flag to be updated.
+          schema:
+            format: int64
+            type: integer
+            example: 23424
+          required: true
+      requestBody:
+        $ref: '#/components/requestBodies/FlagRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/FlagResponse'
+        400:
+          $ref: '#/components/responses/400'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - flag
+    delete:
+      summary: Represents a request for deleting a flag.
+      parameters:
+        - in: path
+          name: id
+          description: id of flag to be deleted.
+          schema:
+            format: int64
+            type: integer
+            example: 23424
+          required: true
+      responses:
+        200:
+          description: Flag was deleted successfully.
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - flag
+    get:
+      summary: Represents a request for getting a flag with its given id.
+      parameters:
+        - in: path
+          name: id
+          description: id of a flag.
+          schema:
+            format: int64
+            type: integer
+            example: 23424
+          required: true
+      responses:
+        200:
+          $ref: '#/components/responses/FlagResponse'
+        400:
+          $ref: '#/components/responses/400'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - flag
+
+  /flag/tag:
+    post:
+      summary: Represents a request for finding flags that hav given tag.
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                entities:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Entity'
-                flags:
-                  type: array
-                  items:
-                    type: string
-                  example:
-                    - flag1
-                    - flag2
-                save_contexts:
-                  type: boolean
-                  example: false
-                use_stored_contexts:
-                  type: boolean
-                  example: true
+                tag:
+                  type: string
+                  example: tag1
               required:
-                - entities
+                - tag
+      responses:
+        200:
+          $ref: '#/components/responses/FlagResponseList'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - flag
+
+  /flag/history:
+    post:
+      summary: Represents a request for finding history of a flag.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                flag:
+                  type: string
+                  example: flag1
+              required:
+                - flag
+      responses:
+        200:
+          $ref: '#/components/responses/FlagResponseList'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - flag
+
+  /flags:
+    post:
+      summary: Represents a request for finding flags using offset and limit.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                offset:
+                  type: integer
+                  example: 10
+                limit:
+                  type: integer
+                  example: 20
+                timestamp:
+                  type: string
+                  example: '2019-07-02T12:30:00+04:30'
+              required:
+                - offset
+      responses:
+        200:
+          $ref: '#/components/responses/FlagResponseList'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+      tags:
+        - flag
+
+  /evaluation:
+    post:
+      summary: Represents a request for evaluation of some entities.
+      requestBody:
+        $ref: '#/components/requestBodies/EvaluationRequest'
       responses:
         200:
           $ref: '#/components/responses/EvaluationResponse'
@@ -68,9 +208,101 @@ paths:
         - evaluation
 
 components:
+  requestBodies:
+    FlagRequest:
+      description: Flag Request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tags:
+                type: array
+                items:
+                  type: string
+                example:
+                  - tag1
+                  - tag2
+              description:
+                type: string
+                example: "Flag description."
+              flag:
+                type: string
+                example: flag1
+              segments:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                      example: "Segment 1 description."
+                    constraints:
+                      type: object
+                      example:
+                        A:
+                          name: "<"
+                          parameters:
+                            value: 10
+                        B:
+                          name: ">"
+                          parameters:
+                            value: 5
+                    expression:
+                      type: string
+                      example: "A ∩ B"
+                    variant:
+                      type: object
+                      properties:
+                        variant_key:
+                          type: string
+                          example: green
+                        variant_attachment:
+                          type: object
+                          example:
+                            hex_color: "#42b983"
+                      required:
+                        - variant_key
+                  required:
+                    - description
+                    - constraints
+                    - expression
+                    - variant
+            required:
+              - description
+              - flag
+              - segments
+
+    EvaluationRequest:
+      description: Evaluation Request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              entities:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+              flags:
+                type: array
+                items:
+                  type: string
+                example:
+                  - flag1
+                  - flag2
+              save_contexts:
+                type: boolean
+                example: false
+              use_stored_contexts:
+                type: boolean
+                example: true
+            required:
+              - entities
+
   responses:
     400:
-      description: The request is wrongly composed
+      description: Bad Request.
       content:
         application/json:
           schema:
@@ -78,10 +310,32 @@ components:
             properties:
               message:
                 type: string
-                example: <message>
+                example: Bad Request
+
+    404:
+      description: Not Fount.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Not Found
+
+    409:
+      description: Conflict.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Conflict
 
     500:
-      description: An internal error occurred
+      description: Internal Server Error.
       content:
         application/json:
           schema:
@@ -89,10 +343,26 @@ components:
             properties:
               message:
                 type: string
-                example: <message>
+                example: Internal Server Error
+
+    FlagResponse:
+      description: Flag Response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Flag'
+
+    FlagResponseList:
+      description: Flag Response List.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Flag'
 
     EvaluationResponse:
-      description: List of evaluations.
+      description: Evaluation Response.
       content:
         application/json:
           schema:
@@ -121,7 +391,6 @@ components:
                             example:
                               hex_color: "#42b983"
 
-
   schemas:
     Entity:
       description: Entity represents the context of what we are going to assign the variant on.
@@ -140,3 +409,75 @@ components:
       required:
         - entity_id
         - entity_type
+
+    Flag:
+      description: Flag represents a feature flag, an experiment, or a configuration.
+      properties:
+        id:
+          format: int64
+          type: integer
+          example: 765345234
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - tag1
+            - tag2
+        description:
+          type: string
+          example: "Flag description."
+        flag:
+          type: string
+          example: flag1
+        segments:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+                example: "Segment 1 description."
+              constraints:
+                type: object
+                example:
+                  A:
+                    name: "<"
+                    parameters:
+                      value: 10
+                  B:
+                    name: ">"
+                    parameters:
+                      value: 5
+              expression:
+                type: string
+                example: "A ∩ B"
+              variant:
+                type: object
+                properties:
+                  variant_key:
+                    type: string
+                    example: green
+                  variant_attachment:
+                    type: object
+                    example:
+                      hex_color: "#42b983"
+                required:
+                  - variant_key
+            required:
+              - description
+              - constraints
+              - expression
+              - variant
+        created_at:
+          type: string
+          example: '2019-07-02T12:30:00+04:30'
+        deleted_at:
+          type: string
+          example: '2019-07-03T12:30:00+04:30'
+      required:
+        - id
+        - description
+        - flag
+        - segments
+        - created_at
