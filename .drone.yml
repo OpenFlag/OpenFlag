@@ -40,7 +40,10 @@ steps:
       tags:
         - latest
         - 0.1.0
-      dry_run: true
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
 
 services:
 
