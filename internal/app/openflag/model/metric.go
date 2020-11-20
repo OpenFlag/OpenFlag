@@ -30,11 +30,13 @@ var (
 			prometheus.CounterOpts{
 				Namespace: metric.Namespace,
 				Name:      "repo_error_total",
+				Help:      "Repo error total.",
 			}, []string{labelRepoName, labelRepoMethod}),
 
 		Histogram: promauto.NewHistogramVec(prometheus.HistogramOpts{
 			Namespace: metric.Namespace,
 			Name:      "repo_duration_total",
+			Help:      "Repo duration total.",
 			Buckets:   prom.HistogramBuckets,
 		}, []string{labelRepoName, labelRepoMethod}),
 	}

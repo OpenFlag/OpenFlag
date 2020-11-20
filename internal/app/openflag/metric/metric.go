@@ -27,12 +27,12 @@ var (
 		DbConnectionStatus: promauto.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: Namespace,
 			Name:      "db_connection_status",
-			Help:      "Database connection status",
+			Help:      "Database connection status.",
 		}, []string{labelDbName}),
 		RedisConnectionStatus: promauto.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: Namespace,
 			Name:      "redis_connection_status",
-			Help:      "Redis connection status",
+			Help:      "Redis connection status.",
 		}, []string{labelRedisName}),
 	}
 )

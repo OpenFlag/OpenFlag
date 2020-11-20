@@ -8,11 +8,6 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
-var (
-	// ErrInvalidRolloutBound represents an error for returning when lower bound and upper bound be invalid.
-	ErrInvalidRolloutBound = errors.New("invalid rollout bound")
-)
-
 const (
 	minBound      = 0
 	maxBound      = 99
@@ -33,7 +28,7 @@ func (r RolloutConstraint) Name() string {
 // Validate is an implementation for the Constraint interface.
 func (r RolloutConstraint) Validate() error {
 	if r.LowerBound >= r.UpperBound {
-		return ErrInvalidRolloutBound
+		return errors.New("invalid rollout bound")
 	}
 
 	return validation.ValidateStruct(&r,
