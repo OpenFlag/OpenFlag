@@ -25,7 +25,7 @@ paths:
         204:
           description: The OpenFlag is up and running.
       servers:
-        - url: 'http://127.0.0.1:7677/healthz'
+        - url: 'http://127.0.0.1:7677'
       tags:
         - health
 

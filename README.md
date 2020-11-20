@@ -1,10 +1,11 @@
 # OpenFlag [Under Development]
 
 [![Build Status][1]][2]
-[![CodeCov][3]][4]
+[![Code Cov][3]][4]
 [![MIT Licence][5]][6]
 [![Go Report][7]][8]
-[![PkgGoDev][9]][10]
+[![Pkg Go Dev][9]][10]
+[![Docker Pull][11]][12]
 
 # Introduction
 
@@ -61,3 +62,5 @@ curl --location --request POST 'http://127.0.0.1:7677/api/v1/evaluation' \
 [8]: https://goreportcard.com/report/github.com/OpenFlag/OpenFlag
 [9]: https://pkg.go.dev/badge/github.com/OpenFlag/OpenFlag
 [10]: https://pkg.go.dev/github.com/OpenFlag/OpenFlag
+[11]: https://img.shields.io/docker/pulls/openflag/openflag.svg?style=flat-square
+[12]: https://hub.docker.com/r/openflag/openflag
