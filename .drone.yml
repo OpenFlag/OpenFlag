@@ -44,7 +44,7 @@ steps:
       repo: openflag/openflag
       tags:
         - latest
-        - 0.1.0
+        - ${DRONE_TAG##v}
       username:
         from_secret: docker_username
       password:
