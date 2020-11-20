@@ -25,11 +25,8 @@ wget https://raw.githubusercontent.com/OpenFlag/OpenFlag/master/docker-compose.y
 # Start using docker-compose.
 docker-compose up -d
 
-# Open the OpenFlag UI.
+# Open the OpenFlag UI and create your feature flag, experiment, or configuration.
 open 127.0.0.1:7677
-
-# Create your feature flag, experiment, or configuration.
-working with UI
 
 # Sending a request for evaluation in the UI panel or using curl.
 curl --location --request POST 'http://127.0.0.1:7677/api/v1/evaluation' \
