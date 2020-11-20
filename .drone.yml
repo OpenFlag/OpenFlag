@@ -34,6 +34,11 @@ steps:
 
   - name: build
     image: plugins/docker
+    when:
+      branch:
+        - master
+      event:
+        - tag
     settings:
       dockerfile: docker/openflag/Dockerfile
       repo: openflag/openflag
