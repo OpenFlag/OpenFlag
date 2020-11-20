@@ -44,6 +44,7 @@ type (
 	// Server represents server configuration struct.
 	Server struct {
 		Address         string        `mapstructure:"address"`
+		RPCAddress      string        `mapstructure:"grpc-address"`
 		ReadTimeout     time.Duration `mapstructure:"read-timeout"`
 		WriteTimeout    time.Duration `mapstructure:"write-timeout"`
 		GracefulTimeout time.Duration `mapstructure:"graceful-timeout"`

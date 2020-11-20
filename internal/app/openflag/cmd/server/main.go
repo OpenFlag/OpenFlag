@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/grpc"
+
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/engine"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/handler"
@@ -111,6 +113,14 @@ func main(cfg config.Config) {
 
 	e.Static("/", "browser/openflag-ui/build")
 
+	grpcServer := grpc.New(evaluationEngine, entityRepo)
+
+	go func() {
+		if err := grpcServer.Start(cfg.Server.RPCAddress); err != nil {
+			logrus.Fatalf("failed to start gRPC server: %s", err.Error())
+		}
+	}()
+
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 
@@ -135,6 +145,10 @@ func main(cfg config.Config) {
 
 	if err := e.Shutdown(ctx); err != nil {
 		logrus.Errorf("failed to shutdown openflag server: %s", err.Error())
+	}
+
+	if err := grpcServer.Shutdown(ctx); err != nil {
+		logrus.Errorf("failed to shutdown gRPC server: %s", err.Error())
 	}
 }
 

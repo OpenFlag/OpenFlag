@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package evaluation;
+
+option go_package = "/evaluation";
+
+service Evaluation {
+    rpc Evaluate (EvaluationRequest) returns (EvaluationResponseList) {
+    }
+}
+
+message Entity {
+    int64 entityID = 1 [json_name = "entity_id"];
+    string entityType = 2 [json_name = "entity_type"];
+    map<string, string> entityContext = 3 [json_name = "entity_context"];
+}
+
+message EvaluationRequest {
+    repeated Entity entities = 1 [json_name = "entities"];
+    repeated string flags = 2 [json_name = "flags"];
+    bool save_contexts = 3 [json_name = "save_contexts"];
+    bool use_stored_contexts = 4 [json_name = "use_stored_contexts"];
+}
+
+message EvaluationResponse {
+    message Variant {
+        string variant_key = 1 [json_name = "variant_key"];
+        bytes variant_attachment = 2 [json_name = "variant_attachment"];
+    }
+
+    message Evaluation {
+        string flag = 1 [json_name = "flag"];
+        Variant variant = 2 [json_name = "variant"];
+    }
+
+    Entity entity = 1 [json_name = "entity"];
+    repeated Evaluation evaluations = 2 [json_name = "evaluations"];
+}
+
+message EvaluationResponseList {
+    repeated EvaluationResponse list = 1 [json_name = "list"];
+}

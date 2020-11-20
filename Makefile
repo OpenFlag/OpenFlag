@@ -10,6 +10,8 @@ export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
 
 export LDFLAGS="-w -s -X '$(BUILD_INFO_PKG).AppVersion=$(APP_VERSION)' -X '$(BUILD_INFO_PKG).Date=$$(date)' -X '$(BUILD_INFO_PKG).BuildVersion=$$(git rev-parse HEAD | cut -c 1-8)' -X '$(BUILD_INFO_PKG).VCSRef=$$(git rev-parse --abbrev-ref HEAD)'"
 
+export PROTO_DIR = pkg/proto
+
 all: format lint build
 
 run-version:
@@ -48,6 +50,12 @@ check-go-bindata:
 
 bindata: check-go-bindata
 	cd internal/app/openflag/migrations/postgres && go-bindata -pkg postgres -o ./../bindata/postgres/bindata.go .
+
+install-protoc-gen-go:
+	which protoc-gen-go || GO111MODULE=off go get -u github.com/golang/protobuf/protoc-gen-go
+
+code-gen:
+	protoc --go_out=plugins=grpc:pkg $(PROTO_DIR)/*.proto
 
 test:
 	go test -v -race -p 1 ./...

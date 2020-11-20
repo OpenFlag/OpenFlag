@@ -27,6 +27,7 @@ logger:
 
 server:
   address: :7677
+  grpc-address: :7678
   read-timeout: 20s
   write-timeout: 20s
   graceful-timeout: 5s
