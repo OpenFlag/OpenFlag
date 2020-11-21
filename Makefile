@@ -58,10 +58,10 @@ code-gen:
 	protoc --go_out=plugins=grpc:pkg $(PROTO_DIR)/*.proto
 
 test:
-	go test -ldflags $(LDFLAGS) -v -race  -p 1 `go list ./... | grep -v integration_tests`
+	go test -ldflags $(LDFLAGS) -v -race -p 1 `go list ./... | grep -v integration_tests`
 
 ci-test:
-	go test -ldflags $(LDFLAGS) -v -race -coverpkg `go list ./... | grep -v github.com/OpenFlag/OpenFlag/pkg | xargs | tr ' ' ','` -p 1 -coverprofile=coverage.txt -covermode=atomic ./...
+	go test -ldflags $(LDFLAGS) -v -race -p 1 -coverprofile=coverage.txt -covermode=atomic ./...
 	go tool cover -func coverage.txt
 
 integration-tests:

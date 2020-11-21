@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/response"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/cmd"
 
@@ -26,6 +29,7 @@ const (
 	serverHTTPAddress           = "127.0.0.1:7677"
 	serverGRPCAddress           = "127.0.0.1:7678"
 	waitingTimeForDoingSomeJobs = 10 * time.Second
+	contextSavingInterval       = 2 * time.Second
 )
 
 type OpenFlagSuite struct {
@@ -35,6 +39,10 @@ type OpenFlagSuite struct {
 }
 
 func (suite *OpenFlagSuite) SetupSuite() {
+	suite.NoError(os.Setenv("OPENFLAG_SERVER_ADDRESS", serverHTTPAddress))
+	suite.NoError(os.Setenv("OPENFLAG_SERVER_GRPC_ADDRESS", serverGRPCAddress))
+	suite.NoError(os.Setenv("OPENFLAG_EVALUATION_UPDATE_FLAGS_CRON_PATTERN", "0/5 * * * * *"))
+
 	cfg := config.Init()
 
 	dbClient, err := database.Create(cfg.Database.Driver, cfg.Database.MasterConnStr, cfg.Database.Options)
@@ -45,15 +53,13 @@ func (suite *OpenFlagSuite) SetupSuite() {
 	suite.dbClient = dbClient
 	suite.redisClient = redisClient
 
-	suite.NoError(os.Setenv("OPENFLAG_SERVER_ADDRESS", serverHTTPAddress))
-	suite.NoError(os.Setenv("OPENFLAG_GRPC_SERVER_ADDRESS", serverGRPCAddress))
-
 	suite.startServer()
 }
 
 func (suite *OpenFlagSuite) TearDownSuite() {
 	suite.NoError(os.Unsetenv("OPENFLAG_SERVER_ADDRESS"))
-	suite.NoError(os.Unsetenv("OPENFLAG_GRPC_SERVER_ADDRESS"))
+	suite.NoError(os.Unsetenv("OPENFLAG_SERVER_GRPC_ADDRESS"))
+	suite.NoError(os.Unsetenv("OPENFLAG_EVALUATION_UPDATE_FLAGS_CRON_PATTERN"))
 }
 
 func (suite *OpenFlagSuite) SetupTest() {
@@ -67,7 +73,7 @@ func (suite *OpenFlagSuite) TearDownTest() {
 }
 
 func (suite *OpenFlagSuite) TestScenario() {
-	flag1Request := request.CreateFlagRequest{
+	flagRequest1 := request.CreateFlagRequest{
 		Flag: request.Flag{
 			Tags:        []string{"tag1", "tag2"},
 			Description: "flag1 description",
@@ -109,7 +115,7 @@ func (suite *OpenFlagSuite) TestScenario() {
 		},
 	}
 
-	flag2Request := request.CreateFlagRequest{
+	flagRequest2 := request.CreateFlagRequest{
 		Flag: request.Flag{
 			Tags:        []string{"tag2", "tag3"},
 			Description: "flag2 description",
@@ -152,17 +158,17 @@ func (suite *OpenFlagSuite) TestScenario() {
 	}
 
 	suite.Run("create feature flags", func() {
-		flag1RequestData, err := json.Marshal(&flag1Request)
+		flagRequestData1, err := json.Marshal(&flagRequest1)
 		suite.NoError(err)
 
-		flag2RequestData, err := json.Marshal(&flag2Request)
+		flagRequestData2, err := json.Marshal(&flagRequest2)
 		suite.NoError(err)
 
-		req1, err := http.NewRequest("POST", makeURL("/api/v1/flag"), bytes.NewBuffer(flag1RequestData))
+		req1, err := http.NewRequest("POST", makeURL("/api/v1/flag"), bytes.NewBuffer(flagRequestData1))
 		suite.NoError(err)
 		req1.Header.Set("Content-Type", "application/json")
 
-		req2, err := http.NewRequest("POST", makeURL("/api/v1/flag"), bytes.NewBuffer(flag2RequestData))
+		req2, err := http.NewRequest("POST", makeURL("/api/v1/flag"), bytes.NewBuffer(flagRequestData2))
 		suite.NoError(err)
 		req2.Header.Set("Content-Type", "application/json")
 
@@ -177,6 +183,333 @@ func (suite *OpenFlagSuite) TestScenario() {
 		suite.NoError(err)
 		suite.NoError(resp2.Body.Close())
 		suite.Equal(http.StatusOK, resp2.StatusCode)
+	})
+
+	// Wait for syncing flags with database
+	time.Sleep(waitingTimeForDoingSomeJobs)
+
+	suite.Run("evaluating entities phase 1", func() {
+		evaluationRequest := request.EvaluationRequest{
+			Entities: []request.Entity{
+				{
+					EntityID:   8,
+					EntityType: "type1",
+				},
+				{
+					EntityID:   15,
+					EntityType: "type2",
+				},
+				{
+					EntityID:   110,
+					EntityType: "type2",
+				},
+			},
+			Flags: []string{"flag1", "flag2"},
+		}
+
+		evaluationRequestData, err := json.Marshal(&evaluationRequest)
+		suite.NoError(err)
+
+		req, err := http.NewRequest("POST", makeURL("/api/v1/evaluation"), bytes.NewBuffer(evaluationRequestData))
+		suite.NoError(err)
+		req.Header.Set("Content-Type", "application/json")
+
+		client := http.Client{}
+
+		resp, err := client.Do(req)
+		suite.NoError(err)
+		suite.Equal(http.StatusOK, resp.StatusCode)
+
+		respBody, err := ioutil.ReadAll(resp.Body)
+		suite.NoError(err)
+
+		suite.NoError(resp.Body.Close())
+
+		var respParsed []response.EvaluationResponse
+
+		suite.NoError(json.Unmarshal(respBody, &respParsed))
+
+		expectedResponse := []response.EvaluationResponse{
+			{
+				Entity: response.Entity{
+					EntityID:   8,
+					EntityType: "type1",
+				},
+				Evaluations: []response.Evaluation{
+					{
+						Flag: "flag1",
+						Variant: response.Variant{
+							VariantKey:        "on1",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+					{
+						Flag: "flag2",
+						Variant: response.Variant{
+							VariantKey:        "on2",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+				},
+			},
+			{
+				Entity: response.Entity{
+					EntityID:   15,
+					EntityType: "type2",
+				},
+				Evaluations: []response.Evaluation{
+					{
+						Flag: "flag1",
+						Variant: response.Variant{
+							VariantKey:        "off1",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+					{
+						Flag: "flag2",
+						Variant: response.Variant{
+							VariantKey:        "on2",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+				},
+			},
+			{
+				Entity: response.Entity{
+					EntityID:   110,
+					EntityType: "type2",
+				},
+				Evaluations: []response.Evaluation{
+					{
+						Flag: "flag1",
+						Variant: response.Variant{
+							VariantKey:        "off1",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+					{
+						Flag: "flag2",
+						Variant: response.Variant{
+							VariantKey:        "off2",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+				},
+			},
+		}
+
+		suite.Equal(expectedResponse, respParsed)
+	})
+
+	suite.Run("evaluating entities phase 2", func() {
+		evaluationRequest := request.EvaluationRequest{
+			Entities: []request.Entity{
+				{
+					EntityID:   8,
+					EntityType: "type1",
+					EntityContext: map[string]string{
+						"c1": "v1",
+					},
+				},
+			},
+			Flags:        []string{"flag1", "flag2"},
+			SaveContexts: true,
+		}
+
+		evaluationRequestData, err := json.Marshal(&evaluationRequest)
+		suite.NoError(err)
+
+		req, err := http.NewRequest("POST", makeURL("/api/v1/evaluation"), bytes.NewBuffer(evaluationRequestData))
+		suite.NoError(err)
+		req.Header.Set("Content-Type", "application/json")
+
+		client := http.Client{}
+
+		resp, err := client.Do(req)
+		suite.NoError(err)
+		suite.Equal(http.StatusOK, resp.StatusCode)
+
+		respBody, err := ioutil.ReadAll(resp.Body)
+		suite.NoError(err)
+
+		suite.NoError(resp.Body.Close())
+
+		var respParsed []response.EvaluationResponse
+
+		suite.NoError(json.Unmarshal(respBody, &respParsed))
+
+		expectedResponse := []response.EvaluationResponse{
+			{
+				Entity: response.Entity{
+					EntityID:   8,
+					EntityType: "type1",
+					EntityContext: map[string]string{
+						"c1": "v1",
+					},
+				},
+				Evaluations: []response.Evaluation{
+					{
+						Flag: "flag1",
+						Variant: response.Variant{
+							VariantKey:        "on1",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+					{
+						Flag: "flag2",
+						Variant: response.Variant{
+							VariantKey:        "on2",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+				},
+			},
+		}
+
+		suite.Equal(expectedResponse, respParsed)
+	})
+
+	// Wait for saving contexts to Redis
+	time.Sleep(contextSavingInterval)
+
+	suite.Run("evaluating entities phase 3", func() {
+		evaluationRequest := request.EvaluationRequest{
+			Entities: []request.Entity{
+				{
+					EntityID:   8,
+					EntityType: "type1",
+					EntityContext: map[string]string{
+						"c2": "v2",
+					},
+				},
+			},
+			Flags:             []string{"flag1", "flag2"},
+			SaveContexts:      true,
+			UseStoredContexts: true,
+		}
+
+		evaluationRequestData, err := json.Marshal(&evaluationRequest)
+		suite.NoError(err)
+
+		req, err := http.NewRequest("POST", makeURL("/api/v1/evaluation"), bytes.NewBuffer(evaluationRequestData))
+		suite.NoError(err)
+		req.Header.Set("Content-Type", "application/json")
+
+		client := http.Client{}
+
+		resp, err := client.Do(req)
+		suite.NoError(err)
+		suite.Equal(http.StatusOK, resp.StatusCode)
+
+		respBody, err := ioutil.ReadAll(resp.Body)
+		suite.NoError(err)
+
+		suite.NoError(resp.Body.Close())
+
+		var respParsed []response.EvaluationResponse
+
+		suite.NoError(json.Unmarshal(respBody, &respParsed))
+
+		expectedResponse := []response.EvaluationResponse{
+			{
+				Entity: response.Entity{
+					EntityID:   8,
+					EntityType: "type1",
+					EntityContext: map[string]string{
+						"c1": "v1",
+						"c2": "v2",
+					},
+				},
+				Evaluations: []response.Evaluation{
+					{
+						Flag: "flag1",
+						Variant: response.Variant{
+							VariantKey:        "on1",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+					{
+						Flag: "flag2",
+						Variant: response.Variant{
+							VariantKey:        "on2",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+				},
+			},
+		}
+
+		suite.Equal(expectedResponse, respParsed)
+	})
+
+	// Wait for saving contexts to Redis
+	time.Sleep(contextSavingInterval)
+
+	suite.Run("evaluating entities phase 4", func() {
+		evaluationRequest := request.EvaluationRequest{
+			Entities: []request.Entity{
+				{
+					EntityID:   8,
+					EntityType: "type1",
+				},
+			},
+			Flags:             []string{"flag1", "flag2"},
+			SaveContexts:      false,
+			UseStoredContexts: true,
+		}
+
+		evaluationRequestData, err := json.Marshal(&evaluationRequest)
+		suite.NoError(err)
+
+		req, err := http.NewRequest("POST", makeURL("/api/v1/evaluation"), bytes.NewBuffer(evaluationRequestData))
+		suite.NoError(err)
+		req.Header.Set("Content-Type", "application/json")
+
+		client := http.Client{}
+
+		resp, err := client.Do(req)
+		suite.NoError(err)
+		suite.Equal(http.StatusOK, resp.StatusCode)
+
+		respBody, err := ioutil.ReadAll(resp.Body)
+		suite.NoError(err)
+
+		suite.NoError(resp.Body.Close())
+
+		var respParsed []response.EvaluationResponse
+
+		suite.NoError(json.Unmarshal(respBody, &respParsed))
+
+		expectedResponse := []response.EvaluationResponse{
+			{
+				Entity: response.Entity{
+					EntityID:   8,
+					EntityType: "type1",
+					EntityContext: map[string]string{
+						"c1": "v1",
+						"c2": "v2",
+					},
+				},
+				Evaluations: []response.Evaluation{
+					{
+						Flag: "flag1",
+						Variant: response.Variant{
+							VariantKey:        "on1",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+					{
+						Flag: "flag2",
+						Variant: response.Variant{
+							VariantKey:        "on2",
+							VariantAttachment: json.RawMessage(`{}`),
+						},
+					},
+				},
+			},
+		}
+
+		suite.Equal(expectedResponse, respParsed)
 	})
 }
 
