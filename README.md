@@ -5,11 +5,24 @@
 [![MIT Licence][5]][6]
 [![Go Report][7]][8]
 [![Pkg Go Dev][9]][10]
-[![Docker Pull][11]][12]
+[![Docker Pulls][11]][12]
 
 # Introduction
 
-OpenFlag is an open-source feature flagging, A/B testing, and dynamic configuration service. It delivers the right experience to the right entity and monitors the impact. It has clear swagger REST APIs for flags management and flag evaluation.
+OpenFlag is an open-source feature flagging, A/B testing, and dynamic configuration service. It delivers the right experience to the right entity and monitors the impact. It has clear Swagger REST APIs for flags management and flag evaluation.
+
+## Features
+
+* Cloud-native and Kubernetes compatible.
+* High performance and easily scalable.
+* Support gRPC for flag evaluation.
+* Clear Swagger REST APIs for flag management and flag evaluation.
+* Rules engine and user segmentation using algebra expression as simple as possible for defining complicated flags.
+* Showing the history of a flag.
+* Evaluation logging for your data pipeline.
+* Contexts saving and reuse stored contexts.
+* Support Feature Flagging, Experimentation A/B testing, and Dynamic Configuration.
+* ...
 
 ## Documentation
 
