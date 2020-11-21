@@ -1,7 +1,7 @@
 ---
 kind: pipeline
-name: default
 type: docker
+name: lint
 
 steps:
 
@@ -9,6 +9,13 @@ steps:
     image: golangci/golangci-lint:v1.23.8
     commands:
       - make lint
+
+---
+kind: pipeline
+type: docker
+name: test
+
+steps:
 
   - name: test
     image: golang:1.15
@@ -32,30 +39,49 @@ steps:
       files:
         - coverage.txt
 
-  - name: release
-    image: golang:1.15
-    when:
-      branch:
-        - master
-      event:
-        - tag
-    commands:
-      - make release
+services:
 
-  - name: github
-    image: plugins/github-release
-    when:
-      branch:
-        - master
-      event:
-        - tag
-    settings:
-      api_key:
-        from_secret: github_token
-      files: releases/*
-      note: CHANGELOG.md
-      checksum:
-        - md5
+  - name: postgres
+    image: postgres:12.4
+    environment:
+      POSTGRES_DB: "openflag"
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_USER: "openflag"
+
+  - name: redis
+    image: bitnami/redis:5.0.5
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+---
+kind: pipeline
+type: docker
+name: release
+
+  #  - name: release
+  #    image: golang-node:1.15-14.9
+  #    when:
+  #      branch:
+  #        - master
+  #      event:
+  #        - tag
+  #    commands:
+  #      - make release
+
+  #  - name: github
+  #    image: plugins/github-release
+  #    when:
+  #      branch:
+  #        - master
+  #      event:
+  #        - tag
+  #    settings:
+  #      api_key:
+  #        from_secret: github_token
+  #      files: releases/*
+  #      note: CHANGELOG.md
+  #      checksum:
+  #        - md5
 
   - name: docker
     image: plugins/docker
@@ -74,17 +100,3 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-
-services:
-
-  - name: postgres
-    image: postgres:12.4
-    environment:
-      POSTGRES_DB: "openflag"
-      POSTGRES_PASSWORD: "secret"
-      POSTGRES_USER: "openflag"
-
-  - name: redis
-    image: bitnami/redis:5.0.5
-    environment:
-      ALLOW_EMPTY_PASSWORD: "yes"
