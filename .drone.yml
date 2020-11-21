@@ -39,9 +39,6 @@ steps:
       files:
         - coverage.txt
 
-depends_on:
-  - lint
-
 services:
 
   - name: postgres
@@ -56,6 +53,9 @@ services:
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
 
+depends_on:
+  - lint
+
 ---
 kind: pipeline
 type: docker
@@ -64,7 +64,7 @@ name: release
 steps:
 
   #  - name: release
-  #    image: golang-node:1.15-14.9
+  #    image: openflag/docker-golang-node-builder:1.15-14.9
   #    when:
   #      branch:
   #        - master
