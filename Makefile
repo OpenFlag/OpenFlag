@@ -4,7 +4,7 @@ export ROOT=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 export APP=openflag
 
-export APP_VERSION=v0.1.0
+export APP_VERSION=v0.1.1
 
 export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
 

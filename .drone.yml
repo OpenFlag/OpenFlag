@@ -32,7 +32,32 @@ steps:
       files:
         - coverage.txt
 
-  - name: build
+  - name: release
+    image: golang:1.15
+    when:
+      branch:
+        - master
+      event:
+        - tag
+    commands:
+      - make release
+
+  - name: github
+    image: plugins/github-release
+    when:
+      branch:
+        - master
+      event:
+        - tag
+    settings:
+      api_key:
+        from_secret: github_token
+      files: releases/*
+      note: CHANGELOG.md
+      checksum:
+        - md5
+
+  - name: docker
     image: plugins/docker
     when:
       branch:
