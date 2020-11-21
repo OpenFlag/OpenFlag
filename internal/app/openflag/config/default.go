@@ -19,7 +19,7 @@ logger:
     max-age: 7
     stdout: true
   evaluation:
-    enabled: true
+    enabled: false
     path: "/var/log/openflag/evaluation.log"
     max-size: 1024
     max-backups: 7

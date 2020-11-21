@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"os"
-
 	"github.com/OpenFlag/OpenFlag/pkg/version"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/cmd/migrate"
@@ -14,12 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	exitFailure = 1
-)
-
-// Execute executes the main functionality of openflag binary.
-func Execute() {
+// NewRootCommand creates a new openflag root command.
+func NewRootCommand() *cobra.Command {
 	var root = &cobra.Command{
 		Use:   "openflag",
 		Short: "OpenFlag is an open-source feature flagging, A/B testing, and dynamic configuration service.",
@@ -31,14 +25,12 @@ func Execute() {
 
 	if err := version.Validate(); err != nil {
 		root.PrintErrln(err.Error())
-		return
+		return nil
 	}
 
 	versionCmd.Register(root)
 	migrate.Register(root, cfg)
 	server.Register(root, cfg)
 
-	if err := root.Execute(); err != nil {
-		os.Exit(exitFailure)
-	}
+	return root
 }
