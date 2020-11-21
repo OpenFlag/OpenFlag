@@ -58,6 +58,8 @@ kind: pipeline
 type: docker
 name: release
 
+steps:
+
   #  - name: release
   #    image: golang-node:1.15-14.9
   #    when:
