@@ -58,14 +58,14 @@ code-gen:
 	protoc --go_out=plugins=grpc:pkg $(PROTO_DIR)/*.proto
 
 test:
-	go test -ldflags $(LDFLAGS) -v -race -p 1 `go list ./... | grep -v integration_tests`
+	go test -ldflags $(LDFLAGS) -v -race -p 1 `go list ./... | grep -v integration`
 
 ci-test:
 	go test -ldflags $(LDFLAGS) -v -race -p 1 -coverprofile=coverage.txt -covermode=atomic ./...
 	go tool cover -func coverage.txt
 
 integration-tests:
-	go test -ldflags $(LDFLAGS) -v -race -p 1 `go list ./... | grep integration_tests`
+	go test -ldflags $(LDFLAGS) -v -race -p 1 `go list ./... | grep integration`
 
 up:
 	docker-compose up -d redis postgres
