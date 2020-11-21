@@ -28,11 +28,11 @@ func (suite *EntityRepoSuite) SetupSuite() {
 }
 
 func (suite *EntityRepoSuite) SetupTest() {
-	suite.entityRepo.RedisMaster.FlushDB()
+	suite.NoError(suite.entityRepo.RedisMaster.FlushDB().Err())
 }
 
 func (suite *EntityRepoSuite) TearDownTest() {
-	suite.entityRepo.RedisMaster.FlushDB()
+	suite.NoError(suite.entityRepo.RedisMaster.FlushDB().Err())
 }
 
 func (suite *EntityRepoSuite) TestEntityRepo() {
@@ -132,7 +132,7 @@ func (suite *EntityRepoSuite) TestEntityRepo() {
 	for i := range cases {
 		tc := cases[i]
 		suite.Run(tc.name, func() {
-			suite.entityRepo.RedisMaster.FlushDB()
+			suite.NoError(suite.entityRepo.RedisMaster.FlushDB().Err())
 
 			err := suite.entityRepo.Save(tc.EntitiesForSave)
 			suite.NoError(err)
