@@ -128,8 +128,9 @@ type FlagHandlerSuite struct {
 }
 
 func (suite *FlagHandlerSuite) SetupSuite() {
-	suite.fakeFlagRepo = &fakeFlagRepo{}
 	suite.engine = echo.New()
+
+	suite.fakeFlagRepo = &fakeFlagRepo{}
 
 	suite.engine.POST("/v1/flag", handler.FlagHandler{FlagRepo: suite.fakeFlagRepo}.Create)
 	suite.engine.DELETE("/v1/flag/:id", handler.FlagHandler{FlagRepo: suite.fakeFlagRepo}.Delete)
