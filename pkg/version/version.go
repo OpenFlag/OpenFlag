@@ -43,10 +43,10 @@ func Validate() error {
 func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if err := Validate(); err == nil {
-			c.Response().Header().Set("X-OPENFLAG-APP-VERSION", AppVersion)
-			c.Response().Header().Set("X-OPENFLAG-VCS-REF", VCSRef)
-			c.Response().Header().Set("X-OPENFLAG-BUILD-VERSION", BuildVersion)
-			c.Response().Header().Set("X-OPENFLAG-BUILD-DATE", Date)
+			c.Response().Header().Set("X-APP-VERSION", AppVersion)
+			c.Response().Header().Set("X-VCS-REF", VCSRef)
+			c.Response().Header().Set("X-BUILD-VERSION", BuildVersion)
+			c.Response().Header().Set("X-BUILD-DATE", Date)
 		}
 
 		return next(c)
