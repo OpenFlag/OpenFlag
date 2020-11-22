@@ -22,7 +22,6 @@ OpenFlag is an open-source feature flagging, A/B testing, and dynamic configurat
 * Evaluation logging for your data pipeline.
 * Contexts saving and reuse stored contexts.
 * Support Feature Flagging, Experimentation A/B testing, and Dynamic Configuration.
-* ...
 
 ## Documentation
 
