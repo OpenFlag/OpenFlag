@@ -41,7 +41,11 @@ var (
 		}, []string{labelRepoName, labelRepoMethod}),
 	}
 
-	DoNotReportErrors = []error{}
+	DoNotReportErrors = []error{
+		ErrFlagNotFound,
+		ErrDuplicateFlagFound,
+		ErrInvalidFlagForUpdate,
+	}
 )
 
 func (m Metrics) report(repoName, methodName string, startTime time.Time, err error) {
