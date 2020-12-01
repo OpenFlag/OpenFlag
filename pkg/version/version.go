@@ -7,16 +7,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Following variables are set via -ldflags
+// Following variables are set via -ldflags.
 // nolint:gochecknoglobals
 var (
-	// AppVersion represents the semantic version of the app
+	// AppVersion represents the semantic version of the app.
 	AppVersion string
-	// VCSRef represents name of branch at build time
+	// VCSRef represents name of branch at build time.
 	VCSRef string
-	// Version represents git SHA at build time
+	// Version represents git SHA at build time.
 	BuildVersion string
-	// Date represents the time of build
+	// Date represents the time of build.
 	Date string
 )
 
@@ -39,7 +39,7 @@ func Validate() error {
 	return errors.New("missing build flags")
 }
 
-// Middleware is an echo middleware for adding version variables to the response header of OpenFlag.
+// Middleware is an echo middleware for adding version variables to the response header of application.
 func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if err := Validate(); err == nil {
@@ -53,7 +53,7 @@ func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-// String generates a string for representing the version of OpenFlag.
+// String generates a string for representing the version of application.
 func String() string {
 	return fmt.Sprintf(
 		"AppVersion = %s\n"+
