@@ -4,6 +4,8 @@ import (
 	"os"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/cmd"
+
+	_ "go.uber.org/automaxprocs"
 )
 
 const (
