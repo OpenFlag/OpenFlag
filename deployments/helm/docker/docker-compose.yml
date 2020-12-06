@@ -1,0 +1,37 @@
+version: "3.1"
+services:
+
+  redis:
+    image: bitnami/redis:5.0.5
+    hostname: redis
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379
+
+  postgres:
+    image: postgres:12.4
+    hostname: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: openflag
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: openflag
+    ports:
+      - 5432:5432
+
+  openflag:
+    image: openflag/openflag:latest
+    hostname: openflag
+    container_name: openflag
+    environment:
+      - OPENFLAG_POSTGRES_MASTER_HOST=postgres
+      - OPENFLAG_POSTGRES_SLAVE_HOST=postgres
+      - OPENFLAG_REDIS_MASTER_ADDRESS=redis:6379
+      - OPENFLAG_REDIS_SLAVE_ADDRESS=redis:6379
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - 7677:7677

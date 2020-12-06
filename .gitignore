@@ -116,6 +116,6 @@ fabric.properties
 logs
 .DS_Store
 /openflag
-config.yaml
-coverage.txt
-releases
+/config.yaml
+/coverage.txt
+/releases
