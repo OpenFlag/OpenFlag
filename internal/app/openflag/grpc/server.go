@@ -6,8 +6,8 @@ import (
 	"net"
 
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/engine"
+	"github.com/OpenFlag/OpenFlag/internal/app/openflag/evaluation"
 	"github.com/OpenFlag/OpenFlag/internal/app/openflag/model"
-	"github.com/OpenFlag/OpenFlag/pkg/evaluation"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

@@ -10,7 +10,7 @@ export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
 
 export LDFLAGS="-w -s -X '$(BUILD_INFO_PKG).AppVersion=$(APP_VERSION)' -X '$(BUILD_INFO_PKG).Date=$$(date)' -X '$(BUILD_INFO_PKG).BuildVersion=$$(git rev-parse HEAD | cut -c 1-8)' -X '$(BUILD_INFO_PKG).VCSRef=$$(git rev-parse --abbrev-ref HEAD)'"
 
-export PROTO_DIR = pkg/proto
+export PROTO_DIR = api
 
 all: format lint build
 
@@ -55,7 +55,10 @@ install-protoc-gen-go:
 	which protoc-gen-go || GO111MODULE=off go get -u github.com/golang/protobuf/protoc-gen-go
 
 code-gen:
-	protoc --go_out=plugins=grpc:pkg $(PROTO_DIR)/*.proto
+	protoc --go_out=plugins=grpc:internal/app/openflag $(PROTO_DIR)/*.proto
+
+install-git-hook:
+	git config --local core.hooksPath ./githooks
 
 test:
 	go test -ldflags $(LDFLAGS) -v -race -p 1 `go list ./... | grep -v integration`
@@ -68,7 +71,7 @@ integration-tests:
 	go test -ldflags $(LDFLAGS) -v -race -p 1 `go list ./... | grep integration`
 
 up:
-	docker-compose up -d redis postgres
+	docker-compose -f test/docker-compose.yml up -d
 
 down:
-	docker-compose down
+	docker-compose -f test/docker-compose.yml down

@@ -60,6 +60,10 @@ curl --location --request POST 'http://127.0.0.1:7677/api/v1/evaluation' \
 }'
 ```
 
+## References
+
+https://github.com/golang-standards/project-layout
+
 ### TODO
 
 * Support custom constraints using **pluggable** languages.

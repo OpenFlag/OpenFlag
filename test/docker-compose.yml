@@ -5,6 +5,8 @@ services:
     image: bitnami/redis:5.0.5
     hostname: redis
     container_name: redis
+    networks:
+      - openflag
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
@@ -14,6 +16,8 @@ services:
     image: postgres:12.4
     hostname: postgres
     container_name: postgres
+    networks:
+      - openflag
     environment:
       POSTGRES_DB: openflag
       POSTGRES_PASSWORD: secret
@@ -21,18 +25,5 @@ services:
     ports:
       - 5432:5432
 
+networks:
   openflag:
-    image: openflag/openflag:latest
-    # build: ./docker/openflag/Dockerfile
-    hostname: openflag
-    container_name: openflag
-    environment:
-      - OPENFLAG_POSTGRES_MASTER_HOST=postgres
-      - OPENFLAG_POSTGRES_SLAVE_HOST=postgres
-      - OPENFLAG_REDIS_MASTER_ADDRESS=redis:6379
-      - OPENFLAG_REDIS_SLAVE_ADDRESS=redis:6379
-    depends_on:
-      - redis
-      - postgres
-    ports:
-      - 7677:7677
