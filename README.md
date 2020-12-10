@@ -33,7 +33,7 @@ Try it with Docker.
 
 ```bash
 # Download docker-compose file.
-wget https://raw.githubusercontent.com/OpenFlag/OpenFlag/master/docker-compose.yml
+wget https://raw.githubusercontent.com/OpenFlag/OpenFlag/master/deployments/docker/openflag/docker-compose.yml
 
 # Start using docker-compose.
 docker-compose up -d
@@ -66,7 +66,9 @@ https://github.com/golang-standards/project-layout
 
 ### TODO
 
-* Support custom constraints using **pluggable** languages.
+* Browser UI.
+* Documentation.
+* Custom constraints using **pluggable** languages.
 
 [1]: https://img.shields.io/drone/build/OpenFlag/OpenFlag.svg?style=flat-square&logo=drone
 [2]: https://cloud.drone.io/OpenFlag/OpenFlag
