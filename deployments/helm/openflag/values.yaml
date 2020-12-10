@@ -5,19 +5,13 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: openflag/openflag
   pullPolicy: IfNotPresent
+  tag: latest
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name:
+nameOverride: "openflag"
+fullnameOverride: "openflag"
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -30,22 +24,47 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/endpoint: "/metrics"
+  prometheus.io/port: "9001"
+
 service:
   type: ClusterIP
-  port: 80
+  http:
+    port: 7677
+  grpc:
+    port: 7678
+
+config:
+  database:
+    driver: postgres
+    master:
+      connstr: postgresql://openflag:secret@postgresql:5432/openflag?sslmode=disable&connect_timeout=30
+    slave:
+      connstr: postgresql://openflag:secret@postgresql:5432/openflag?sslmode=disable&connect_timeout=30
+  redis:
+    master:
+      name: mymaster
+      address: redis:6379
+    slave:
+      address: redis:6379
+    sentinel: false
+    password: ""
 
 ingress:
   enabled: false
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/ingress.class: openflag
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
-      paths: []
+    - host: openflag.com
+      paths:
+        - /
   tls: []
-  #  - secretName: chart-example-tls
+  #  - secretName: openflag-tls
   #    hosts:
-  #      - chart-example.local
+  #      - openflag.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
