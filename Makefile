@@ -4,7 +4,7 @@ export ROOT=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 export APP=openflag
 
-export APP_VERSION=v0.1.5
+export APP_VERSION=v0.1.6
 
 export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
 
@@ -30,7 +30,7 @@ install:
 	go install -ldflags $(LDFLAGS) ./cmd/openflag
 
 release:
-	./scripts/release.sh $(APP) $(APP_VERSION) $(LDFLAGS)
+	./scripts/release.sh $(APP) $(APP_VERSION) "$(LDFLAGS)"
 
 check-formatter:
 	which goimports || GO111MODULE=off go get -u golang.org/x/tools/cmd/goimports

@@ -18,7 +18,7 @@ function release {
     mv ${APP} ${FOLDER_NAME}
     cp LICENSE ${FOLDER_NAME}
     cp README.md ${FOLDER_NAME}
-    cp config.example.yaml ${FOLDER_NAME}/config.yaml
+    cp configs/config.example.yaml ${FOLDER_NAME}/config.yaml
 
     mkdir -p ${FOLDER_NAME}/browser/${APP}-ui
     cp -r ./browser/${APP}-ui/build ${FOLDER_NAME}/browser/${APP}-ui
