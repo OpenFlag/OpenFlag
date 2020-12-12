@@ -5,7 +5,9 @@ metadata:
   labels:
     {{- include "openflag.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoScaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "openflag.selectorLabels" . | nindent 6 }}
@@ -32,13 +34,13 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 7677
+              containerPort: {{ .Values.service.http.port }}
               protocol: TCP
             - name: grpc
-              containerPort: 7678
+              containerPort: {{ .Values.service.grpc.port }}
               protocol: TCP
-            - name: monitoring
-              containerPort: 9001
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
           livenessProbe:
             httpGet:

@@ -19,3 +19,6 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:{{ .Values.service.http.port }}
 {{- end }}
+{{- if not .Values.autoScaling.enabled }}
+2. You can use HorizontalPodAutoscaler to automatically scale pods.
+{{- end }}

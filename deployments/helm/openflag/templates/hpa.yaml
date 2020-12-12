@@ -1,0 +1,14 @@
+{{- if and .Values.autoScaling.enabled}}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "openflag.fullname" . }}
+  labels:
+    {{- include "openflag.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "openflag.fullname" . }}
+{{ toYaml .Values.autoScaling.config | indent 2 }}
+  {{- end }}
