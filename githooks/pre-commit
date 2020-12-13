@@ -1,4 +1,5 @@
 #!/bin/bash
 
 make format
+git add $(git diff --name-only --cached)
 make lint
