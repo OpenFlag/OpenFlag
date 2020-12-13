@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 
+	_ "github.com/jinzhu/gorm/dialects/mysql"    // MySQL driver should have blank import
 	_ "github.com/jinzhu/gorm/dialects/postgres" // PostgreSQL driver should have blank import
 )
 
