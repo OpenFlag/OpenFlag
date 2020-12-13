@@ -17,7 +17,7 @@ OpenFlag is an open-source feature flagging, A/B testing, and dynamic configurat
 * High performance and easily scalable.
 * Support gRPC for flag evaluation.
 * Clear Swagger REST APIs for flag management and flag evaluation.
-* Rules engine and user segmentation using algebra expression as simple as possible for defining complicated flags.
+* Rule engine and user segmentation using algebra expression as simple as possible for defining complicated flags.
 * Showing the history of a flag.
 * Evaluation logging for your data pipeline.
 * Contexts saving and reuse stored contexts.
