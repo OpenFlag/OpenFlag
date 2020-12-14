@@ -63,21 +63,8 @@ name: release
 
 steps:
 
-  - name: build
-    image: node:alpine
-    when:
-      branch:
-        - master
-      event:
-        - tag
-    commands:
-      - cd ./browser/openflag-ui
-      - npm install
-      - npm run build --prod
-      - cd ../../
-
   - name: release
-    image: golang:1.15
+    image: openflag/docker-openflag-builder:latest
     when:
       branch:
         - master

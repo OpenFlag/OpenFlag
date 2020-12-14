@@ -30,12 +30,10 @@ function release {
 
 mkdir -p ${RELEASE_FOLDER}
 
-if [[ ! -d "./browser/${APP}-ui/build" ]]; then
-    cd ./browser/${APP}-ui
-    npm install
-    npm run build --prod
-    cd ../../
-fi
+cd ./browser/${APP}-ui
+npm install
+npm run build --prod
+cd ../../
 
 release darwin amd64
 release linux amd64
