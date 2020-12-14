@@ -63,29 +63,42 @@ name: release
 
 steps:
 
-  #  - name: release
-  #    image: openflag/docker-golang-node-builder:1.15-14.9
-  #    when:
-  #      branch:
-  #        - master
-  #      event:
-  #        - tag
-  #    commands:
-  #      - make release
+  - name: build
+    image: node:alpine
+    when:
+      branch:
+        - master
+      event:
+        - tag
+    commands:
+      - cd ./browser/openflag-ui
+      - npm install
+      - npm run build --prod
+      - cd ../../
 
-  #  - name: github
-  #    image: plugins/github-release
-  #    when:
-  #      branch:
-  #        - master
-  #      event:
-  #        - tag
-  #    settings:
-  #      api_key:
-  #        from_secret: github_token
-  #      files: releases/*
-  #      checksum:
-  #        - md5
+  - name: release
+    image: golang:1.15
+    when:
+      branch:
+        - master
+      event:
+        - tag
+    commands:
+      - make release
+
+  - name: github
+    image: plugins/github-release
+    when:
+      branch:
+        - master
+      event:
+        - tag
+    settings:
+      api_key:
+        from_secret: github_token
+      files: releases/*
+      checksum:
+        - md5
 
   - name: docker
     image: plugins/docker
