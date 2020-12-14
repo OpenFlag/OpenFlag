@@ -84,7 +84,7 @@ steps:
       api_key:
         from_secret: github_token
       files: releases/*
-      checksum_file: openflag-checksum.txt
+      checksum_file: openflag-${DRONE_TAG}-sha256-sum.txt
       checksum:
         - sha256
 
