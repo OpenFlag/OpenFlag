@@ -4,7 +4,7 @@ export ROOT=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 export APP=openflag
 
-export APP_VERSION=v0.1.8
+export APP_VERSION=v0.1.9
 
 export BUILD_INFO_PKG="github.com/OpenFlag/OpenFlag/pkg/version"
 
@@ -75,3 +75,6 @@ up:
 
 down:
 	docker-compose -f test/docker-compose.yml down
+
+update-pkg-cache:
+	GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/OpenFlag/OpenFlag@$(APP_VERSION)

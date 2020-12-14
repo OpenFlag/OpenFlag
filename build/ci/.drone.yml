@@ -84,8 +84,9 @@ steps:
       api_key:
         from_secret: github_token
       files: releases/*
+      checksum_file: openflag-checksum.txt
       checksum:
-        - md5
+        - sha256
 
   - name: docker
     image: plugins/docker
