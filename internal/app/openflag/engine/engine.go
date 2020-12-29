@@ -62,7 +62,11 @@ func New(logger Logger, flagRepo model.FlagRepo) *EvaluationEngine {
 }
 
 // Fetch fetches all flags from the database and prepares new period evaluations.
-func (e *EvaluationEngine) Fetch() error {
+func (e *EvaluationEngine) Fetch() (finalErr error) {
+	startTime := time.Now()
+
+	defer func() { metrics.report("fetch", startTime, finalErr) }()
+
 	dbFlags, err := e.FlagRepo.FindAll()
 	if err != nil {
 		return err
@@ -140,7 +144,11 @@ func (e *EvaluationEngine) Start(cronPattern string) error {
 }
 
 // Evaluate evaluates the given entity.
-func (e *EvaluationEngine) Evaluate(flags []string, entity model.Entity) (*Result, error) {
+func (e *EvaluationEngine) Evaluate(flags []string, entity model.Entity) (_ *Result, finalErr error) {
+	startTime := time.Now()
+
+	defer func() { metrics.report("evaluate", startTime, finalErr) }()
+
 	value, ok := e.cache.Get(cacheKey)
 	if !ok {
 		return nil, errors.New("failed to load flags from cache")
