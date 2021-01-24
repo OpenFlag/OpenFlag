@@ -33,6 +33,9 @@ steps:
 
   - name: coverage
     image: plugins/codecov
+    when:
+      branch:
+        - master
     settings:
       token:
         from_secret: codecov_token
