@@ -16,6 +16,7 @@ const (
 	MatchConstraintName           = "match"
 	RandomConstraintName          = "random"
 	RolloutConstraintName         = "rollout"
+	CronConstraintName            = "cron"
 	IntersectionConstraintName    = "∩"
 	UnionConstraintName           = "∪"
 	LessThanConstraintName        = "<"
@@ -52,6 +53,7 @@ func BasicConstraints() []string {
 		MatchConstraintName,
 		RandomConstraintName,
 		RolloutConstraintName,
+		CronConstraintName,
 		LessThanConstraintName,
 		LessThanEqualConstraintName,
 		BiggerThanConstraintName,
@@ -77,6 +79,8 @@ func Find(name string) (Constraint, error) {
 		return &RandomConstraint{}, nil
 	case RolloutConstraintName:
 		return &RolloutConstraint{}, nil
+	case CronConstraintName:
+		return &CronConstraint{}, nil
 	case UnionConstraintName:
 		return &UnionConstraint{}, nil
 	case LessThanConstraintName:
