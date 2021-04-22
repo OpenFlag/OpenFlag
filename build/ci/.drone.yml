@@ -76,8 +76,7 @@ steps:
       event:
         - tag
     commands:
-      - export APP_VERSION=${DRONE_TAG}
-      - make release
+      - make release APP_VERSION=${DRONE_TAG}
 
   - name: github
     image: plugins/github-release
