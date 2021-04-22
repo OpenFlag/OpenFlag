@@ -48,21 +48,15 @@ curl --location --request POST 'http://127.0.0.1:7677/api/v1/evaluation' \
     "entities": [
         {
             "entity_id": 1234567,
-            "entity_type": "type1",
+            "entity_type": "user",
             "entity_context": {
-                "state": "CA"
+                "city": "AMS"
             }
         }
     ],
     "flags": ["flag1", "flag2"],
-    "save_contexts": true,
-    "use_stored_contexts": false
 }'
 ```
-
-## References
-
-https://github.com/golang-standards/project-layout
 
 ### TODO
 
