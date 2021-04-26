@@ -111,15 +111,15 @@ steps:
       password:
         from_secret: docker_password
 
-  - name: update
-    image: golang:1.15
-    when:
-      branch:
-        - master
-      event:
-        - tag
-    commands:
-      - GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/OpenFlag/OpenFlag@${DRONE_TAG}
+#  - name: update
+#    image: golang:1.15
+#    when:
+#      branch:
+#        - master
+#      event:
+#        - tag
+#    commands:
+#      - GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/OpenFlag/OpenFlag@${DRONE_TAG}
 
 depends_on:
   - test
