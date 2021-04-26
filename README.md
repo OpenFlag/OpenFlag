@@ -1,4 +1,4 @@
-# OpenFlag [Under Development]
+# OpenFlag
 
 [![Build Status][1]][2]
 [![Code Cov][3]][4]
@@ -57,12 +57,6 @@ curl --location --request POST 'http://127.0.0.1:7677/api/v1/evaluation' \
     "flags": ["flag1", "flag2"],
 }'
 ```
-
-### TODO
-
-* Browser UI.
-* Documentation.
-* Custom constraints using **pluggable** languages.
 
 [1]: https://img.shields.io/drone/build/OpenFlag/OpenFlag.svg?style=flat-square&logo=drone
 [2]: https://cloud.drone.io/OpenFlag/OpenFlag
