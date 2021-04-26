@@ -75,6 +75,3 @@ up:
 
 down:
 	docker-compose -f test/docker-compose.yml down
-
-update-pkg-cache:
-	curl https://sum.golang.org/lookup/github.com/openflag/openflag@$(APP_VERSION)

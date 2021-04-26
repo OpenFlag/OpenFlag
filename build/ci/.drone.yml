@@ -112,14 +112,14 @@ steps:
         from_secret: docker_password
 
   - name: update
-    image: openflag/docker-openflag-builder:latest
+    image: golang:1.15
     when:
       branch:
         - master
       event:
         - tag
     commands:
-      - make update-pkg-cache APP_VERSION=${DRONE_TAG}
+      - GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/OpenFlag/OpenFlag@${DRONE_TAG}
 
 depends_on:
   - test
