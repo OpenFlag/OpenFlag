@@ -111,5 +111,15 @@ steps:
       password:
         from_secret: docker_password
 
+  - name: update
+    image: openflag/docker-openflag-builder:latest
+    when:
+      branch:
+        - master
+      event:
+        - tag
+    commands:
+      - make update-pkg-cache APP_VERSION=${DRONE_TAG}
+
 depends_on:
   - test
