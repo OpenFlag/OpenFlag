@@ -9,6 +9,10 @@ function Sidebar({ color, image, routes }) {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
 
+  let textStyles = {
+    marginLeft: "10px",
+  };
+
   return (
     <div className="sidebar" data-image={image} data-color={color}>
       <div
@@ -35,8 +39,8 @@ function Sidebar({ color, image, routes }) {
                     className="nav-link"
                     activeClassName="active"
                   >
-                    <i className={prop.icon} />
-                    <p>{prop.name}</p>
+                    {prop.icon}
+                    <p style={textStyles}>{prop.name}</p>
                   </NavLink>
                 </li>
               );
