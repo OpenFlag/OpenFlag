@@ -1,6 +1,4 @@
 import Dashboard from "views/Dashboard.js";
-import TableList from "views/TableList.js";
-import Icons from "views/Icons.js";
 
 import { App, Search, Eye } from "react-bootstrap-icons";
 
@@ -18,14 +16,14 @@ const dashboardRoutes = [
     path: "/search",
     name: "Search",
     icon: <Search size={iconSize} />,
-    component: Icons,
+    component: Dashboard,
     layout: "/admin",
   },
   {
     path: "/evaluation",
     name: "Evaluation",
     icon: <Eye size={iconSize} />,
-    component: TableList,
+    component: Dashboard,
     layout: "/admin",
   },
 ];
